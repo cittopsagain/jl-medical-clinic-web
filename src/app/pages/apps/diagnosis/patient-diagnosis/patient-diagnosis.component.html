@@ -1,0 +1,282 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row justify-content-end m-b-24">
+      <div class="col-sm-4 text-right">
+        <a routerLink="/apps/patient-management/patient-consultation" mat-flat-button class="bg-error text-white m-r-10">
+          Print Patient Diagnosis
+        </a>
+        <button mat-flat-button color="primary">
+          Save Patient Diagnosis
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="col-12 mt-2">
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-accordion>
+  <!-- Patient Information Section -->
+  <mat-expansion-panel class="cardWithShadow" [expanded]="true" (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="f-w-600 f-s-14">
+        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+        >Patient Information
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="row m-t-20">
+      <!-- Patient Id -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Patient Id</mat-label>
+          <input matInput placeholder="Patient Id" [value]="data?.patientId" name="patientId" />
+        </mat-form-field>
+      </div>
+
+      <!-- Consultation Id -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Consultation Id</mat-label>
+          <input matInput placeholder="Consultation Id" value="{{ data?.consultationId }}" name="consultationId" />
+        </mat-form-field>
+      </div>
+
+      <!-- Last Name -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Last Name</mat-label>
+          <input matInput placeholder="Last Name" value="{{ data?.lastName }}" name="lastName" />
+        </mat-form-field>
+      </div>
+
+      <!-- First Name -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>First Name</mat-label>
+          <input matInput placeholder="First Name" value="{{ data?.firstName }}" name="firstName" />
+        </mat-form-field>
+      </div>
+
+      <!-- Middle Name -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Middle Name</mat-label>
+          <input matInput placeholder="Middle Name" value="{{ data?.middleName }}" name="middleName" />
+        </mat-form-field>
+      </div>
+
+      <!-- Birth Date -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Birth Date</mat-label>
+          <input matInput placeholder="Middle Name" value="{{ data?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
+        </mat-form-field>
+      </div>
+
+      <!-- Address -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Address</mat-label>
+          <input matInput placeholder="Address" value="{{ data?.address }}" name="address" />
+        </mat-form-field>
+      </div>
+
+      <!-- Gender -->
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Gender</mat-label>
+          <input matInput placeholder="Gender" value="{{ data?.sex }}" name="sex" />
+        </mat-form-field>
+      </div>
+
+      <!-- Consultation Date -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Consultation Date</mat-label>
+          <input matInput placeholder="Consultation Date" value="{{ data?.consultationDate | date: 'MM/dd/yyyy' }}" name="consultationDate" />
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Vital Signs Section -->
+  <mat-expansion-panel class="cardWithShadow" (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="f-w-600 f-s-14">
+        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+        >Vital Signs
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <!-- Vital Signs Section -->
+    <div class="row m-t-20">
+      <!-- Weight -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Weight</mat-label>
+          <input matInput placeholder="Weight" value="{{ data?.weight }}" name="weight" />
+        </mat-form-field>
+      </div>
+
+      <!-- Height -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Height(cm)</mat-label>
+          <input matInput placeholder="Height(cm)" value="{{ data?.height }}" name="height" />
+        </mat-form-field>
+      </div>
+
+      <!-- Temperature -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Temperature</mat-label>
+          <input matInput placeholder="Temperature" value="{{ data?.temperature }}" name="temperature" />
+        </mat-form-field>
+      </div>
+
+      <!-- Blood Pressure -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Blood Pressure</mat-label>
+          <input matInput placeholder="Blood Pressure" value="{{ data?.bloodPressure }}" name="bloodPressure" />
+        </mat-form-field>
+      </div>
+
+      <!-- Heart Rate -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Heart Rate</mat-label>
+          <input matInput placeholder="Heart Rate" value="{{ data?.heartRate }}" name="heartRate" />
+        </mat-form-field>
+      </div>
+
+      <!-- Oxygen Saturation -->
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Oxygen Saturation</mat-label>
+          <input matInput placeholder="Oxygen Saturation" value="{{ data?.oxygenSaturation }}" name="oxygenSaturation" />
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Diagnosis Section -->
+  <mat-expansion-panel class="cardWithShadow" (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="f-w-600 f-s-14">
+        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+        >Patient Medical Summary
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="col-lg-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Diagnosis</mat-label>
+        <textarea matInput placeholder="Diagnosis" name="oxygenSaturation"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Follow-up check up / Remarks</mat-label>
+        <textarea matInput placeholder="Follow-up check up / Remarks"name="oxygenSaturation">Follow up on 7th day if symptoms persists</textarea>
+      </mat-form-field>
+    </div>
+    <div class="col-lg-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Remarks (Visible on the Medical Certificate)</mat-label>
+        <textarea matInput placeholder="Remarks (Visible on the Medical Certificate)" name="oxygenSaturation"></textarea>
+      </mat-form-field>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Prescription Section -->
+  <mat-expansion-panel class="cardWithShadow" [expanded]="true" (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title class="f-w-600 f-s-14">
+        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+        >Prescription
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="example-table-container responsive-table">
+      <table mat-table [dataSource]="medicineList" class="hover-table">
+        <!-- Medicine Name -->
+        <ng-container matColumnDef="medicineName">
+          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+            Medicine Name
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.medicineName }}
+          </td>
+        </ng-container>
+
+        <!-- Dosage -->
+        <ng-container matColumnDef="dosage">
+          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+            Quantity
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-form-field appearance="outline" class="w-100" style="margin-top: 10px;">
+              <input matInput placeholder="Heart Rate" name="heartRate" />
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row" style="margin-top: 20px;">
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100 hide-hint">
+          <mat-label>Search Medicine</mat-label>
+          <input
+            matInput
+            placeholder="Search Medicine..."
+            [(ngModel)]="medicineName"
+            (keyup.enter)="applyFilter()"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-lg-4">
+        <button mat-flat-button (click)="applyFilter()" color="primary">
+          Search
+        </button>
+      </div>
+    </div>
+    <div class="example-table-container responsive-table">
+      <table mat-table [dataSource]="medicineList" class="hover-table">
+        <!-- Medicine Name -->
+        <ng-container matColumnDef="medicineName">
+          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+            Medicine Name
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.medicineName }}
+          </td>
+        </ng-container>
+
+        <!-- Dosage -->
+        <ng-container matColumnDef="dosage">
+          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+            Dosage
+          </th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.dosage }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

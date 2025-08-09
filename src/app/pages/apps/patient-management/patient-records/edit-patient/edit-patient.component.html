@@ -1,0 +1,78 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row justify-content-end m-b-24">
+      <div class="col-sm-4 text-right">
+        <a routerLink="/apps/patient-management/patient-records" mat-flat-button class="bg-error text-white m-r-10">
+          Cancel
+        </a>
+        <button mat-flat-button color="primary" (click)="updatePatient($event)" [disabled]="patientForm.invalid">
+          Update Patient
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="col-12 mt-2">
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
+    </div>
+
+    <form [formGroup]="patientForm">
+      <div class="row m-y-24 p-t-24">
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Patient Id</mat-label>
+            <input matInput placeholder="Patient Id" [value]="patientRecord.patientId" name="patientId"/>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Last Name</mat-label>
+            <input matInput placeholder="Last Name" formControlName="lastName" name="lastName"/>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>First Name</mat-label>
+            <input matInput placeholder="First Name" formControlName="firstName" name="firstName"/>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Middle Name</mat-label>
+            <input matInput placeholder="Middle Name" formControlName="middleName" name="middleName"/>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Birth Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required/>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Address</mat-label>
+            <input matInput placeholder="Address" formControlName="address" name="address"/>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="sex" disableOptionCentering placeholder="Gender" required>
+              @for (gender of gender; track gender) {
+                <mat-option [value]="gender === 'Male' ? 'M' : (gender === 'Female' ? 'F' : gender)">
+                  {{ gender }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="mat-sm-4">
+            <mat-checkbox color="primary" formControlName="markForConsultation">Mark for Consultation</mat-checkbox>
+        </div>
+      </div>
+    </form>
+
+  </mat-card-content>
+</mat-card>

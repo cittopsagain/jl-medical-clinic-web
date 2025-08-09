@@ -1,0 +1,36 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row justify-content-end m-b-24">
+      <div class="col-sm-4 text-right">
+        <a routerLink="/apps/patient-management/patient-consultation" mat-flat-button class="bg-error text-white m-r-10">
+          Cancel
+        </a>
+        <button mat-flat-button color="primary" (click)="savePatientConsultation($event)"> <!--[disabled]="patientForm.invalid">-->
+          Save Patient Consultation
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="col-lg-4">
+      <mat-form-field appearance="outline" class="w-100 hide-hint">
+        <mat-label>Search Patient</mat-label>
+        <input
+          matInput
+          placeholder="Search Patient"
+          [(ngModel)]="patientName"
+          (keyup.enter)="applyFilter()"
+          #patientNameInput
+        />
+        <mat-icon matSuffix>
+          <i-tabler name="search" class="icon-20 d-flex m-t-2"></i-tabler>
+        </mat-icon>
+      </mat-form-field>
+    </div>
+  </mat-card-content>
+</mat-card>

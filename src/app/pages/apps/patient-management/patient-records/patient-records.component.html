@@ -1,0 +1,177 @@
+<div class="example-container">
+  <mat-card class="cardWithShadow">
+    <mat-card-content>
+<!--      <div class="row justify-content-between gap-16">-->
+      <div class="row gap-6">
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100 hide-hint">
+            <mat-label>Patient Name</mat-label>
+            <input
+              matInput
+              placeholder="Patient Name"
+              [(ngModel)]="patientName"
+              (keyup.enter)="applyFilter()"
+              #patientNameInput
+            />
+<!--            <mat-icon matSuffix>-->
+<!--              <i-tabler name="search" class="icon-20 d-flex m-t-2"></i-tabler>-->
+<!--            </mat-icon>-->
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100 hide-hint">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              placeholder="Address"
+              [(ngModel)]="address"
+              (keyup.enter)="applyFilter()"
+            />
+<!--            <mat-icon matSuffix>-->
+<!--              <i-tabler name="search" class="icon-20 d-flex m-t-2"></i-tabler>-->
+<!--            </mat-icon>-->
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <button mat-flat-button (click)="applyFilter()" color="primary">
+            Search
+          </button>
+        </div>
+
+            <!--        <div class="col-lg-4 d-flex align-items-center justify-content-end">-->
+<!--          <button mat-flat-button (click)="openDialog('Add', {})" color="primary">-->
+<!--            Add Patient-->
+<!--          </button>-->
+<!--        </div>-->
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="cardWithShadow">
+    <mat-card-content>
+      <div class="col-lg-12 d-flex align-items-center justify-content-end">
+        <button mat-flat-button [routerLink]="['/apps/patient-management/patient-records/add-patient']" color="primary">
+          Add Patient
+        </button>
+      </div>
+
+      <div class="example-table-container responsive-table">
+        <table mat-table [dataSource]="data" matSort matSortActive="date_created" matSortDisableClear
+               matSortDirection="desc" class="hover-table">
+          <!-- Number Column -->
+          <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              #
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index">{{ ((paginator.pageIndex * pageSize ) + i ) + 1 }}</td>
+          </ng-container>
+
+          <!-- Patient Id -->
+          <ng-container matColumnDef="patientId">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Patient Id
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.patientId }}
+            </td>
+          </ng-container>
+
+          <!-- Patient Name -->
+          <ng-container matColumnDef="patientName">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Patient Name
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.lastName }}, {{ row.firstName }} {{ row.middleName }}
+            </td>
+          </ng-container>
+
+          <!-- Address -->
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Address
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.address }}
+            </td>
+          </ng-container>
+
+          <!-- Date Created -->
+          <ng-container matColumnDef="dateCreated">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Date Created
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.dateCreated }} {{ row.markForConsultation }}
+            </td>
+          </ng-container>
+
+          <!-- Action -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Action
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="d-flex align-items-center gap-8">
+                <!-- Edit -->
+                <a
+                  mat-icon-button
+                  [routerLink]="['/apps/patient-management/patient-records/edit-patient', element.patientId]"
+                  class="d-flex align-items-center justify-content-center"
+                  [disabled]="element.markForConsultation == 1"
+                >
+                  <i-tabler
+                    name="pencil"
+                    class="icon-18 d-flex align-items-center"
+                  ></i-tabler>
+                </a>
+
+                <!-- View -->
+                <a
+                  mat-icon-button
+                  [routerLink]="['/apps/patient-management/patient-records/view-patient', element.patientId]"
+                  class="d-flex align-items-center justify-content-center"
+                >
+                  <i-tabler
+                    name="eye"
+                    class="icon-18 d-flex align-items-center"
+                  ></i-tabler>
+                </a>
+
+                <!-- Delete -->
+                <a
+                  mat-icon-button
+                  class="d-flex align-items-center justify-content-center"
+                  [disabled]="element.reference > 0"
+                  (click)="deletePatientRecord(element.patientId)"
+                >
+                  <i-tabler
+                    name="trash"
+                    class="icon-18 d-flex align-items-center"
+                  ></i-tabler>
+                </a>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+
+      <mat-paginator [length]="resultsLength" [pageSize]="`${ pageSize }`"></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  @if(isLoadingResults || isError) {
+    <div class="example-loading-shade" style="margin-top: 20px;">
+      @if(isLoadingResults) {
+        <mat-spinner></mat-spinner>
+      } @if(isError) {
+      <div class="example-rate-limit-reached">
+        Problem loading data. Please try again later.
+      </div>
+    }
+    </div>
+  }
+</div>

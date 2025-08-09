@@ -1,0 +1,66 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row justify-content-end m-b-24">
+      <div class="col-sm-4 text-right">
+        <a routerLink="/apps/patient-management/patient-records" mat-flat-button class="bg-error text-white m-r-10">
+          Cancel
+        </a>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+
+    <div class="row m-y-24 p-t-24">
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Patient Id</mat-label>
+          <input matInput placeholder="Last Name" value="{{ patientRecord?.patientId }}" name="patientId"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Last Name</mat-label>
+          <input matInput placeholder="Last Name" value="{{ patientRecord?.lastName }}" name="lastName"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>First Name</mat-label>
+          <input matInput placeholder="First Name" value="{{ patientRecord?.firstName }}" name="firstName"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Middle Name</mat-label>
+          <input matInput placeholder="First Name" value="{{ patientRecord?.middleName }}" name="middleName"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Birth Date</mat-label>
+          <input matInput placeholder="First Name" value="{{ patientRecord?.birthDate | date: 'MM/dd/yyyy'  }}" name="birthDate"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Address</mat-label>
+          <input matInput placeholder="First Name" value="{{ patientRecord?.address  }}" name="address"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Gender</mat-label>
+          <input matInput placeholder="Gender" value="{{ patientRecord?.sex  }}" name="gender"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <div class="col-sm-6">
+          <mat-checkbox color="primary" [checked]="patientRecord?.markForConsultation == 1 ? true : false">Mark for Consultation</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+
+
+  </mat-card-content>
+</mat-card>

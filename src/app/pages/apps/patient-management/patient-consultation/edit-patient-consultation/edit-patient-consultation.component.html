@@ -1,0 +1,179 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row justify-content-end m-b-24">
+      <div class="col-sm-4 text-right">
+        <a routerLink="/apps/patient-management/patient-consultation" mat-flat-button class="bg-error text-white m-r-10">
+          Cancel
+        </a>
+        <button mat-flat-button color="primary"
+                (click)="updatePatientConsultation($event)"
+                [disabled]="patientConsultationForm.invalid"
+                *ngIf="patientConsultation?.status === 'Waiting'"
+        >
+          Update Consultation
+        </button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="col-12 mt-2">
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <div class="p-16 bg-light-primary rounded">
+      <h5 class="f-s-14 text-primary d-flex align-items-center f-w-600">
+        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+        >Patient Information
+      </h5>
+    </div>
+
+    <form [formGroup]="patientConsultationForm">
+      <div class="row m-t-20">
+        <!-- Patient Id -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Patient Id</mat-label>
+            <input matInput placeholder="Patient Id" [value]="patientConsultation?.patientId" name="patientId" />
+          </mat-form-field>
+        </div>
+
+        <!-- Consultation Id -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Consultation Id</mat-label>
+            <input matInput placeholder="Consultation Id" value="{{ patientConsultation?.consultationId }}" name="consultationId" />
+          </mat-form-field>
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Last Name</mat-label>
+            <input matInput placeholder="Last Name" value="{{ patientConsultation?.lastName }}" name="lastName" />
+          </mat-form-field>
+        </div>
+
+        <!-- First Name -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>First Name</mat-label>
+            <input matInput placeholder="First Name" value="{{ patientConsultation?.firstName }}" name="firstName" />
+          </mat-form-field>
+        </div>
+
+        <!-- Middle Name -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Middle Name</mat-label>
+            <input matInput placeholder="Middle Name" value="{{ patientConsultation?.middleName }}" name="middleName" />
+          </mat-form-field>
+        </div>
+
+        <!-- Birth Date -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Birth Date</mat-label>
+            <input matInput placeholder="Middle Name" value="{{ patientConsultation?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
+          </mat-form-field>
+        </div>
+
+        <!-- Address -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Address</mat-label>
+            <input matInput placeholder="Address" value="{{ patientConsultation?.address }}" name="address" />
+          </mat-form-field>
+        </div>
+
+        <!-- Gender -->
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Gender</mat-label>
+            <input matInput placeholder="Gender" value="{{ patientConsultation?.sex }}" name="sex" />
+          </mat-form-field>
+        </div>
+
+        <!-- Consultation Date -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Consultation Date</mat-label>
+            <input matInput placeholder="Consultation Date" value="{{ patientConsultation?.consultationDate | date: 'MM/dd/yyyy' }}" name="consultationDate" />
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <div class="p-16 bg-light-primary rounded">
+      <h5 class="f-s-14 text-primary d-flex align-items-center f-w-600">
+        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+        >Vital Signs
+      </h5>
+    </div>
+
+    <form [formGroup]="patientConsultationForm">
+      <div class="row m-t-20">
+        <!-- Weight -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Weight</mat-label>
+            <input matInput placeholder="Weight" #weightInput formControlName="weight" name="weight" />
+          </mat-form-field>
+        </div>
+
+        <!-- Height -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Height(cm)</mat-label>
+            <input matInput placeholder="Height(cm)" formControlName="height" name="height" />
+          </mat-form-field>
+        </div>
+
+        <!-- Temperature -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Temperature</mat-label>
+            <input matInput placeholder="Temperature" formControlName="temperature" name="temperature" />
+          </mat-form-field>
+        </div>
+
+        <!-- Blood Pressure -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Blood Pressure</mat-label>
+            <input matInput placeholder="Blood Pressure" formControlName="bloodPressure" name="bloodPressure" />
+          </mat-form-field>
+        </div>
+
+        <!-- Heart Rate -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Heart Rate</mat-label>
+            <input matInput placeholder="Heart Rate" formControlName="heartRate" name="heartRate" />
+          </mat-form-field>
+        </div>
+
+        <!-- Oxygen Saturation -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Oxygen Saturation</mat-label>
+            <input matInput placeholder="Oxygen Saturation" formControlName="oxygenSaturation" name="oxygenSaturation" />
+          </mat-form-field>
+        </div>
+
+        <!-- Set In Progress -->
+        <div class="col-sm-6" *ngIf="patientConsultation?.status === 'Waiting'">
+          <mat-checkbox color="primary" formControlName="status" (click)="checkInProgressConsultationStatusCount($event)" [checked]="false">Set Consultation Status to In Progress</mat-checkbox>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
