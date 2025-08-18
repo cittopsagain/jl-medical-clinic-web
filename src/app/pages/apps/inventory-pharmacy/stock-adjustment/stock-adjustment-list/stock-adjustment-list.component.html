@@ -1,0 +1,152 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="row">
+      <div class="col-sm-7">
+        <mat-form-field appearance="outline" class="w-100 hide-hint">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            placeholder="Search..."
+            [(ngModel)]="productName"
+            (keyup.enter)="applyFilter()"
+            #stockAdjustmentProductNameInput
+          />
+        </mat-form-field>
+
+        <div class="example-table-container responsive-table">
+          <table mat-table [dataSource]="data" matSort matSortActive="product_name" matSortDisableClear
+                 matSortDirection="asc" class="hover-table">
+
+            <!-- Product Name -->
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Product Name
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <div class="m-l-16" >
+                  <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                    {{ row.brandName }}
+                  </h6>
+                  <span class="f-s-14 f-s-12">
+                    {{ row.productName }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Qty On Hand -->
+            <ng-container matColumnDef="qtyOnHand">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Qty On Hand
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row.qtyOnHand }}
+              </td>
+            </ng-container>
+
+            <!-- Selling Price -->
+            <ng-container matColumnDef="sellingPrice">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Selling Price
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row.sellingPrice }}
+              </td>
+            </ng-container>
+
+            <!-- Expiry Date -->
+            <ng-container matColumnDef="expiryDate">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Expiry Date
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row.expiryDate | date: 'MM/dd/yyyy' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                [class.selected-row]="selectedRow && selectedRow.productId === row.productId"
+                (click)="getProductDetailsById(row)"></tr>
+          </table>
+        </div>
+
+        <mat-paginator [length]="resultsLength" [pageSize]="`${ pageSize }`"></mat-paginator>
+      </div>
+
+      <!-- Product Details -->
+      <div class="col" style="margin-top: 15px;">
+        <h3 class="text-center">Product Details</h3>
+        <div class="col-12" style="margin-top: 15px;">
+          <small class="text-muted">* Required fields are marked with an asterisk</small>
+        </div>
+
+        <mat-divider style="margin-top: 18px;"></mat-divider>
+
+        <!-- Brand Name -->
+        <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px;">
+          <mat-label>Brand Name</mat-label>
+          <input matInput readonly placeholder="Brand Name" [(ngModel)]="selectedBrandName" name="selectedBrandName"/>
+        </mat-form-field>
+
+        <!-- Product Name -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Product Name</mat-label>
+          <input matInput readonly placeholder="Product Name" [(ngModel)]="selectedProductName" name="selectedProductName"/>
+        </mat-form-field>
+
+        <!-- Adjustment Type -->
+        <mat-label class="f-s-14 f-w-600 d-block">Adjustment Type *</mat-label>
+        <mat-radio-group aria-label="Select an option" class="m-t-8" [(ngModel)]="adjustmentTypeGroup" (change)="onAdjustmentTypeChange($event)">
+          <mat-radio-button value="QUANTITY_ON_HAND" color="primary">Quantity On Hand</mat-radio-button>
+          <mat-radio-button value="SELLING_PRICE" color="primary">Selling Price</mat-radio-button>
+          <mat-radio-button value="EXPIRY_DATE" color="primary">Expiry Date</mat-radio-button>
+          <mat-radio-button value="LOT_NUMBER" color="primary">Lot Number</mat-radio-button>
+        </mat-radio-group>
+
+        <!-- Quantity On Hand -->
+        <div *ngIf="adjustmentType === 'QUANTITY_ON_HAND'">
+          <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px;">
+            <mat-label>Current Quantity On Hand</mat-label>
+            <input matInput readonly placeholder="0" [(ngModel)]="currentQuantityOnHand" type="number" name="currentQuantityOnHand"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>New Quantity On Hand *</mat-label>
+            <input matInput placeholder="0" [(ngModel)]="newQuantityOnHand" type="text" name="newQuantityOnHand" (keyup)="checkValue()"/>
+          </mat-form-field>
+        </div>
+
+        <!-- Selling Price -->
+        <div *ngIf="adjustmentType === 'SELLING_PRICE'">
+          <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px;">
+            <mat-label>Current Selling Price</mat-label>
+            <input matInput placeholder="0" [(ngModel)]="currentSellingPrice" type="number" name="currentSellingPrice"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>New Selling Price *</mat-label>
+            <input matInput placeholder="0" [(ngModel)]="newSellingPrice" type="text" name="newSellingPrice" (keyup)="checkValue()"/>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Adjustment Reason *</mat-label>
+          <textarea matInput placeholder="Adjustment Reason"name="adjustmentReason" [(ngModel)]="adjustmentReason"></textarea>
+        </mat-form-field>
+
+        <div class="row">
+          <div class="col-6 d-flex justify-content-end">
+            <button mat-flat-button color="primary" class="w-100" (click)="updateInventory()" [disabled]="(newQuantityOnHand === '0' && newSellingPrice === '0') || selectedRow === null || adjustmentReason === ''">
+              Update
+            </button>
+          </div>
+          <div class="col-6 d-flex justify-content-end">
+            <button mat-flat-button color="primary" class="w-100" (click)="clear()">
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </mat-card-content>
+</mat-card>

@@ -70,6 +70,7 @@ export class AddPatientComponent {
       address: ['', Validators.required],
       birthDate: ['', Validators.required],
       sex: ['', Validators.required],
+      contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       markForConsultation: [1] // Initialize with 1 (checked)
     });
   }
@@ -99,8 +100,14 @@ export class AddPatientComponent {
         .subscribe({
           next: (response: any) => {
             this.toastr.success(response.message, 'Success!');
-            this.patientForm.reset();
-            this.router.navigate(['/apps/patient-management/patient-records']);
+            // this.patientForm.reset();
+            if (response.data.consultationId != null && response.data.consultationId != undefined
+            && this.patientForm.value.markForConsultation == 1) {
+              // If consultationId is present, navigate to the consultation page
+              this.router.navigate(['/apps/patient-management/patient-consultation/edit-patient-for-consultation', response.data.consultationId]);
+            } else {
+              this.router.navigate(['/apps/patient-management/patient-records']);
+            }
           },
           error: (error) => {
             this.toastr.error(error.error.message, 'Oops!');

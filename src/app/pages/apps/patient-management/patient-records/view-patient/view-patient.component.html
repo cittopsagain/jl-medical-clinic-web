@@ -14,43 +14,49 @@
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Patient Id</mat-label>
-          <input matInput placeholder="Last Name" value="{{ patientRecord?.patientId }}" name="patientId"/>
+          <input matInput readonly placeholder="Last Name" value="{{ patientRecord?.patientId }}" name="patientId"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Last Name</mat-label>
-          <input matInput placeholder="Last Name" value="{{ patientRecord?.lastName }}" name="lastName"/>
+          <input matInput readonly placeholder="Last Name" value="{{ patientRecord?.lastName }}" name="lastName"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>First Name</mat-label>
-          <input matInput placeholder="First Name" value="{{ patientRecord?.firstName }}" name="firstName"/>
+          <input matInput readonly placeholder="First Name" value="{{ patientRecord?.firstName }}" name="firstName"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Middle Name</mat-label>
-          <input matInput placeholder="First Name" value="{{ patientRecord?.middleName }}" name="middleName"/>
+          <input matInput readonly placeholder="First Name" value="{{ patientRecord?.middleName }}" name="middleName"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Birth Date</mat-label>
-          <input matInput placeholder="First Name" value="{{ patientRecord?.birthDate | date: 'MM/dd/yyyy'  }}" name="birthDate"/>
+          <input matInput readonly placeholder="First Name" value="{{ patientRecord?.birthDate | date: 'MM/dd/yyyy'  }}" name="birthDate"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Address</mat-label>
-          <input matInput placeholder="First Name" value="{{ patientRecord?.address  }}" name="address"/>
+          <input matInput readonly placeholder="First Name" value="{{ patientRecord?.address  }}" name="address"/>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Contact Number</mat-label>
+          <input matInput readonly placeholder="Contact Number" value="{{ patientRecord?.contactNumber  }}" name="contactNumber"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Gender</mat-label>
-          <input matInput placeholder="Gender" value="{{ patientRecord?.sex  }}" name="gender"/>
+          <input matInput readonly placeholder="Gender" value="{{ patientRecord?.sex  }}" name="gender"/>
         </mat-form-field>
       </div>
       <div class="col-sm-4">

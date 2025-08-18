@@ -42,6 +42,12 @@ import {
 import {
   EditPatientConsultationComponent
 } from "./patient-management/patient-consultation/edit-patient-consultation/edit-patient-consultation.component";
+import {BrandListComponent} from "./inventory-pharmacy/brands/brand-list/brand-list.component";
+import {AddBrandComponent} from "./inventory-pharmacy/brands/add-brand/add-brand.component";
+import {PosComponent} from "./sales/pos/pos/pos.component";
+import {
+  StockAdjustmentListComponent
+} from "./inventory-pharmacy/stock-adjustment/stock-adjustment-list/stock-adjustment-list.component";
 
 
 export const AppsRoutes: Routes = [
@@ -138,6 +144,51 @@ export const AppsRoutes: Routes = [
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Patient Diagnosis' },
+          ]
+        }
+      },
+      {
+        path: 'inventory-pharmacy/brands',
+        component: BrandListComponent,
+        data: {
+          title: 'Brands',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Brands' },
+          ]
+        }
+      },
+      {
+        path: 'inventory-pharmacy/brands/add-brand',
+        component: AddBrandComponent,
+        data: {
+          title: 'Add Brand',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Brands', url: '/apps/inventory-pharmacy/brands' },
+            { title: 'Add Brand' },
+          ]
+        }
+      },
+      {
+        path: 'inventory-pharmacy/stock-adjustments',
+        component: StockAdjustmentListComponent,
+        data: {
+          title: 'Stock Adjustments',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Stock Adjustments' },
+          ]
+        }
+      },
+      {
+        path: 'sales/pos',
+        component: PosComponent,
+        data: {
+          title: 'POS (Point of Sale)',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'POS (Point of Sale)' },
           ]
         }
       },

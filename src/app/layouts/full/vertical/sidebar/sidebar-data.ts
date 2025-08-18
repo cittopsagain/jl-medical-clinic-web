@@ -23,23 +23,23 @@ export const navItems: NavItem[] = [
     route: 'apps/patient-management/patient-consultation',
   },
   {
-    navCap: 'Billing/Payments',
+    navCap: 'Sales',
   },
   {
-    displayName: 'Payment Processing',
-    iconName: 'credit-card-pay',
-    //route: 'apps/chat',
+    displayName: 'Point of Sale',
+    iconName: 'cash-register',
+    route: 'apps/sales/pos',
   },
   {
-    displayName: 'Invoice Generation',
-    iconName: 'invoice',
+    displayName: 'Consultation Fees',
+    iconName: 'cash',
     //route: 'apps/chat',
   },
   {
     navCap: 'Diagnosis',
   },
   {
-    displayName: 'Patient Diagnosis',
+    displayName: 'Patient Diagnosis & Records',
     iconName: 'clipboard-heart',
     route: 'apps/diagnosis/patient-diagnosis',
   },
@@ -60,12 +60,22 @@ export const navItems: NavItem[] = [
     //route: 'front-pages/homepage',
   },
   {
-    displayName: 'Items',
-    iconName: 'clipboard-list',
+    displayName: 'Brands',
+    iconName: 'tag',
+    route: 'apps/inventory-pharmacy/brands',
+  },
+  {
+    displayName: 'Medicines',
+    iconName: 'pill',
     //route: 'front-pages/homepage',
   },
   {
-    displayName: 'Stock Management',
+    displayName: 'Stock Adjustments',
+    iconName: 'clipboard',
+    route: 'apps/inventory-pharmacy/stock-adjustments',
+  },
+  {
+    displayName: 'Stock Receiving',
     iconName: 'building-warehouse'
   },
   {

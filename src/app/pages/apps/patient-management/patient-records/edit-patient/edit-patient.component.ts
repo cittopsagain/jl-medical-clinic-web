@@ -61,6 +61,7 @@ export class EditPatientComponent {
       address: ['', Validators.required],
       birthDate: ['', Validators.required],
       sex: ['', Validators.required],
+      contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       markForConsultation: [0]
     });
 
@@ -87,7 +88,8 @@ export class EditPatientComponent {
             address: data.address,
             birthDate: data.birthDate,
             sex: sex,
-            markForConsultation: data.markForConsultation
+            markForConsultation: data.markForConsultation,
+            contactNumber: data.contactNumber
           });
         },
         error: (error) => {

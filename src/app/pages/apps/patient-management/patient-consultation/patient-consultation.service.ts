@@ -39,6 +39,7 @@ export interface PatientConsultation {
   sex: string;
   birthDate: string;
   address: string;
+  contactNumber: string;
   status: string;
   consultationDate: string;
   weight: number;

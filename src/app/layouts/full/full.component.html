@@ -76,13 +76,13 @@
       <app-horizontal-header (toggleMobileNav)="sidenav.toggle()" (toggleMobileFilterNav)="toggleFilterNav()"
         (optionsChange)="receiveOptions($event)"></app-horizontal-header>
       } @if(options.horizontal) {
-      <app-horizontal-sidebar></app-horizontal-sidebar>
+<!--      <app-horizontal-sidebar></app-horizontal-sidebar>-->
       }
 
       <main class="pageWrapper" [ngClass]="{
           maxWidth: options.boxed
         }">
-        <app-breadcrumb></app-breadcrumb>
+<!--        <app-breadcrumb></app-breadcrumb>-->
         <!-- ============================================================== -->
         <!-- Outlet -->
         <!-- ============================================================== -->

@@ -73,5 +73,6 @@ export interface PatientRecords {
   modifiedBy: string;
   dateModified: string;
   reference: number,
-  markForConsultation: number
+  markForConsultation: number,
+  contactNumber: string
 }

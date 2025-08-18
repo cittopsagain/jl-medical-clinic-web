@@ -91,7 +91,9 @@ export class PatientRecordsComponent {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
     this.getPatientRecords();
-    this.patientNameInput.nativeElement.focus();
+    if (this.patientNameInput) {
+      this.patientNameInput.nativeElement.focus();
+    }
   }
 
   openDialog(action: string, employee: Employee | any) {
