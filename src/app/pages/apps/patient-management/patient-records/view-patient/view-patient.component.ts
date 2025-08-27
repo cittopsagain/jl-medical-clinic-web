@@ -9,8 +9,9 @@ import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {PatientRecords, PatientRecordsService} from "../patient-records.service";
 import {ToastrService} from "ngx-toastr";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MedicalHistoryComponent} from "../medical-history/medical-history.component";
 
 @Component({
   selector: 'app-view-patient',
@@ -29,7 +30,9 @@ import {MatCheckbox} from "@angular/material/checkbox";
     ReactiveFormsModule,
     RouterLink,
     DatePipe,
-    MatCheckbox
+    MatCheckbox,
+    MedicalHistoryComponent,
+    NgIf
   ],
   templateUrl: './view-patient.component.html',
   styleUrl: './view-patient.component.scss'

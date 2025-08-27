@@ -18,7 +18,7 @@ export const navItems: NavItem[] = [
     route: 'apps/patient-management/patient-records'
   },
   {
-    displayName: 'Patient Consultation',
+    displayName: 'Consultations & Follow-ups',
     iconName: 'stethoscope',
     route: 'apps/patient-management/patient-consultation',
   },
@@ -39,18 +39,18 @@ export const navItems: NavItem[] = [
     navCap: 'Diagnosis',
   },
   {
-    displayName: 'Patient Diagnosis & Records',
+    displayName: 'Diagnosis & Records',
     iconName: 'clipboard-heart',
     route: 'apps/diagnosis/patient-diagnosis',
   },
-  {
+  /*{
     navCap: 'Medical Records',
   },
   {
     displayName: 'Medical Certificate',
     iconName: 'certificate',
     //route: 'front-pages/homepage'
-  },
+  },*/
   {
     navCap: 'Inventory/Pharmacy',
   },

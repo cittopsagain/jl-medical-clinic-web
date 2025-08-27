@@ -53,6 +53,11 @@ export class PatientRecordsService {
     return this.httpClient.put<PatientRecords>(href, patientRecord);
   }
 
+  getMedicalHistory(patientId: number) {
+    const href = `${environment.MEDICAL_HISTORY_API_URL}/${patientId}`;
+    return this.httpClient.get<MedicalHistoryApi>(href);
+  }
+
 }
 
 export interface  PatientRecordsApi {
@@ -74,5 +79,47 @@ export interface PatientRecords {
   dateModified: string;
   reference: number,
   markForConsultation: number,
-  contactNumber: string
+  markForInProgress: number,
+  contactNumber: string,
+  visitType: string;
+}
+
+export interface MedicalHistoryApi {
+  patientVisits: PatientVisits[];
+  patientPrescriptionsList: PatientPrescriptionList[];
+}
+
+export interface PatientVisits {
+  diagnosisId: number;
+  visitId: number;
+  patientId: number;
+  visitDateTime: string;
+  age: number;
+  ageType: string;
+  height: number;
+  weight: number;
+  temperature: number;
+  bloodPressure: string;
+  heartRate: number;
+  oxygenSaturation: number;
+  followup: string;
+  diagnosis: string;
+  remarks: string;
+  patientComplaintsNotes: string;
+  visitType: string;
+  visitStatus: string;
+}
+
+export interface PatientPrescriptionList {
+  prescriptionId: number;
+  patientId: number;
+  visitId: number;
+  diagnosisId: number;
+  productHistoryId: number;
+  brandName: string;
+  productId: number;
+  productName: string;
+  quantity: number;
+  dosage: string;
+  instructions: string;
 }

@@ -5,5 +5,7 @@ export const environment = {
   PATIENT_DIAGNOSIS_API_URL: 'http://localhost:8083/api/v1/patient-diagnosis',
   BRANDS_API_URL: 'http://localhost:8084/api/v1/brands',
   POS_API_URL: 'http://localhost:8085/api/v1/pos',
-  STOCK_ADJUSTMENT_API_URL: 'http://localhost:8086/api/v1/stock-adjustment'
+  STOCK_ADJUSTMENT_API_URL: 'http://localhost:8086/api/v1/stock-adjustment',
+  MEDICAL_HISTORY_API_URL: 'http://localhost:8087/api/v1/medical-history',
+  PDF_API_URL: 'http://localhost:8088/api/v1/pdf'
 };

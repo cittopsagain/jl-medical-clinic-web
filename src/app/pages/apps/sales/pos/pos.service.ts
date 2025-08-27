@@ -41,16 +41,20 @@ export interface ProductApi {
 }
 
 export interface Products {
+  productHistoryId: number;
   productId: number;
   brandId: number;
   brandName: string;
   productName: string;
+  lotNumber: string;
   qtyOnHand: number;
   sellingPrice: number;
   expiryDate: string;
+  unit: string;
 }
 
 export interface PurchasedProducts {
+  productHistoryId: number;
   productId: number;
   brandId: number;
   brandName: string;

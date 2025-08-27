@@ -44,7 +44,7 @@
         <!-- Consultation Id -->
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Consultation Id</mat-label>
+            <mat-label>Visit Id</mat-label>
             <input matInput readonly placeholder="Consultation Id" value="{{ patientConsultation?.consultationId }}" name="consultationId" />
           </mat-form-field>
         </div>
@@ -113,6 +113,14 @@
           </mat-form-field>
         </div>
 
+        <!-- Visit Type -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Visit Type</mat-label>
+            <input matInput readonly placeholder="Consultation Id" value="{{ patientConsultation?.visitType }}" name="visitType" />
+          </mat-form-field>
+        </div>
+
       </div>
     </form>
   </mat-card-content>
@@ -132,8 +140,8 @@
         <!-- Weight -->
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Weight</mat-label>
-            <input matInput placeholder="Weight" #weightInput formControlName="weight" name="weight" />
+            <mat-label>Weight(kg)</mat-label>
+            <input matInput placeholder="Weight(kg)" #weightInput formControlName="weight" name="weight" />
           </mat-form-field>
         </div>
 
@@ -165,7 +173,7 @@
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Heart Rate</mat-label>
-            <input matInput placeholder="Heart Rate" formControlName="heartRate" name="heartRate" />
+            <input matInput placeholder="Heart Rate" formControlName="heartRate" name="heartRate" maxlength="3"/>
           </mat-form-field>
         </div>
 
@@ -173,13 +181,13 @@
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Oxygen Saturation</mat-label>
-            <input matInput placeholder="Oxygen Saturation" formControlName="oxygenSaturation" name="oxygenSaturation" />
+            <input matInput placeholder="Oxygen Saturation" formControlName="oxygenSaturation" name="oxygenSaturation" maxlength="3" />
           </mat-form-field>
         </div>
 
         <!-- Set In Progress -->
         <div class="col-sm-6" *ngIf="patientConsultation?.status === 'Waiting'">
-          <mat-checkbox color="primary" formControlName="status" (click)="checkInProgressConsultationStatusCount($event)" [checked]="false">Set Consultation Status to In Progress</mat-checkbox>
+          <mat-checkbox color="primary" formControlName="status" (click)="checkInProgressConsultationStatusCount($event)" [checked]="false">Set status to In Progress</mat-checkbox>
         </div>
       </div>
     </form>

@@ -118,7 +118,7 @@
                   mat-icon-button
                   [routerLink]="['/apps/patient-management/patient-records/edit-patient', element.patientId]"
                   class="d-flex align-items-center justify-content-center"
-                  [disabled]="element.markForConsultation == 1"
+                  [disabled]="element.markForInProgress == 1"
                 >
                   <i-tabler
                     name="pencil"

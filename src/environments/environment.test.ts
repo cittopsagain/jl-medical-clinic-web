@@ -5,5 +5,7 @@ export const environment = {
   PATIENT_DIAGNOSIS_API_URL: 'https://davetolentin.ph/api/v1/patient-diagnosis',
   BRANDS_API_URL: 'https://davetolentin.ph/api/v1/brands',
   POS_API_URL: 'https://davetolentin.ph/api/v1/pos',
-  STOCK_ADJUSTMENT_API_URL: 'https://davetolentin.ph/api/v1/stock-adjustment'
+  STOCK_ADJUSTMENT_API_URL: 'https://davetolentin.ph/api/v1/stock-adjustment',
+  MEDICAL_HISTORY_API_URL: 'https://davetolentin.ph/api/v1/medical-history',
+  PDF_API_URL: 'https://davetolentin.ph/api/v1/pdf'
 };

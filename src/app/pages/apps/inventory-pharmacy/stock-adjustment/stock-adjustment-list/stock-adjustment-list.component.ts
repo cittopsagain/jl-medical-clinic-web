@@ -5,7 +5,7 @@ import {MatSort} from "@angular/material/sort";
 import {Products} from "../../../sales/pos/pos.service";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {DatePipe, NgIf} from "@angular/common";
+import {DatePipe, NgIf, UpperCasePipe} from "@angular/common";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {
   MatCell,
@@ -50,7 +50,8 @@ import {ToastrService} from "ngx-toastr";
     MatRadioGroup,
     MatRadioButton,
     MatButton,
-    NgIf
+    NgIf,
+    UpperCasePipe
   ],
   templateUrl: './stock-adjustment-list.component.html',
   styleUrl: './stock-adjustment-list.component.scss'
@@ -67,6 +68,7 @@ export class StockAdjustmentListComponent {
 
   selectedBrandName: string;
   selectedProductName: string;
+  lotNumber: string;
 
   currentQuantityOnHand: number = 0;
   newQuantityOnHand: string = '0';
@@ -83,7 +85,7 @@ export class StockAdjustmentListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
-  displayedColumns: string[] = ['productName', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
+  displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
 
   constructor(private stockAdjustmentService: StockAdjustmentService, private fb: UntypedFormBuilder, private toastr: ToastrService) {
 
@@ -98,6 +100,7 @@ export class StockAdjustmentListComponent {
   }
 
   applyFilter() {
+    this.paginator.pageIndex = 0;
     this.getProducts();
   }
 
@@ -120,7 +123,7 @@ export class StockAdjustmentListComponent {
           this.isLoadingResults = false;
           this.isError = false;
           this.resultsLength = data.data.totalCount;
-
+          console.log(data.data.items);
           return data.data.items;
         }),
         catchError(() => {
@@ -138,7 +141,6 @@ export class StockAdjustmentListComponent {
 
   getProductDetailsById(row: Products) {
     this.selectedRow = row;
-    console.log(row);
 
     // Reset the values if the user selects a different product
     if (row.brandName !== this.selectedBrandName && row.productName !== this.selectedBrandName) {
@@ -150,6 +152,9 @@ export class StockAdjustmentListComponent {
     this.selectedProductName = row.productName;
     this.currentQuantityOnHand = row.qtyOnHand;
     this.currentSellingPrice = row.sellingPrice;
+    this.lotNumber = row.lotNumber;
+
+    console.log("Lot Number: ", row.lotNumber);
   }
 
   clear() {
@@ -184,6 +189,7 @@ export class StockAdjustmentListComponent {
   updateInventory() {
     this.stockAdjustmentService.updateInventory({
       brandId: this.selectedRow.brandId,
+      productHistoryId: this.selectedRow.productHistoryId,
       productId: this.selectedRow.productId,
       qtyOnHand: this.selectedRow.qtyOnHand,
       newQtyOnHand: this.newQuantityOnHand,
@@ -193,8 +199,8 @@ export class StockAdjustmentListComponent {
       adjustmentType: this.adjustmentType
     }).subscribe({
       next: (response: any) => {
-        this.toastr.success(response.message, 'Success!');
         this.getProducts();
+        this.toastr.success(response.message, 'Success!');
         if (this.adjustmentType == 'qty') {
           this.selectedRow.qtyOnHand = this.newQuantityOnHand;
           this.currentQuantityOnHand = this.selectedRow.qtyOnHand;
@@ -210,6 +216,5 @@ export class StockAdjustmentListComponent {
         this.toastr.error(error.error.message, 'Oops!');
       }
     });
-    console.log(this.selectedRow);
   }
 }

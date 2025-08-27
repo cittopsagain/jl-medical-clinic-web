@@ -54,7 +54,7 @@ import {NgClass} from "@angular/common";
 export class PatientConsultationListComponent {
   patientName: string;
 
-  displayedColumns: string[] = ['patientId', 'consultationId', 'patientName', 'address', 'status', 'action'];
+  displayedColumns: string[] = ['patientId', 'consultationId', 'visitType', 'patientName', 'address', 'status', 'action'];
   data: PatientConsultation[] = [];
   isLoadingResults = true;
   isError = false;

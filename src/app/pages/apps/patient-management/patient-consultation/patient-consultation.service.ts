@@ -49,4 +49,5 @@ export interface PatientConsultation {
   heartRate: number;
   oxygenSaturation: number;
   inProgressStatusCount: number;
+  visitType: string;
 }

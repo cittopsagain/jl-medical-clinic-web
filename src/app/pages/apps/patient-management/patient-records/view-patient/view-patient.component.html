@@ -9,7 +9,6 @@
     </div>
     <mat-divider></mat-divider>
 
-
     <div class="row m-y-24 p-t-24">
       <div class="col-sm-4">
         <mat-form-field appearance="outline" class="w-100">
@@ -59,14 +58,14 @@
           <input matInput readonly placeholder="Gender" value="{{ patientRecord?.sex  }}" name="gender"/>
         </mat-form-field>
       </div>
-      <div class="col-sm-4">
+      <!--<div class="col-sm-4">
         <div class="col-sm-6">
           <mat-checkbox color="primary" [checked]="patientRecord?.markForConsultation == 1 ? true : false">Mark for Consultation</mat-checkbox>
         </div>
-      </div>
+      </div>-->
 
     </div>
-
-
   </mat-card-content>
 </mat-card>
+
+<app-medical-history *ngIf="patientRecord?.patientId" [patientId]="patientRecord.patientId"></app-medical-history>

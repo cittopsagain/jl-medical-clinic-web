@@ -20,7 +20,7 @@ export class StockAdjustmentService {
       search.productName = '';
     }
 
-    const href = environment.POS_API_URL;
+    const href = environment.STOCK_ADJUSTMENT_API_URL;
     const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}`;
 
     return this.httpClient.get<ProductApi>(requestUrl);
@@ -39,10 +39,13 @@ export interface ProductApi {
 }
 
 export interface Products {
+  productHistoryId: number;
   productId: number;
   brandId: number;
   brandName: string;
   productName: string;
+  unit: string;
+  lotNumber: string;
   qtyOnHand: number;
   sellingPrice: number;
   expiryDate: string;

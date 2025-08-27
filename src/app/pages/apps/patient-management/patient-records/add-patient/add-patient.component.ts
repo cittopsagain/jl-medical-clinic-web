@@ -64,9 +64,9 @@ export class AddPatientComponent {
               private patientService: PatientRecordsService, private toastr: ToastrService,
               private router: Router) {
     this.patientForm = this.fb.group({
-      lastName: ['', Validators.required],
-      firstName: ['', Validators.required],
-      middleName: '',
+      lastName: ['', [Validators.required, Validators.pattern('^[a-zA-ZñÑ\\s\'\-]+$')]],
+      firstName: ['', [Validators.required, Validators.pattern('^[a-zA-ZñÑ\\s\'\\-\\.]+$')]],
+      middleName: ['', Validators.pattern('^[a-zA-Z\\s\'\-]+$')],
       address: ['', Validators.required],
       birthDate: ['', Validators.required],
       sex: ['', Validators.required],

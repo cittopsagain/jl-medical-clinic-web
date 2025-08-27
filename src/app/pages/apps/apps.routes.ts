@@ -48,6 +48,12 @@ import {PosComponent} from "./sales/pos/pos/pos.component";
 import {
   StockAdjustmentListComponent
 } from "./inventory-pharmacy/stock-adjustment/stock-adjustment-list/stock-adjustment-list.component";
+import {
+  DiagnosisAndMedicalRecordsComponent
+} from "./diagnosis/diagnosis-and-medical-records/diagnosis-and-medical-records.component";
+import {
+  ViewPatientMedicalRecordsComponent
+} from "./diagnosis/medical-records/view-patient-medical-records/view-patient-medical-records.component";
 
 
 export const AppsRoutes: Routes = [
@@ -138,12 +144,23 @@ export const AppsRoutes: Routes = [
       },
       {
         path: 'diagnosis/patient-diagnosis',
-        component: PatientDiagnosisComponent,
+        component: DiagnosisAndMedicalRecordsComponent,
         data: {
           title: 'Patient Diagnosis',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Patient Diagnosis' },
+          ]
+        }
+      },
+      {
+        path: 'medical-records/view-patient-medical-records/:id',
+        component: ViewPatientMedicalRecordsComponent,
+        data: {
+          title: 'Patient Medical Records',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Patient Medical Records' },
           ]
         }
       },

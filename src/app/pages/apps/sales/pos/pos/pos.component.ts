@@ -17,11 +17,14 @@ import {
   MatTable
 } from "@angular/material/table";
 import {MatDivider} from "@angular/material/divider";
-import {DatePipe, DecimalPipe, NgIf} from "@angular/common";
+import {DatePipe, DecimalPipe, NgIf, UpperCasePipe} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {ToastrService} from "ngx-toastr";
+import {MatTab, MatTabGroup, MatTabLabel} from "@angular/material/tabs";
+import {TablerIconComponent} from "angular-tabler-icons";
+import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 
 @Component({
   selector: 'app-pos',
@@ -51,7 +54,14 @@ import {ToastrService} from "ngx-toastr";
     MatButton,
     DecimalPipe,
     MatCheckbox,
-    NgIf
+    NgIf,
+    UpperCasePipe,
+    MatTab,
+    MatTabGroup,
+    MatTabLabel,
+    TablerIconComponent,
+    MatRadioButton,
+    MatRadioGroup
   ],
   templateUrl: './pos.component.html',
   styleUrl: './pos.component.scss'
@@ -78,14 +88,16 @@ export class PosComponent {
   change: number = 0;
   cash: number = 0;
 
+  customerType: string[] = ['Prescription', 'Walk-in'];
+
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
   @ViewChild('cashInput') cashInput: ElementRef;
 
-  displayedColumns: string[] = ['productName', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
-  purchasedItemsColumns: string[] = ['productName', 'qty', 'price'];
+  displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
+  purchasedItemsColumns: string[] = ['productName', 'unit', 'qty', 'price'];
 
   constructor(private posService: PosService, private toastr: ToastrService) {
   }
@@ -99,6 +111,7 @@ export class PosComponent {
   }
 
   applyFilter() {
+    this.paginator.pageIndex = 0; // Reset to first page
     this.getProducts();
   }
 
@@ -141,9 +154,14 @@ export class PosComponent {
     let row = this.data[index];
 
     // Check if item already exists in the purchased items
-    const existingItem = this.purchasedItems.find(item => item.productId === row.productId);
+    const existingItem = this.purchasedItems
+      .find(item => item.productId === row.productId && item.productHistoryId === row.productHistoryId);
 
     if (existingItem) {
+      if (existingItem.qty >= row.qtyOnHand) {
+        return;
+      }
+
       // If item exists, increment quantity
       existingItem.qty = (existingItem.qty || 1) + 1;
       existingItem.totalAmount = existingItem.qty * row.sellingPrice;
@@ -247,8 +265,14 @@ export class PosComponent {
       details: this.purchasedItems
     }).subscribe({
       next: (response: any) => {
-        this.toastr.success(response.message, 'Success!');
+        if (response.statusCode === 400) {
+          this.toastr.error(response.message);
+          this.getProducts();
+          return;
+        }
 
+        this.toastr.success(response.message, 'Success!');
+        this.getProducts();
         this.purchasedItems = [];
         this.proceedToPayment = false;
         this.change = 0.00;

@@ -1,0 +1,101 @@
+<div class="example-container">
+  <mat-card class="cardWithShadow">
+    <mat-card-content>
+      <!--      <div class="row justify-content-between gap-16">-->
+      <div class="row gap-6">
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100 hide-hint">
+            <mat-label>Patient Name</mat-label>
+            <input
+              matInput
+              placeholder="Patient Name"
+              [(ngModel)]="patientName"
+              (keyup.enter)="applyFilter()"
+              #patientNameInput
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100 hide-hint">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              placeholder="Address"
+              [(ngModel)]="address"
+              (keyup.enter)="applyFilter()"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-lg-4">
+          <button mat-flat-button (click)="applyFilter()" color="primary">
+            Search
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="example-table-container responsive-table">
+        <table mat-table [dataSource]="data" matSort matSortActive="last_name" matSortDisableClear
+               matSortDirection="asc" class="hover-table">
+
+          <!-- Number Column -->
+          <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              #
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index">{{ ((paginator.pageIndex * pageSize ) + i ) + 1 }}</td>
+          </ng-container>
+
+          <!-- Patient Id -->
+          <ng-container matColumnDef="patientId">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Patient Id
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              {{ row.patientId }}
+            </td>
+          </ng-container>
+
+          <!-- Patient Name -->
+          <ng-container matColumnDef="patientName">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Patient Name
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              {{ row.lastName }}, {{ row.firstName }} {{ row.middleName }}
+            </td>
+          </ng-container>
+
+          <!-- Address -->
+          <ng-container matColumnDef="address">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Address
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              {{ row.address }}
+            </td>
+          </ng-container>
+
+          <!-- Visit Count -->
+          <ng-container matColumnDef="visitCount">
+            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+              Visit Count
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              {{ row.visitCount }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"
+          (dblclick)="viewPatientDetails(row)"></tr>
+        </table>
+      </div>
+
+      <mat-paginator [length]="resultsLength" [pageSize]="`${ pageSize }`"></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

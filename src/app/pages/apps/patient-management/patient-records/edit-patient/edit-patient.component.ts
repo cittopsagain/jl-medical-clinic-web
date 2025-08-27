@@ -4,14 +4,17 @@ import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatDivider} from "@angular/material/divider";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {PatientRecords, PatientRecordsService} from "../patient-records.service";
+import {MedicalHistoryApi, PatientRecords, PatientRecordsService} from "../patient-records.service";
 import {ToastrService} from "ngx-toastr";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatSelect} from "@angular/material/select";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MedicalHistoryComponent} from "../medical-history/medical-history.component";
+import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
+import {TablerIconComponent} from "angular-tabler-icons";
 
 @Component({
   selector: 'app-edit-patient',
@@ -33,7 +36,12 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatSuffix,
     MatOption,
     MatSelect,
-    MatCheckbox
+    MatCheckbox,
+    MedicalHistoryComponent,
+    NgIf,
+    MatRadioGroup,
+    MatRadioButton,
+    TablerIconComponent
   ],
   providers: [
     provideNativeDateAdapter()
@@ -50,6 +58,9 @@ export class EditPatientComponent {
     'Female'
   ];
 
+  selectedVisitType: string;
+  visitType: string[] = ['Consultation', 'Follow-up Checkup'];
+
   constructor(private patientRecordsService: PatientRecordsService, private fb: UntypedFormBuilder, private cdr: ChangeDetectorRef,
               private patientService: PatientRecordsService, private toastr: ToastrService, private route: ActivatedRoute,
               private router: Router) {
@@ -62,7 +73,8 @@ export class EditPatientComponent {
       birthDate: ['', Validators.required],
       sex: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      markForConsultation: [0]
+      markForConsultation: [0],
+      visitType: ['', Validators.required]
     });
 
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
@@ -72,6 +84,7 @@ export class EditPatientComponent {
         next: (data: PatientRecords) => {
           this.patientRecord = data;
 
+          console.log(data);
           let sex = '';
           if (data.sex == 'Male') {
             sex = 'M';
@@ -87,9 +100,11 @@ export class EditPatientComponent {
             middleName: data.middleName,
             address: data.address,
             birthDate: data.birthDate,
-            sex: sex,
+            // sex: sex,
+            sex: data.sex,
             markForConsultation: data.markForConsultation,
-            contactNumber: data.contactNumber
+            contactNumber: data.contactNumber,
+            visitType: data.visitType
           });
         },
         error: (error) => {
@@ -115,11 +130,15 @@ export class EditPatientComponent {
       next: (response: any) => {
         this.toastr.success(response.message, 'Success!');
         this.patientForm.reset();
-        this.router.navigate(['/apps/patient-management/patient-records']);
+        // this.router.navigate(['/apps/patient-management/patient-records']);
+        this.router.navigate([
+          '/apps/patient-management/patient-consultation/edit-patient-for-consultation',
+          response.data
+        ]);
       },
       error: (error) => {
         this.toastr.error(error.error.message, 'Oops!');
       }
-    })
+    });
   }
 }

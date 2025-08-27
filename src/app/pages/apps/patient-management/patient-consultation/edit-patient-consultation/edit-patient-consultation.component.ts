@@ -53,7 +53,7 @@ export class EditPatientConsultationComponent implements OnInit {
     this.patientConsultationForm = this.fb.group({
       weight: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
       height: ['', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
-      temperature: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
+        temperature: ['', [Validators.required, Validators.pattern('^([0-9]|[1-3][0-9]|4[0-2])(\\.\\d{1,2})?$'), Validators.min(0), Validators.max(42)]],
       bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
       heartRate: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
       oxygenSaturation: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],

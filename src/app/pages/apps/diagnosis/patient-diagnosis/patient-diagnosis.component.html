@@ -1,288 +1,873 @@
 <mat-card class="cardWithShadow">
   <mat-card-content>
-    <div class="row justify-content-end m-b-24">
+    <div class="row justify-content-end">
       <div class="col-sm-4 text-right">
-        <a routerLink="/apps/patient-management/patient-consultation" mat-flat-button class="bg-error text-white m-r-10">
-          Print Patient Diagnosis
+        <a mat-flat-button class="bg-error text-white m-r-10" (click)="printMedicalCertificate()">
+          Print Medical Certificate
         </a>
-        <button mat-flat-button color="primary">
+        <button mat-flat-button color="primary" (click)="savePatientDiagnosis()" [disabled]="diagnosis === ''">
           Save Patient Diagnosis
         </button>
       </div>
     </div>
-
-    <mat-divider></mat-divider>
-    <div class="col-12 mt-2">
-      <small class="text-muted">* Required fields are marked with an asterisk</small>
-    </div>
   </mat-card-content>
 </mat-card>
 
-<mat-accordion>
-  <!-- Patient Information Section -->
-  <mat-expansion-panel class="cardWithShadow" [expanded]="true" (opened)="panelOpenState = true"
-                       (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-      <mat-panel-title class="f-w-600 f-s-14">
-        <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
-        >Patient Information
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div class="row m-t-20">
-      <!-- Patient Id -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Patient Id</mat-label>
-          <input matInput readonly placeholder="Patient Id" [value]="data?.patientId" name="patientId" />
-        </mat-form-field>
-      </div>
+<!-- Prescription -->
+<!--
+  Note: The 397px width is to match the width of the prescription paper
+  105mm = 397px
+-->
+<div class="font-family-times-new-roman-1" id="prescriptionReceipt" #prescriptionReceiptInput style="display: none;">
+  <div style="width: 397px; margin: 10px;">
+    <div class="header-1">
+      <h2 class="text-primary"><strong>Dr. Jefrey B. Lawas, M.D.</strong></h2>
+      <p>#53 Sploarium Street, Brgy. Duljo-Fatima, Cebu City, Cebu</p>
+      <p>Telephone Number: (032) 231 3621</p>
+    </div>
 
-      <!-- Consultation Id -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Consultation Id</mat-label>
-          <input matInput readonly placeholder="Consultation Id" value="{{ data?.consultationId }}" name="consultationId" />
-        </mat-form-field>
+    <div class="row" style="font-size: 12px;">
+      <div class="col-3" style="text-align: left">
+        Clinic Hours:
       </div>
-
-      <!-- Last Name -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Last Name</mat-label>
-          <input matInput readonly placeholder="Last Name" value="{{ data?.lastName }}" name="lastName" />
-        </mat-form-field>
-      </div>
-
-      <!-- First Name -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>First Name</mat-label>
-          <input matInput readonly placeholder="First Name" value="{{ data?.firstName }}" name="firstName" />
-        </mat-form-field>
-      </div>
-
-      <!-- Middle Name -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Middle Name</mat-label>
-          <input matInput readonly placeholder="Middle Name" value="{{ data?.middleName }}" name="middleName" />
-        </mat-form-field>
-      </div>
-
-      <!-- Birth Date -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Birth Date</mat-label>
-          <input matInput readonly placeholder="Middle Name" value="{{ data?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
-        </mat-form-field>
-      </div>
-
-      <!-- Address -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Address</mat-label>
-          <input matInput readonly placeholder="Address" value="{{ data?.address }}" name="address" />
-        </mat-form-field>
-      </div>
-
-      <!-- Gender -->
-      <div class="col-sm-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Gender</mat-label>
-          <input matInput readonly placeholder="Gender" value="{{ data?.sex }}" name="sex" />
-        </mat-form-field>
-      </div>
-
-      <!-- Consultation Date -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Consultation Date</mat-label>
-          <input matInput readonly placeholder="Consultation Date" value="{{ data?.consultationDate | date: 'MM/dd/yyyy' }}" name="consultationDate" />
-        </mat-form-field>
+      <div class="col-9" style="text-align: right">
+        <div class="row">
+          <div class="col-12">
+            <div class="row">
+              <div class="col">
+                Monday - Friday :
+              </div>
+              <div class="col">
+                09:00 AM to 06:00 PM
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="row">
+              <div class="col">
+                Saturday and Holidays :
+              </div>
+              <div class="col">
+                09:00 AM to 03:00 PM
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </mat-expansion-panel>
 
-  <!-- Vital Signs Section -->
-  <mat-expansion-panel class="cardWithShadow" (opened)="panelOpenState = true"
-                       (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-      <mat-panel-title class="f-w-600 f-s-14">
-        <i-tabler name="activity-heartbeat" class="icon-20 m-r-8 d-flex"></i-tabler
-        >Vital Signs
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <!-- Vital Signs Section -->
-    <div class="row m-t-20">
-      <!-- Weight -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Weight</mat-label>
-          <input matInput readonly placeholder="Weight" value="{{ data?.weight }}" name="weight" />
-        </mat-form-field>
+    <div style="border-bottom: 1px solid #000;"></div>
+
+    <div class="row">
+      <div class="col-12 content-2">
+        Prescription Number: {{ selectedPatientVisit?.diagnosisId }}
       </div>
 
-      <!-- Height -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Height(cm)</mat-label>
-          <input matInput readonly placeholder="Height(cm)" value="{{ data?.height }}" name="height" />
-        </mat-form-field>
+      <div class="col-12 content-2">
+        <div class="row">
+          <div class="col">
+            Patient's Name: {{ data?.firstName }} {{ data?.lastName }}
+          </div>
+          <div class="col" style="text-align: right">
+            Age: {{ selectedPatientVisit?.age }} {{ selectedPatientVisit?.ageType }}
+          </div>
+        </div>
       </div>
 
-      <!-- Temperature -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Temperature</mat-label>
-          <input matInput readonly placeholder="Temperature" value="{{ data?.temperature }}" name="temperature" />
-        </mat-form-field>
-      </div>
-
-      <!-- Blood Pressure -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Blood Pressure</mat-label>
-          <input matInput readonly placeholder="Blood Pressure" value="{{ data?.bloodPressure }}" name="bloodPressure" />
-        </mat-form-field>
-      </div>
-
-      <!-- Heart Rate -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Heart Rate</mat-label>
-          <input matInput readonly placeholder="Heart Rate" value="{{ data?.heartRate }}" name="heartRate" />
-        </mat-form-field>
-      </div>
-
-      <!-- Oxygen Saturation -->
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Oxygen Saturation</mat-label>
-          <input matInput readonly placeholder="Oxygen Saturation" value="{{ data?.oxygenSaturation }}" name="oxygenSaturation" />
-        </mat-form-field>
+      <div class="col-12 content-2">
+        <div class="row">
+          <div class="col">
+            Address: {{ data?.address }}
+          </div>
+          <div class="col" style="text-align: right">
+            Gender: {{ data?.sex }}
+          </div>
+        </div>
       </div>
     </div>
-  </mat-expansion-panel>
+
+    <div style="border-bottom: 1px solid #000;"></div>
+
+    <table mat-table [dataSource]="patientPrescriptions" matSort matSortActive="product_name" matSortDisableClear
+           matSortDirection="asc" style="font-family: 'Times New Roman', Arial, sans-serif;">
+
+      <!-- Product Name -->
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef class="f-w-600 f-s-12" style="font-family: 'Times New Roman', Arial, sans-serif;">
+          Product Name
+        </th>
+        <td mat-cell *matCellDef="let row; let i = index" style="font-family: 'Times New Roman', Arial, sans-serif;">
+          <div class="text-left m-0" style="width: 210px; font-family: 'Times New Roman', Arial, sans-serif;">
+            <h6 class="mat-subtitle-1 f-s-12 f-w-600 text-primary m-0" style="font-family: 'Times New Roman', Arial, sans-serif;">
+              {{ row.brandName }}
+            </h6>
+            <span class="f-s-12" style="font-family: 'Times New Roman', Arial, sans-serif; display: block; margin: 0;">
+              {{ row.productName }}
+            </span>
+
+            <h6 class="mat-subtitle-1 f-s-12 f-w-600 m-0" style="font-family: 'Times New Roman', Arial, sans-serif;"
+            *ngIf="row.dosage && row.dosage !== ''">
+              Dosage: {{ row.dosage }}
+            </h6>
+            <h6 class="mat-subtitle-1 f-s-12 f-w-600 m-0" style="font-family: 'Times New Roman', Arial, sans-serif;"
+            *ngIf="row.instructions && row.instructions !== ''">
+              Instruction: {{ row.instructions }}
+            </h6>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Unit -->
+      <ng-container matColumnDef="unit">
+        <th mat-header-cell *matHeaderCellDef class="f-w-600 m-0 f-s-12" style="font-family: 'Times New Roman', Arial, sans-serif;">
+          Unit
+        </th>
+        <td mat-cell *matCellDef="let row; let i = index" style="font-family: 'Times New Roman', Arial, sans-serif;">
+          <div class="text-left" style="font-family: 'Times New Roman', Arial, sans-serif;">
+            <span class="f-s-12" style="font-family: 'Times New Roman', Arial, sans-serif;">
+              {{ row.unit | uppercase }}
+            </span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Qty On Hand -->
+      <ng-container matColumnDef="qty">
+        <th mat-header-cell *matHeaderCellDef class="f-w-600 m-0 f-s-12" style="font-family: 'Times New Roman', Arial, sans-serif;">
+          Quantity
+        </th>
+        <td mat-cell *matCellDef="let row; let i = index" style="font-family: 'Times New Roman', Arial, sans-serif;">
+          {{ row.quantity }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="prescriptionReceiptColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: prescriptionReceiptColumns;"></tr>
+    </table>
+
+    <div class="font-family-times-new-roman-1 content-2" style="width: 397px; margin-top: 50px; margin-bottom: 50px;">
+      <strong>Follow-up check-up / Remarks:</strong> {{ followUpCheckupRemarks }}
+    </div>
+
+    <div class="row content-2">
+      <div class="col-6">
+
+      </div>
+      <div class="col-6">
+        <div class="col-12 text-right" style="line-height: 0.5;">
+          <p><b>Jefrey B. Lawas, M.D.</b></p>
+          <p>PTR #: 922647</p>
+          <p>License #: 0094634</p>
+          <p>TIN: 223640145</p>
+        </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Medical Certificate -->
+<div id="medical-certificate" #medicalCertificateInput style="display: none;">
+  <div class="font-family-times-new-roman">
+    <div class="header-1">
+      <h1>Dr. Jefrey B. Lawas Medical Clinic</h1>
+      <p>#53 Sploarium Street, Brgy. Duljo-Fatima, Cebu City, Cebu</p>
+      <p>Telephone Number: (032) 231 3621</p>
+    </div>
+
+    <div class="title">Medical Certificate</div>
+    <div class="content">
+      <p><strong>To Whom It May Concern:</strong></p>
+      <p>This is to certify that <b><u>{{ data?.firstName }} {{ data?.lastName }}</u></b>&nbsp;<b><u>{{ selectedPatientVisit?.age }} {{ selectedPatientVisit?.ageType }}</u></b> of age,</p>
+      <p>a resident of  <b><u>{{ data?.address }}</u></b></p>
+      <p>was examined and treated on <b><u>{{ selectedPatientVisit?.visitDateTime | date: 'MMMM dd, yyyy' }}</u></b> with the following findings and / or diagnosis:</p>
+      <p>{{ selectedPatientVisit?.diagnosis }}</p>
+    </div>
+
+    <div class="content">
+      <p><strong>Remarks:</strong></p>
+      <p>{{ selectedPatientVisit?.remarks }}</p>
+    </div>
+
+    <div class="content-1">
+      <p><b>Jefrey B. Lawas, M.D.</b></p>
+      <p>PRC No: 0094634<br/>PTR No: 922647</p>
+      <p></p>
+    </div>
+
+    <div class="footer"></div>
+
+    <div class="row" style="font-size: 12px;">
+      <div class="col-6">
+        Clinic Hours: Monday - Friday : 09:00 AM to 06:00 PM
+      </div>
+      <div class="col-6" style="text-align: right">
+        Saturday and Holidays : 09:00 AM to 03:00 PM
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Medical Certificate -->
+
+<mat-tab-group [selectedIndex]="0">
+  <!-- Patient Information -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="d-flex align-items-center">
+        <mat-icon>
+          <i-tabler name="info-circle" class="icon-20 m-r-8"></i-tabler>
+        </mat-icon>
+      </div>
+      Patient Information
+    </ng-template>
+    <div class="f-s-14 p-16 rounded m-t-12">
+      <div class="row m-t-20">
+        <!-- Patient Id -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Patient Id</mat-label>
+            <input matInput readonly placeholder="Patient Id" [value]="data?.patientId" name="patientId" />
+          </mat-form-field>
+        </div>
+
+        <!-- Consultation Id -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Visit Id</mat-label>
+            <input matInput readonly placeholder="Consultation Id" value="{{ data?.consultationId }}" name="consultationId" />
+          </mat-form-field>
+        </div>
+
+        <!-- Last Name -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Last Name</mat-label>
+            <input matInput readonly placeholder="Last Name" value="{{ data?.lastName }}" name="lastName" />
+          </mat-form-field>
+        </div>
+
+        <!-- First Name -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>First Name</mat-label>
+            <input matInput readonly placeholder="First Name" value="{{ data?.firstName }}" name="firstName" />
+          </mat-form-field>
+        </div>
+
+        <!-- Middle Name -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Middle Name</mat-label>
+            <input matInput readonly placeholder="Middle Name" value="{{ data?.middleName }}" name="middleName" />
+          </mat-form-field>
+        </div>
+
+        <!-- Birth Date -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Birth Date</mat-label>
+            <input matInput readonly placeholder="Middle Name" value="{{ data?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
+          </mat-form-field>
+        </div>
+
+        <!-- Address -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Address</mat-label>
+            <input matInput readonly placeholder="Address" value="{{ data?.address }}" name="address" />
+          </mat-form-field>
+        </div>
+
+        <!-- Gender -->
+        <div class="col-sm-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Gender</mat-label>
+            <input matInput readonly placeholder="Gender" value="{{ data?.sex }}" name="sex" />
+          </mat-form-field>
+        </div>
+
+        <!-- Consultation Date -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Consultation Date</mat-label>
+            <input matInput readonly placeholder="Consultation Date" value="{{ data?.consultationDate | date: 'MM/dd/yyyy' }}" name="consultationDate" />
+          </mat-form-field>
+        </div>
+
+        <!-- Visit Type -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Visit Type</mat-label>
+            <input matInput readonly placeholder="Visit Type" value="{{ data?.visitType }}" name="visitType" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- Vital Signs -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="d-flex align-items-center">
+        <mat-icon>
+          <i-tabler name="activity-heartbeat" class="icon-20 m-r-8"></i-tabler>
+        </mat-icon>
+      </div>
+      Vital Signs
+    </ng-template>
+    <div class="f-s-14 p-16 rounded m-t-12">
+      <!-- Vital Signs Section -->
+      <div class="row m-t-20">
+        <!-- Weight -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Weight</mat-label>
+            <input matInput readonly placeholder="Weight" value="{{ data?.weight }}" name="weight" />
+          </mat-form-field>
+        </div>
+
+        <!-- Height -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Height(cm)</mat-label>
+            <input matInput readonly placeholder="Height(cm)" value="{{ data?.height }}" name="height" />
+          </mat-form-field>
+        </div>
+
+        <!-- Temperature -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Temperature</mat-label>
+            <input matInput readonly placeholder="Temperature" value="{{ data?.temperature }}" name="temperature" />
+          </mat-form-field>
+        </div>
+
+        <!-- Blood Pressure -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Blood Pressure</mat-label>
+            <input matInput readonly placeholder="Blood Pressure" value="{{ data?.bloodPressure }}" name="bloodPressure" />
+          </mat-form-field>
+        </div>
+
+        <!-- Heart Rate -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Heart Rate</mat-label>
+            <input matInput readonly placeholder="Heart Rate" value="{{ data?.heartRate }}" name="heartRate" />
+          </mat-form-field>
+        </div>
+
+        <!-- Oxygen Saturation -->
+        <div class="col-lg-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Oxygen Saturation</mat-label>
+            <input matInput readonly placeholder="Oxygen Saturation" value="{{ data?.oxygenSaturation }}" name="oxygenSaturation" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 
   <!-- Patient Medical Summary -->
-  <mat-expansion-panel class="cardWithShadow" (opened)="panelOpenState = true"
-                       (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-      <mat-panel-title class="f-w-600 f-s-14">
-        <i-tabler name="clipboard-list" class="icon-20 m-r-8 d-flex"></i-tabler
-        >Patient Medical Summary
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <div class="col-lg-12">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Patient Complaints/Notes</mat-label>
-        <textarea matInput placeholder="Patient Complaints/Notes" name="oxygenSaturation"></textarea>
-      </mat-form-field>
-    </div>
-    <div class="col-lg-12">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Diagnosis</mat-label>
-        <textarea matInput placeholder="Diagnosis" name="oxygenSaturation"></textarea>
-      </mat-form-field>
-    </div>
-    <div class="col-lg-12">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Follow-up check up / Remarks</mat-label>
-        <textarea matInput placeholder="Follow-up check up / Remarks"name="oxygenSaturation">Follow up on 7th day if symptoms persists</textarea>
-      </mat-form-field>
-    </div>
-    <div class="col-lg-12">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Remarks (Visible on the Medical Certificate)</mat-label>
-        <textarea matInput placeholder="Remarks (Visible on the Medical Certificate)" name="oxygenSaturation"></textarea>
-      </mat-form-field>
-    </div>
-  </mat-expansion-panel>
-
-  <!-- Prescription Section -->
-  <mat-expansion-panel class="cardWithShadow" [expanded]="true" (opened)="panelOpenState = true"
-                       (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-      <mat-panel-title class="f-w-600 f-s-14">
-        <i-tabler name="prescription" class="icon-20 m-r-8 d-flex"></i-tabler
-        >Prescription
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-
-    <div class="example-table-container responsive-table">
-      <table mat-table [dataSource]="medicineList" class="hover-table">
-        <!-- Medicine Name -->
-        <ng-container matColumnDef="medicineName">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-            Medicine Name
-          </th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.medicineName }}
-          </td>
-        </ng-container>
-
-        <!-- Dosage -->
-        <ng-container matColumnDef="dosage">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-            Quantity
-          </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-form-field appearance="outline" class="w-100" style="margin-top: 10px;">
-              <input matInput placeholder="Heart Rate" name="heartRate" />
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <div class="row" style="margin-top: 20px;">
-      <div class="col-lg-4">
-        <mat-form-field appearance="outline" class="w-100 hide-hint">
-          <mat-label>Search Medicine</mat-label>
-          <input
-            matInput
-            placeholder="Search Medicine..."
-            [(ngModel)]="medicineName"
-            (keyup.enter)="applyFilter()"
-          />
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="d-flex align-items-center">
+        <mat-icon>
+          <i-tabler name="clipboard-list" class="icon-20 m-r-8"></i-tabler>
+        </mat-icon>
+      </div>
+      Patient Medical Summary
+    </ng-template>
+    <div class="f-s-14 p-16 rounded m-t-12">
+      <div class="col-12 mt-2">
+        <small class="text-muted">* Required fields are marked with an asterisk</small>
+      </div>
+      <div class="col-lg-12 m-t-14">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Patient Complaints/Notes</mat-label>
+          <textarea matInput placeholder="Patient Complaints/Notes" [(ngModel)]="patientComplaintsNotes" name="patientComplaintsNotes"></textarea>
         </mat-form-field>
       </div>
-      <div class="col-lg-4">
-        <button mat-flat-button (click)="applyFilter()" color="primary">
-          Search
-        </button>
+      <div class="col-lg-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Diagnosis *</mat-label>
+          <textarea matInput placeholder="Diagnosis" [(ngModel)]="diagnosis" name="diagnosis"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Follow-up check up / Remarks</mat-label>
+          <textarea matInput placeholder="Follow-up check up / Remarks" [(ngModel)]="followUpCheckupRemarks" name="folowUpCheckupRemarks"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Remarks (Visible on the Medical Certificate)</mat-label>
+          <textarea matInput placeholder="Remarks (Visible on the Medical Certificate)" [(ngModel)]="remarksForMedicalCertificate" name="remarksForMedicalCertificate"></textarea>
+        </mat-form-field>
       </div>
     </div>
-    <div class="example-table-container responsive-table">
-      <table mat-table [dataSource]="medicineList" class="hover-table">
-        <!-- Medicine Name -->
-        <ng-container matColumnDef="medicineName">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-            Medicine Name
-          </th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.medicineName }}
-          </td>
-        </ng-container>
+  </mat-tab>
 
-        <!-- Dosage -->
-        <ng-container matColumnDef="dosage">
-          <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-            Dosage
-          </th>
-          <td mat-cell *matCellDef="let row">
-            {{ row.dosage }}
-          </td>
-        </ng-container>
+  <!-- Prescription -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="d-flex align-items-center">
+        <mat-icon>
+          <i-tabler name="prescription" class="icon-20 m-r-8"></i-tabler>
+        </mat-icon>
+      </div>
+      Prescription
+    </ng-template>
+    <div class="f-s-14 p-16 rounded m-t-12">
+      <div class="row">
+        <div class="col-sm-7">
+          <mat-form-field appearance="outline" class="w-100 hide-hint">
+            <mat-label>Search</mat-label>
+            <input
+              matInput
+              placeholder="Search..."
+              [(ngModel)]="medicineName"
+              (keyup.enter)="applyFilter()"
+            />
+          </mat-form-field>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+          <div class="example-table-container responsive-table">
+            <table mat-table [dataSource]="productData" matSort matSortActive="product_name" matSortDisableClear
+                   matSortDirection="asc" class="hover-table">
+
+              <!-- Product Name -->
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Product Name
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <div class="m-l-16" >
+                    <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                      {{ row.brandName }}
+                    </h6>
+                    <span class="f-s-14 f-s-12">
+                      {{ row.productName }}
+                    </span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Unit -->
+              <ng-container matColumnDef="unit">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Unit
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <div class="m-l-16" >
+                    <span class="f-s-14 f-s-12">
+                {{ row.unit | uppercase }}
+              </span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Qty On Hand -->
+              <ng-container matColumnDef="qtyOnHand">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Qty On Hand
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  {{ row.qtyOnHand }}
+                </td>
+              </ng-container>
+
+              <!-- Selling Price -->
+              <ng-container matColumnDef="sellingPrice">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Selling Price
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  {{ row.sellingPrice }}
+                </td>
+              </ng-container>
+
+              <!-- Expiry Date -->
+              <ng-container matColumnDef="expiryDate">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Expiry Date
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <!-- {{ row.expiryDate | date: 'MM/dd/yyyy' }} -->
+                  {{ row.expiryDate }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" (click)="onRowClicked(i)"></tr>
+            </table>
+          </div>
+
+          <mat-paginator [length]="resultsLength" [pageSize]="`${ pageSize }`"></mat-paginator>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col" style="margin-top: 14px;">
+          <h3 class="text-center">Prescription Details</h3>
+          <div *ngIf="showEditPrescription">
+            <div class="row m-t-10">
+              <!-- Brand Name -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Brand Name</mat-label>
+                  <input matInput readonly placeholder="Brand Name" name="brandName" value="{{ selectedPrescription.brandName }}" />
+                </mat-form-field>
+              </div>
+
+              <!-- Product Name -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Product Name</mat-label>
+                  <input matInput readonly placeholder="Product Name" name="productName" value="{{ selectedPrescription.productName }}" />
+                </mat-form-field>
+              </div>
+
+              <!-- Unit -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Unit</mat-label>
+                  <input matInput readonly placeholder="Unit" name="unit" value="{{ selectedPrescription.unit | uppercase }}" />
+                </mat-form-field>
+              </div>
+
+              <!-- Qty -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Qty</mat-label>
+                  <input matInput readonly placeholder="Qty" name="qty" value="{{ selectedPrescription.quantity }}" />
+                </mat-form-field>
+              </div>
+
+              <!-- Expiry Date -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Expiry Date</mat-label>
+                  <input matInput readonly placeholder="Expiry Date" name="expiryDate" value="{{ selectedPrescription.expiryDate }}" />
+                </mat-form-field>
+              </div>
+
+              <!-- Dosage -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Dosage</mat-label>
+                  <input matInput placeholder="Dosage" name="dosage" [(ngModel)]="dosage" />
+                </mat-form-field>
+              </div>
+
+              <!-- Instructions -->
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Instructions</mat-label>
+                  <input matInput placeholder="Instructions" name="instructions" [(ngModel)]="instructions" />
+                </mat-form-field>
+              </div>
+
+              <div class="col-6 d-flex">
+                <button mat-flat-button color="primary" class="w-100" (click)="updatePrescription(); showEditPrescription = false">
+                  Update
+                </button>
+              </div>
+              <div class="col-6 d-flex">
+                <button mat-flat-button color="primary" class="w-100" (click)="showEditPrescription = false">
+                  Back to Prescription Details
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!showEditPrescription" class="example-table-container responsive-table" style="max-height: 550px;">
+            <table mat-table [dataSource]="prescriptionList" matSort matSortActive="product_name" matSortDisableClear
+                   matSortDirection="asc" class="hover-table">
+
+              <!-- Product Name -->
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Product Name
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <div class="m-l-16" >
+                    <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                      {{ row.brandName }}
+                    </h6>
+                    <span class="f-s-14 f-s-12">
+                      {{ row.productName }}
+                    </span>
+                    <h6 class="mat-subtitle-1 f-s-14 f-w-600 m-t-2 text-primary">
+                      Dosage: {{ row.dosage }}
+                    </h6>
+                    <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                      Instructions: {{ row.instructions }}
+                    </h6>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Unit -->
+              <ng-container matColumnDef="unit">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Unit
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <div class="m-l-16" >
+                      <span class="f-s-14 f-s-12">
+                        {{ row.unit | uppercase }}
+                      </span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Qty -->
+              <ng-container matColumnDef="qty">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Qty
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index" (click)="onPrescriptionQtyClicked(row, i)">
+                  {{ row.quantity }}
+                </td>
+              </ng-container>
+
+              <!-- Action -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Action
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <i-tabler name="pencil" class="icon-20" (click)="editPrescription(row, i)"></i-tabler>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="prescriptionColumns; sticky: false"></tr>
+              <tr mat-row *matRowDef="let row; columns: prescriptionColumns; let i = index"></tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-  </mat-expansion-panel>
-</mat-accordion>
+  </mat-tab>
+
+  <!-- Medical History -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="d-flex align-items-center">
+        <mat-icon>
+          <i-tabler name="history" class="icon-20 m-r-8"></i-tabler>
+        </mat-icon>
+      </div>
+      Medical History
+    </ng-template>
+    <div class="f-s-14 p-16 rounded m-t-12">
+      <div class="row" *ngIf="patientVisits && patientVisits.length > 0">
+        <div class="col-sm-7" *ngIf="showEditPatientVisit">
+          <h3 class="text-center">Patient Visit Details</h3>
+          <div class="row m-t-30">
+            <!-- Visit Id -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Visit Id</mat-label>
+                <input matInput readonly placeholder="Visit Id" name="visitId" value="{{ selectedPatientVisit?.visitId }}" />
+              </mat-form-field>
+            </div>
+
+            <!-- Visit Date -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Visit Date</mat-label>
+                <input matInput readonly placeholder="Visit Date" name="visitDate" value="{{ selectedPatientVisit?.visitDateTime | date: 'MM/dd/yyyy' }}" />
+              </mat-form-field>
+            </div>
+
+            <!-- Patient Complaints/Notes -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Patient Complaints/Notes</mat-label>
+                <textarea matInput readonly placeholder="Patient Complaints/Notes" name="patientComplaintsNotes" value="{{ selectedPatientVisit?.patientComplaintsNotes }}"></textarea>
+              </mat-form-field>
+            </div>
+
+            <!-- Followup -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Follow-up</mat-label>
+                <input matInput readonly placeholder="Follow-up" name="followUp" value="{{ selectedPatientVisit?.followup }}" />
+              </mat-form-field>
+            </div>
+
+            <!-- Diagnosis -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Diagnosis</mat-label>
+                <textarea matInput readonly placeholder="Diagnosis" name="diagnosis" value="{{ selectedPatientVisit?.diagnosis }}"></textarea>
+              </mat-form-field>
+            </div>
+
+            <!-- Remarks -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Remarks</mat-label>
+                <textarea matInput placeholder="Remarks" name="remarks" #remarksInput value="{{ selectedPatientVisit?.remarks }}"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="col-6 d-flex">
+              <button mat-flat-button color="primary" class="w-100"
+                      (click)="updatePatientRemarks(); showEditPatientVisit = false">
+                Update Remarks
+              </button>
+            </div>
+            <div class="col-6 d-flex">
+              <button mat-flat-button color="primary" class="w-100" (click)="showEditPatientVisit = false">
+                Back to Patient Visits
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-7" *ngIf="!showEditPatientVisit">
+          <h3 class="text-center">Patient Visits</h3>
+          <div class="example-table-container responsive-table m-t-10">
+            <table mat-table [dataSource]="patientVisits" class="hover-table">
+              <!-- Visit Id -->
+              <ng-container matColumnDef="visitId">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Visit Id
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.visitId }}
+                </td>
+              </ng-container>
+
+              <!-- Date Time Visit -->
+              <ng-container matColumnDef="dateTimeVisit">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Visit Date
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.visitDateTime | date: 'MM/dd/yyyy' }}
+                </td>
+              </ng-container>
+
+              <!-- Diagnosis -->
+              <ng-container matColumnDef="diagnosis">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Diagnosis
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.diagnosis }}
+                  <h6 class="mat-subtitle-1 f-s-14 f-w-600 text-primary" *ngIf="row.remarks && row.remarks !== ''">
+                    Remarks: {{ row.remarks }}
+                  </h6>
+                </td>
+              </ng-container>
+
+              <!-- Action -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Action
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <div class="d-flex align-items-center gap-8">
+                    <!-- Print -->
+                    <a
+                      mat-icon-button
+                      class="d-flex align-items-center justify-content-center"
+                      (click)="printMedicalCertificate();">
+                      <i-tabler
+                        name="printer"
+                        class="icon-18 d-flex align-items-center"
+                      ></i-tabler>
+                    </a>
+
+                    <!-- Edit -->
+                    <a
+                      mat-icon-button
+                      class="d-flex align-items-center justify-content-center"
+                      (click)="showEditPatientVisit = true;"
+                    >
+                      <i-tabler
+                        name="pencil"
+                        class="icon-18 d-flex align-items-center"
+                      ></i-tabler>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="patientVisitsDisplayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: patientVisitsDisplayedColumns; let i = index"
+                  (click)="onMedicalHistoryRowClick(i, row); $event.preventDefault();"></tr>
+            </table>
+          </div>
+        </div>
+        <div class="col" *ngIf="selectedPatientPrescriptionsByVisit && selectedPatientPrescriptionsByVisit.length > 0">
+          <h3 class="text-center">Patient Prescriptions</h3>
+          <div class="example-table-container responsive-table m-t-10">
+            <table mat-table [dataSource]="selectedPatientPrescriptionsByVisit" class="hover-table">
+              <!-- Visit Id -->
+              <ng-container matColumnDef="visitId">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Visit Id
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.visitId }}
+                </td>
+              </ng-container>
+
+              <!-- Date Time Visit -->
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Product Name
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                    {{ row.brandName }}
+                  </h6>
+                  <span class="f-s-14 f-s-12">
+              {{ row.productName }}
+            </span>
+                </td>
+              </ng-container>
+
+              <!-- Dosage -->
+              <ng-container matColumnDef="dosage">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Dosage
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.dosage }}
+                </td>
+              </ng-container>
+
+              <!-- Quantity -->
+              <ng-container matColumnDef="qty">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Quantity
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.quantity }}
+                </td>
+              </ng-container>
+
+              <!-- Unit -->
+              <ng-container matColumnDef="unit">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Unit
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.unit | uppercase }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="patientPrescriptionsDisplayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: patientPrescriptionsDisplayedColumns; let i = index"></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
