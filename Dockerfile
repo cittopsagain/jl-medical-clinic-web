@@ -45,7 +45,7 @@ RUN apk add --no-cache tzdata
 ENV TZ=Asia/Manila
 
 # For debugging purposes
-RUN apk add mysql mysql-client
+# RUN apk add mysql mysql-client
 
 # Expose the port the app runs on
 EXPOSE 80
