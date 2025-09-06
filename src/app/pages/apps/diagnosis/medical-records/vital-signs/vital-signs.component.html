@@ -1,0 +1,61 @@
+<div class="row">
+  <!-- Weight -->
+  <div class="col-lg-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Weight(kg)</mat-label>
+      <input matInput readonly placeholder="Weight(kg)"
+             value="{{ vitalSigns?.weight }}"
+             name="weight" />
+    </mat-form-field>
+  </div>
+
+  <!-- Height -->
+  <div class="col-lg-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Height(cm)</mat-label>
+      <input matInput readonly placeholder="Height(cm)"
+             value="{{ vitalSigns?.height }}"
+             name="height" />
+    </mat-form-field>
+  </div>
+
+  <!-- Temperature -->
+  <div class="col-lg-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Temperature</mat-label>
+      <input matInput readonly placeholder="Temperature"
+             value="{{ vitalSigns?.temperature }}"
+             name="temperature" />
+    </mat-form-field>
+  </div>
+
+  <!-- Blood Pressure -->
+  <div class="col-lg-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Blood Pressure</mat-label>
+      <input matInput readonly placeholder="Blood Pressure"
+             value="{{ vitalSigns?.bloodPressure }}"
+             name="bloodPressure" />
+    </mat-form-field>
+  </div>
+
+  <!-- Heart Rate -->
+  <div class="col-lg-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Heart Rate</mat-label>
+      <input matInput readonly placeholder="Heart Rate"
+             value="{{ vitalSigns?.heartRate }}"
+             name="heartRate" />
+    </mat-form-field>
+  </div>
+
+  <!-- Oxygen Saturation -->
+  <div class="col-lg-4">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Oxygen Saturation</mat-label>
+      <input matInput readonly placeholder="Oxygen Saturation"
+             value="{{ vitalSigns?.oxygenSaturation }}"
+             name="oxygenSaturation" />
+    </mat-form-field>
+  </div>
+</div>

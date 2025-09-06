@@ -94,8 +94,8 @@
         <mat-divider class="m-t-20"></mat-divider>
 
         <div class="col-12 m-t-10">
-          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Customer Type *</label>
-          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="visitType">
+          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Customer Order Type *</label>
+          <mat-radio-group [(ngModel)]="selectedCustomerType" aria-labelledby="example-radio-group-label" class="example-radio-group">
             @for(type of customerType; track type) {
               <mat-radio-button class="example-radio-button" color="primary" [value]="type">
                 {{ type }}
@@ -194,7 +194,7 @@
           <!-- Payment -->
           <div style="margin-top: 15px;">
             <button mat-flat-button color="primary" class="w-100"
-                    [disabled]="purchasedItems.length <= 0"
+                    [disabled]="purchasedItems.length <= 0 || !selectedCustomerType"
                     (click)="processPayment(true)">
               Proceed and Pay
             </button>

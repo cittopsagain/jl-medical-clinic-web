@@ -44,7 +44,7 @@ export class AddPatientConsultationComponent {
   }
 
   savePatientConsultation(event: Event) {
-    console.log("Patient consultation saved successfully!");
+
   }
 
   applyFilter() {

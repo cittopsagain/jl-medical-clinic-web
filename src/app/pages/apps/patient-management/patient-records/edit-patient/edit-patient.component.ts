@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {MatButton} from "@angular/material/button";
-import {MatCard, MatCardContent} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatDivider} from "@angular/material/divider";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
@@ -15,6 +15,11 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {MedicalHistoryComponent} from "../medical-history/medical-history.component";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {TablerIconComponent} from "angular-tabler-icons";
+import {PrescriptionsComponent} from "../../../diagnosis/medical-records/prescriptions/prescriptions.component";
+import {VisitsComponent} from "../../../diagnosis/medical-records/visits/visits.component";
+import {VitalSignsService} from "../../../diagnosis/medical-records/vital-signs/vital-signs.service";
+import {PrescriptionsService} from "../../../diagnosis/medical-records/prescriptions/prescriptions.service";
+import {VisitsService} from "../../../diagnosis/medical-records/visits/visits.service";
 
 @Component({
   selector: 'app-edit-patient',
@@ -41,7 +46,11 @@ import {TablerIconComponent} from "angular-tabler-icons";
     NgIf,
     MatRadioGroup,
     MatRadioButton,
-    TablerIconComponent
+    TablerIconComponent,
+    MatCardHeader,
+    MatCardTitle,
+    PrescriptionsComponent,
+    VisitsComponent
   ],
   providers: [
     provideNativeDateAdapter()
@@ -63,7 +72,8 @@ export class EditPatientComponent {
 
   constructor(private patientRecordsService: PatientRecordsService, private fb: UntypedFormBuilder, private cdr: ChangeDetectorRef,
               private patientService: PatientRecordsService, private toastr: ToastrService, private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router, private vitalSignsService: VitalSignsService, private prescriptionService: PrescriptionsService,
+              private visitsService: VisitsService) {
     this.patientForm = this.fb.group({
       patientId: '',
       lastName: ['', Validators.required],
@@ -84,7 +94,6 @@ export class EditPatientComponent {
         next: (data: PatientRecords) => {
           this.patientRecord = data;
 
-          console.log(data);
           let sex = '';
           if (data.sex == 'Male') {
             sex = 'M';
@@ -106,6 +115,8 @@ export class EditPatientComponent {
             contactNumber: data.contactNumber,
             visitType: data.visitType
           });
+
+          // this.visitsService.setPatientId(data.patientId);
         },
         error: (error) => {
           this.toastr.error(error.error.message, 'Oops!');
@@ -115,6 +126,7 @@ export class EditPatientComponent {
   }
 
   ngAfterViewInit() {
+    this.prescriptionService.setPrescriptions([]);
     // Delay focus to avoid ExpressionChangedAfterItHasBeenChecked error
     setTimeout(() => {
       if (this.lastNameInput) {
@@ -140,5 +152,10 @@ export class EditPatientComponent {
         this.toastr.error(error.error.message, 'Oops!');
       }
     });
+  }
+
+  clearLocalStorage() {
+    this.vitalSignsService.setVitalSigns(null);
+    this.prescriptionService.setPrescriptions([]);
   }
 }

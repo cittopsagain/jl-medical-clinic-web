@@ -73,7 +73,7 @@ export class StockAdjustmentListComponent {
   currentQuantityOnHand: number = 0;
   newQuantityOnHand: string = '0';
   currentSellingPrice: number = 0;
-  newSellingPrice: string = '0';
+  newSellingPrice: string = '';
   adjustmentReason: string = '';
 
   adjustmentType: string = '';
@@ -123,7 +123,7 @@ export class StockAdjustmentListComponent {
           this.isLoadingResults = false;
           this.isError = false;
           this.resultsLength = data.data.totalCount;
-          console.log(data.data.items);
+
           return data.data.items;
         }),
         catchError(() => {
@@ -144,8 +144,8 @@ export class StockAdjustmentListComponent {
 
     // Reset the values if the user selects a different product
     if (row.brandName !== this.selectedBrandName && row.productName !== this.selectedBrandName) {
-      this.newSellingPrice = '0';
-      this.newQuantityOnHand = '0';
+      this.newSellingPrice = '';
+      this.newQuantityOnHand = '';
     }
 
     this.selectedBrandName = row.brandName;
@@ -153,17 +153,15 @@ export class StockAdjustmentListComponent {
     this.currentQuantityOnHand = row.qtyOnHand;
     this.currentSellingPrice = row.sellingPrice;
     this.lotNumber = row.lotNumber;
-
-    console.log("Lot Number: ", row.lotNumber);
   }
 
   clear() {
     this.selectedBrandName = '';
     this.selectedProductName = '';
     this.currentQuantityOnHand = 0;
-    this.newQuantityOnHand = '0';
+    this.newQuantityOnHand = '';
     this.currentSellingPrice = 0;
-    this.newSellingPrice = '0';
+    this.newSellingPrice = '';
     this.adjustmentType = '';
     this.selectedRow = null;
     this.adjustmentReason = '';
@@ -172,18 +170,15 @@ export class StockAdjustmentListComponent {
   }
 
   checkValue() {
-    this.newQuantityOnHand = (Number(this.newQuantityOnHand) * 1).toString(); // Remove leading zeros, if the user will input 0000, it will be converted to 0
-    this.newSellingPrice = (Number(this.newSellingPrice) * 1).toString(); // Remove leading zeros, if the user will input 0000, it will be converted to 0
+    const qtyValue = Number(this.newQuantityOnHand);
+    this.newQuantityOnHand = isNaN(qtyValue) ? '0' : qtyValue.toString();
 
-    if (isNaN(Number(this.newQuantityOnHand))) {
-      // Handle invalid input
-      this.newQuantityOnHand = '0';
-    }
-
-    if (isNaN(Number(this.newSellingPrice))) {
-      // Handle invalid input
-      this.newSellingPrice = '0';
-    }
+    setTimeout(() => {
+      let newSellingPrice = Number(this.newSellingPrice);
+      if (isNaN(newSellingPrice)) {
+        this.newSellingPrice = '';
+      }
+    }, 0);
   }
 
   updateInventory() {

@@ -88,6 +88,8 @@ export class PosComponent {
   change: number = 0;
   cash: number = 0;
 
+  selectedCustomerType: string;
+
   customerType: string[] = ['Prescription', 'Walk-in'];
 
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
@@ -260,11 +262,13 @@ export class PosComponent {
         isSeniorCitizenPwdDiscounted: this.isSeniorCitizenPwdDiscounted ? 1 : 0,
         discountPercent: this.discountPercent,
         totalAmountDue: this.totalItemsPurchasedDue,
-        totalAmountPaid: this.cash
+        totalAmountPaid: this.cash,
+        customerOrderType: this.selectedCustomerType
       },
       details: this.purchasedItems
     }).subscribe({
       next: (response: any) => {
+        console.log(response);
         if (response.statusCode === 400) {
           this.toastr.error(response.message);
           this.getProducts();
@@ -277,6 +281,7 @@ export class PosComponent {
         this.proceedToPayment = false;
         this.change = 0.00;
         this.cash = 0;
+        this.selectedCustomerType = '';
 
         // Reset the medicine name input
         if (this.medicineNameInput) {

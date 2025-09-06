@@ -1,25 +1,16 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {PatientDiagnosisService} from "../../patient-diagnosis/patient-diagnosis.service";
-import {
-  PatientPrescriptionList,
-  PatientVisits
-} from "../../../patient-management/patient-records/patient-records.service";
+import {Component} from '@angular/core';
+import {Router, RouterLink} from "@angular/router";
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {DatePipe, NgIf, UpperCasePipe} from "@angular/common";
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell, MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow, MatRowDef, MatTable
-} from "@angular/material/table";
+import {MedicalRecordsService, Patient} from "../medical-records.service";
+import {PatientInformationComponent} from "../patient-information/patient-information.component"
+import {VitalSignsComponent} from "../vital-signs/vital-signs.component";
+import {VisitsComponent} from "../visits/visits.component";
+import {VitalSignsService} from "../vital-signs/vital-signs.service";
+import {PrescriptionsComponent} from "../prescriptions/prescriptions.component";
+import {PrescriptionsService} from "../prescriptions/prescriptions.service";
 import {TablerIconComponent} from "angular-tabler-icons";
-import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
-import {MedicalRecordsService} from "../medical-records.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-view-patient-medical-records',
@@ -30,130 +21,96 @@ import {MedicalRecordsService} from "../medical-records.service";
     MatCardTitle,
     MatButton,
     RouterLink,
-    DatePipe,
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
+    PatientInformationComponent,
+    VitalSignsComponent,
+    VisitsComponent,
+    PrescriptionsComponent,
     MatIconButton,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    NgIf,
-    TablerIconComponent,
-    MatHeaderCellDef,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatFormField,
-    UpperCasePipe
+    TablerIconComponent
   ],
   templateUrl: './view-patient-medical-records.component.html',
   styleUrl: './view-patient-medical-records.component.scss'
 })
-export class ViewPatientMedicalRecordsComponent implements OnInit {
+export class ViewPatientMedicalRecordsComponent {
 
-  patientVisits: PatientVisits[] = [];
-  patientPrescriptions: PatientPrescriptionList[] = [];
-  showEditPatientVisit: boolean = false;
-  patientVisitsDisplayedColumns: string[] = ['visitId', 'dateTimeVisit', 'diagnosis', 'action'];
-  patientPrescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit'];
+  patientInformation: Patient;
+  visitId: number;
 
-  selectedPatientVisit: PatientVisits;
-  selectedPatientPrescriptionsByVisit: PatientPrescriptionList[] = [];
-  data: any;
+  constructor(private vitalSignsService: VitalSignsService, private prescriptionService: PrescriptionsService,
+              private router: Router, private medicalRecordsService: MedicalRecordsService,
+              private toastR: ToastrService,) {
 
-  @ViewChild('remarksInput') remarksInput: ElementRef;
-
-  constructor(private route: ActivatedRoute,
-              private patientDiagnosisService: PatientDiagnosisService,
-              private medicalRecordsService: MedicalRecordsService,
-              private router: Router) {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras?.state as { patient: any };
 
     if (state) {
       // If data is from navigation, save it to localStorage and use it
-      this.data = state.patient;
-      localStorage.setItem('patientData', JSON.stringify(this.data));
+      this.patientInformation = state.patient;
+      localStorage.setItem('patientInformation', JSON.stringify(this.patientInformation));
     } else {
       // On page refresh, try to retrieve from localStorage
-      const savedData = localStorage.getItem('patientData');
+      const savedData = localStorage.getItem('patientInformation');
       if (savedData) {
-        this.data = JSON.parse(savedData);
+        this.patientInformation = JSON.parse(savedData);
       }
     }
   }
 
-  ngOnInit() {
-    const id: number = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-      this.getMedicalHistory(id);
-    }
-  }
-
-  getMedicalHistory(patientId: number) {
-    this.patientDiagnosisService.getMedicalHistory(patientId).subscribe({
-      next: (response: any) => {
-        this.patientVisits = response.patientVisits;
-        this.patientPrescriptions = response.patientPrescriptionsList;
-      },
-      error: (error) => {
-        console.log(error);
+  ngAfterViewInit() {
+    this.vitalSignsService.vitalSigns$.subscribe(vitalSigns => {
+      if (vitalSigns) {
+        this.visitId = vitalSigns.visitId;
       }
     });
   }
 
-  printMedicalCertificate(row: PatientVisits) {
-    this.medicalRecordsService.getMedicalCertificate(row.patientId, row.visitId).subscribe({
-      next: (response: Blob) => {
-        // Open PDF in new tab
-        const fileURL = URL.createObjectURL(response);
-        // window.open(fileURL);
+  printPatientPrescription() {
+    let patientId = this.patientInformation.patientId;
+    let visitId = this.visitId;
+
+    this.medicalRecordsService.getPrescription(patientId, visitId).subscribe({
+      next: (res) => {
+        const file = new Blob([res], {type: 'application/pdf'});
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL, '_blank', 'width=900,height=800,scrollbars=yes,resizable=yes');
+
+        const issuedDate = this.formatDate(new Date());
 
         // Trigger download
         const a = document.createElement('a');
         a.href = fileURL;
-        a.download = 'medical-certificate.pdf';
+        a.download = `Prescription_${patientId}_Issued${issuedDate}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-
-        // Open PDF in new window
-        window.open(fileURL, '_blank', 'width=900,height=900,toolbar=0,menubar=0,location=0,status=0,scrollbars=1,resizable=1');
 
         // Cleanup
         URL.revokeObjectURL(fileURL);
       },
       error: (error) => {
-        console.error(error);
+        this.toastR.error(error.error.message, 'Oops!');
       }
     });
   }
 
-  onMedicalHistoryRowClick(i: number, row: PatientVisits) {
-    // Get prescriptions related to this visit
-    this.selectedPatientPrescriptionsByVisit = [];
-    this.getPrescriptionsByVisitId(row.visitId);
-    this.selectedPatientVisit = row;
+  clearLocalStorage() {
+    this.vitalSignsService.setVitalSigns(null);
+    this.prescriptionService.setPrescriptions([]);
   }
 
-  /**
-   * Returns prescriptions that match the given visit ID
-   */
-  getPrescriptionsByVisitId(visitId: number) {
-    for (let i = 0; i < this.patientPrescriptions.length; i++) {
-      if (this.patientPrescriptions[i].visitId === visitId) {
-        this.selectedPatientPrescriptionsByVisit.push(this.patientPrescriptions[i]);
-      }
-    }
+  formatDate(date: Date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}${mm}${dd}`;
   }
 
-  updatePatientRemarks() {
-    let remarks = this.remarksInput.nativeElement.value;
-    this.selectedPatientVisit.remarks = this.remarksInput.nativeElement.value;
+  formatDateToYYYYMMDD(dateStr: string): string {
+    const d = new Date(dateStr);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}${mm}${dd}`;
   }
 
 }

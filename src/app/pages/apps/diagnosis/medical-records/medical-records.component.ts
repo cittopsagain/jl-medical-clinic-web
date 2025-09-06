@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {MedicalRecordsService} from "./medical-records.service";
+import {MedicalRecordsService, Patient, PatientRecordsApi} from "./medical-records.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {ToastrService} from "ngx-toastr";
@@ -18,7 +18,7 @@ import {
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
   MatTable
 } from "@angular/material/table";
-import {Router, RouterLink} from "@angular/router";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-medical-records',
@@ -43,8 +43,7 @@ import {Router, RouterLink} from "@angular/router";
     MatHeaderRowDef,
     MatRow,
     MatRowDef,
-    MatPaginator,
-    RouterLink
+    MatPaginator
   ],
   templateUrl: './medical-records.component.html',
   styleUrl: './medical-records.component.scss'
@@ -52,7 +51,7 @@ import {Router, RouterLink} from "@angular/router";
 export class MedicalRecordsComponent {
 
   displayedColumns: string[] = ['number', 'patientId', 'patientName', 'address', 'visitCount'];
-  data: any[] = [];
+  patientData: Patient[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -68,7 +67,7 @@ export class MedicalRecordsComponent {
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
   constructor(private medicalRecordsService: MedicalRecordsService,
-              private toastr: ToastrService,
+              private toastR: ToastrService,
               private router: Router) {
 
   }
@@ -84,22 +83,21 @@ export class MedicalRecordsComponent {
       this.address = '';
     }
 
-    this.getMedicalRecords();
+    this.getPatientRecords();
   }
 
   applyFilter() {
     this.paginator.pageIndex = 0;
-    this.getMedicalRecords();
+    this.getPatientRecords();
   }
 
-  getMedicalRecords() {
+  getPatientRecords() {
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-
-          return this.medicalRecordsService!.getMedicalRecords(
+          return this.medicalRecordsService!.getPatientRecords(
             this.sort.active,
             this.sort.direction,
             this.paginator.pageIndex,
@@ -107,11 +105,11 @@ export class MedicalRecordsComponent {
             this.address
           );
         }),
-        map((data: any) => {
+        map((data: any): Patient[] => {
           this.isLoadingResults = false;
           this.isError = false;
           this.resultsLength = data.data.totalCount;
-          console.log(data.data.items);
+
           return data.data.items;
         }),
         catchError(() => {
@@ -119,7 +117,7 @@ export class MedicalRecordsComponent {
           this.isError = true;
           return observableOf([]);
         })
-      ).subscribe((data: any[]) => (this.data = data));
+      ).subscribe((data: Patient[]) => (this.patientData = data));
   }
 
   viewPatientDetails(row: any): void {

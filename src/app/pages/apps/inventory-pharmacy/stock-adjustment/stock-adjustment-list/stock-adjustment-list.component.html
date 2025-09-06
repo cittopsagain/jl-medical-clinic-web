@@ -143,7 +143,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>New Selling Price *</mat-label>
-            <input matInput placeholder="0" [(ngModel)]="newSellingPrice" type="text" name="newSellingPrice" (keyup)="checkValue()"/>
+            <input matInput placeholder="" [(ngModel)]="newSellingPrice" type="text" name="newSellingPrice" (keydown)="checkValue()"/>
           </mat-form-field>
         </div>
 

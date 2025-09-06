@@ -1,0 +1,65 @@
+<div class="row">
+  <!-- Patient Id -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Patient Id</mat-label>
+      <input matInput readonly placeholder="Patient Id" [value]="patientInformation?.patientId" name="patientId" />
+    </mat-form-field>
+  </div>
+
+  <!-- Last Name -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Last Name</mat-label>
+      <input matInput readonly placeholder="Last Name" value="{{ patientInformation?.lastName }}" name="lastName" />
+    </mat-form-field>
+  </div>
+
+  <!-- First Name -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>First Name</mat-label>
+      <input matInput readonly placeholder="First Name" value="{{ patientInformation?.firstName }}" name="firstName" />
+    </mat-form-field>
+  </div>
+
+  <!-- Middle Name -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Middle Name</mat-label>
+      <input matInput readonly placeholder="Middle Name" value="{{ patientInformation?.middleName }}" name="middleName" />
+    </mat-form-field>
+  </div>
+
+  <!-- Birth Date -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Birth Date</mat-label>
+      <input matInput readonly placeholder="Middle Name" value="{{ patientInformation?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
+    </mat-form-field>
+  </div>
+
+  <!-- Address -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Address</mat-label>
+      <input matInput readonly placeholder="Address" value="{{ patientInformation?.address }}" name="address" />
+    </mat-form-field>
+  </div>
+
+  <!-- Gender -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Gender</mat-label>
+      <input matInput readonly placeholder="Gender" value="{{ patientInformation?.gender }}" name="sex" />
+    </mat-form-field>
+  </div>
+
+  <!-- Contact Number -->
+  <div class="col-lg-6">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Contact Number</mat-label>
+      <input matInput readonly placeholder="Contact Number" value="{{ patientInformation?.contactNumber }}" name="sex" />
+    </mat-form-field>
+  </div>
+</div>

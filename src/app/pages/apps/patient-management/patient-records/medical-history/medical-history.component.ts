@@ -17,8 +17,6 @@ import {
   MatTable
 } from "@angular/material/table";
 import {DatePipe, NgIf, UpperCasePipe} from "@angular/common";
-import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
-import {MatDivider} from "@angular/material/divider";
 
 @Component({
   selector: 'app-medical-history',
@@ -34,12 +32,6 @@ import {MatDivider} from "@angular/material/divider";
     MatHeaderCell,
     MatHeaderCellDef,
     DatePipe,
-    MatCard,
-    MatCardContent,
-    MatCardTitle,
-    MatDivider,
-    MatCardHeader,
-    MatCardSubtitle,
     UpperCasePipe,
     NgIf
   ],
@@ -69,6 +61,8 @@ export class MedicalHistoryComponent {
     if (this.patientId) {
       this.patientService.getMedicalHistory(this.patientId).subscribe({
         next: (data: MedicalHistoryApi) => {
+          console.log(data);
+
           this.patientVisits = data.patientVisits;
           this.patientPrescriptions = data.patientPrescriptionsList;
         },

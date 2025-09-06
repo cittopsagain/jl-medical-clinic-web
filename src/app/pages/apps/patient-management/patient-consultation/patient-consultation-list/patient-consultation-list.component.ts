@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {FormsModule} from "@angular/forms";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -15,7 +15,7 @@ import {
   MatTable
 } from "@angular/material/table";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {merge, of as observableOf} from "rxjs";
+import {interval, merge, of as observableOf, Subscription} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {MatChipsModule} from "@angular/material/chips";
@@ -51,13 +51,15 @@ import {NgClass} from "@angular/common";
   templateUrl: './patient-consultation-list.component.html',
   styleUrl: './patient-consultation-list.component.scss'
 })
-export class PatientConsultationListComponent {
+export class PatientConsultationListComponent implements OnDestroy {
   patientName: string;
 
   displayedColumns: string[] = ['patientId', 'consultationId', 'visitType', 'patientName', 'address', 'status', 'action'];
   data: PatientConsultation[] = [];
   isLoadingResults = true;
   isError = false;
+
+  refreshInterval: Subscription;
 
   errorMessage: string = 'Problem loading data. Please try again later.';
 
@@ -78,7 +80,13 @@ export class PatientConsultationListComponent {
       this.patientNameInput.nativeElement.focus();
     }
 
+    // Initial data load
     this.getPatientConsultation();
+
+    // Set up automatic refresh every 5 seconds
+    this.refreshInterval = interval(5000).subscribe(() => {
+      this.getPatientConsultation();
+    });
   }
 
   getPatientConsultation() {
@@ -121,4 +129,10 @@ export class PatientConsultationListComponent {
     }
   }
 
+  ngOnDestroy() {
+    // Clean up subscription when component is destroyed
+    if (this.refreshInterval) {
+      this.refreshInterval.unsubscribe();
+    }
+  }
 }

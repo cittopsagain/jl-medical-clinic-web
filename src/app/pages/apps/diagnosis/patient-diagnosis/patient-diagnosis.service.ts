@@ -11,6 +11,8 @@ export class PatientDiagnosisService {
   constructor(private httpClient: HttpClient) { }
   private limit = 30; // Default limit for pagination
 
+
+
   getPatientDiagnosis(): Observable<PatientDiagnosis> {
     const href = environment.PATIENT_DIAGNOSIS_API_URL;
     return this.httpClient.get<PatientDiagnosis>(href);
@@ -20,6 +22,7 @@ export class PatientDiagnosisService {
               sort: string,
               order: string,
               page: number): Observable<ProductApi> {
+
     if (search.productName == null || search.productName === undefined) {
       search.productName = '';
     }
@@ -29,21 +32,24 @@ export class PatientDiagnosisService {
 
     return this.httpClient.get<ProductApi>(requestUrl);
   }
+
   savePatientDiagnosis(diagnosis: any): Observable<any> {
     const href = environment.PATIENT_DIAGNOSIS_API_URL;
     return this.httpClient.post<any>(href, diagnosis);
   }
 
-  getMedicalHistory(patientId: number) {
-    const href = `${environment.MEDICAL_HISTORY_API_URL}/${patientId}`;
-    return this.httpClient.get<MedicalHistoryApi>(href);
+  getInProgressPatient() {
+    const href = `${environment.PATIENT_DIAGNOSIS_API_URL}/in-progress-patient`;
+    return this.httpClient.get<any>(href);
   }
 
-  getPrescription(patientId: number, visitId: number, diagnosisId: number) {
-    const href = `${environment.MEDICAL_HISTORY_API_URL}/${patientId}/${visitId}/${diagnosisId}`;
-    return this.httpClient.get<MedicalHistoryApi>(href);
+  setPatientMedicalSummary() {
+
   }
 
+  setPatientPrescription() {
+
+  }
 }
 
 export interface ProductApi {
@@ -83,12 +89,6 @@ export interface PatientDiagnosis {
   consultationDate: string;
   consultationStatus: string;
   visitType: string;
-}
-
-export interface Medicine {
-  medicineId: number;
-  medicineName: string;
-  diagnosis: string;
 }
 
 export interface Prescription {

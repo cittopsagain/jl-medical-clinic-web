@@ -28,7 +28,6 @@ export class PosService {
   }
 
   savePurchasedProducts(purchasedProducts: any): Observable<any> {
-    console.log(purchasedProducts);
     const href = environment.POS_API_URL;
     return this.httpClient.post<any>(href, purchasedProducts);
   }

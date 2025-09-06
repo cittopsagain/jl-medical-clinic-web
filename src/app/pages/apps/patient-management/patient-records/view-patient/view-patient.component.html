@@ -68,4 +68,25 @@
   </mat-card-content>
 </mat-card>
 
-<app-medical-history *ngIf="patientRecord?.patientId" [patientId]="patientRecord.patientId"></app-medical-history>
+<div class="row">
+  <div class="col-6">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Patient Visits</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-visits *ngIf="patientRecord" [patientId]="patientRecord.patientId" [showActionsButton]="false"></app-visits>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-6">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Patient Prescriptions</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-prescriptions></app-prescriptions>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
