@@ -20,8 +20,10 @@ COPY . .
 
 # Build the Angular application with the production configuration
 # RUN npm run build -- --configuration production
+# RUN npm run build -- --configuration test
+RUN npm run build -- --configuration production
 # RUN npm run build:test
-RUN npm run build:production # or use npm run build:prod if you want the production build
+# RUN npm run build:test # or use npm run build:prod if you want the production build
 
 # Production stage
 FROM nginx:alpine
