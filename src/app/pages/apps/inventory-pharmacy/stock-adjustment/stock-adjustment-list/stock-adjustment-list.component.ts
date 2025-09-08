@@ -16,12 +16,14 @@ import {
   MatHeaderRowDef,
   MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
-import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
+import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {MatDivider} from "@angular/material/divider";
 import {MatRadioButton, MatRadioChange, MatRadioGroup} from "@angular/material/radio";
 import {MatButton} from "@angular/material/button";
 import {ToastrService} from "ngx-toastr";
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {provideNativeDateAdapter} from "@angular/material/core";
 
 @Component({
   selector: 'app-stock-adjustment-list',
@@ -51,7 +53,14 @@ import {ToastrService} from "ngx-toastr";
     MatRadioButton,
     MatButton,
     NgIf,
-    UpperCasePipe
+    UpperCasePipe,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatSuffix
+  ],
+  providers: [
+    provideNativeDateAdapter()
   ],
   templateUrl: './stock-adjustment-list.component.html',
   styleUrl: './stock-adjustment-list.component.scss'
@@ -75,6 +84,11 @@ export class StockAdjustmentListComponent {
   currentSellingPrice: number = 0;
   newSellingPrice: string = '';
   adjustmentReason: string = '';
+
+  currentLotNo: string = '';
+  newLotNo: string = '';
+  currentExpiryDate: string = '';
+  newExpiryDate: string = '';
 
   adjustmentType: string = '';
   adjustmentTypeGroup: any;
@@ -153,6 +167,8 @@ export class StockAdjustmentListComponent {
     this.currentQuantityOnHand = row.qtyOnHand;
     this.currentSellingPrice = row.sellingPrice;
     this.lotNumber = row.lotNumber;
+    this.currentLotNo = row.lotNumber;
+    this.currentExpiryDate = row.expiryDate;
   }
 
   clear() {
@@ -165,6 +181,10 @@ export class StockAdjustmentListComponent {
     this.adjustmentType = '';
     this.selectedRow = null;
     this.adjustmentReason = '';
+    this.currentLotNo = '';
+    this.newLotNo = '';
+    this.currentExpiryDate = '';
+    this.newExpiryDate = '';
 
     this.adjustmentTypeGroup = null;
   }
@@ -190,6 +210,10 @@ export class StockAdjustmentListComponent {
       newQtyOnHand: this.newQuantityOnHand,
       sellingPrice: this.selectedRow.sellingPrice,
       newSellingPrice: this.newSellingPrice,
+      lotNumber: this.lotNumber,
+      newLotNumber: this.newLotNo,
+      expiryDate: this.formatExpiryDate(this.selectedRow.expiryDate),
+      newExpiryDate: this.formatExpiryDate(this.newExpiryDate),
       adjustmentReason: this.adjustmentReason,
       adjustmentType: this.adjustmentType
     }).subscribe({
@@ -205,11 +229,31 @@ export class StockAdjustmentListComponent {
           this.selectedRow.sellingPrice = this.newSellingPrice;
           this.currentSellingPrice = this.selectedRow.sellingPrice;
         }
+
+        if (this.adjustmentType == 'lot-no') {
+          this.selectedRow.lotNumber = this.newLotNo;
+          this.currentLotNo = this.selectedRow.lotNumber;
+        }
+
+        if (this.adjustmentType == 'expirydate') {
+          this.selectedRow.expiryDate = this.formatExpiryDate(this.newExpiryDate);
+          this.currentExpiryDate = this.formatExpiryDate(this.selectedRow.expiryDate);
+        }
+
         this.adjustmentReason = '';
       },
       error: (error) => {
         this.toastr.error(error.error.message, 'Oops!');
       }
     });
+  }
+
+  private formatExpiryDate(date: string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return date;
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const year = d.getFullYear();
+    return `${month}/${year}`;
   }
 }

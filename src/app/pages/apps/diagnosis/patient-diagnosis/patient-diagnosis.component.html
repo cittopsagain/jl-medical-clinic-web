@@ -84,7 +84,7 @@
     </div>
   </mat-tab>
 
-  <!-- Medical History -->
+  <!-- History -->
   <mat-tab>
     <ng-template mat-tab-label>
       <div class="d-flex align-items-center">
@@ -92,7 +92,7 @@
           <i-tabler name="history" class="icon-20 m-r-8"></i-tabler>
         </mat-icon>
       </div>
-      Medical History
+      History
     </ng-template>
     <div class="f-s-14 p-16 rounded m-t-12">
       <div class="row">
@@ -108,8 +108,14 @@
         </div>
         <div class="col-6">
           <mat-card>
-            <mat-card-header>
+            <mat-card-header class="d-flex justify-content-between align-items-center">
               <mat-card-title>Patient Prescriptions</mat-card-title>
+              <a mat-icon-button (click)="printPatientPrescription(true)">
+                <i-tabler
+                  name="printer"
+                  class="icon-18"
+                ></i-tabler>
+              </a>
             </mat-card-header>
             <mat-card-content>
               <app-prescriptions></app-prescriptions>

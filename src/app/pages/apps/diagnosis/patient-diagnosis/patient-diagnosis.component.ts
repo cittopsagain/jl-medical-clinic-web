@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {
   MatDatepickerModule
 } from "@angular/material/datepicker";
@@ -54,7 +54,8 @@ import {PrescriptionsService} from "../medical-records/prescriptions/prescriptio
     VisitsComponent,
     NgIf,
     MatCardTitle,
-    PrescriptionsComponent
+    PrescriptionsComponent,
+    MatIconButton
   ],
   providers: [
     provideNativeDateAdapter()
@@ -77,6 +78,7 @@ export class PatientDiagnosisComponent {
 
   @ViewChild(PrescriptionComponent) prescriptionComponent: PrescriptionComponent;
   @ViewChild(MedicalSummaryComponent) medicalSummaryComponent: MedicalSummaryComponent;
+  @ViewChild(VisitsComponent) visitsComponent: VisitsComponent;
 
   patientInformation: Patient;
   vitalSigns: VitalSigns;
@@ -201,7 +203,17 @@ export class PatientDiagnosisComponent {
     });
   }
 
-  printPatientPrescription() {
+  printPatientPrescription(history: boolean = false) {
+    if (history) {
+      let patientId = this.patientInformation.patientId;
+      let visitId = this.visitsComponent.visits[
+        this.visitsComponent.currentPatientVisitRowIndex
+        ].visitId;
+
+      this.patientId = patientId;
+      this.visitId = visitId;
+    }
+
     this.medicalRecordsService.getPrescription(this.patientId, this.visitId).subscribe({
       next: (res) => {
         const file = new Blob([res], {type: 'application/pdf'});

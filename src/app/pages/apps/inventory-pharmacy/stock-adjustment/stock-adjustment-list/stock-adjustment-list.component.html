@@ -121,6 +121,8 @@
         <mat-radio-group aria-label="Select an option" class="m-t-8" [(ngModel)]="adjustmentTypeGroup" (change)="onAdjustmentTypeChange($event)">
           <mat-radio-button value="qty" color="primary">Quantity On Hand</mat-radio-button>
           <mat-radio-button value="price" color="primary">Selling Price</mat-radio-button>
+          <mat-radio-button value="lot-no" color="primary">Lot No</mat-radio-button>
+          <mat-radio-button value="expirydate" color="primary">Expiry Date</mat-radio-button>
         </mat-radio-group>
 
         <!-- Quantity On Hand -->
@@ -144,6 +146,32 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>New Selling Price *</mat-label>
             <input matInput placeholder="" [(ngModel)]="newSellingPrice" type="text" name="newSellingPrice" (keydown)="checkValue()"/>
+          </mat-form-field>
+        </div>
+
+        <!-- Lot No -->
+        <div *ngIf="adjustmentType === 'lot-no'">
+          <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px;">
+            <mat-label>Current Lot No</mat-label>
+            <input matInput readonly placeholder="0" [(ngModel)]="currentLotNo" type="text" name="currentLotNo"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>New Lot No *</mat-label>
+            <input matInput placeholder="" [(ngModel)]="newLotNo" type="text" name="newLotNo"/>
+          </mat-form-field>
+        </div>
+
+        <!-- Expiry Date -->
+        <div *ngIf="adjustmentType === 'expirydate'">
+          <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px;">
+            <mat-label>Current Expiry Date</mat-label>
+            <input matInput readonly placeholder="0" [(ngModel)]="currentExpiryDate" type="text" name="currentExpiryDate"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>New Expiry Date *</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="newExpiryDate" readonly/>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
 

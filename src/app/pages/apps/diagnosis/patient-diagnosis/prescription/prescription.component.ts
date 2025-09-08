@@ -176,10 +176,10 @@ export class PrescriptionComponent {
   }
 
   updatePrescription() {
-    if (this.qty > this.currentSelectedProduct.qtyOnHand) {
+    /* if (this.qty > this.currentSelectedProduct.qtyOnHand) {
       this.toastR.error('Quantity exceeds available stock.', 'Error');
       return;
-    }
+    } */
 
     this.prescriptionList[this.currentSelectedPrescriptionIndex].dosage = this.dosage;
     this.prescriptionList[this.currentSelectedPrescriptionIndex].instructions = this.instructions;
