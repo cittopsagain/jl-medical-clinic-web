@@ -1,0 +1,30 @@
+<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Sales Report</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
+
+      <mat-form-field appearance="outline" class="w-100 m-t-15">
+        <mat-label>Date From *</mat-label>
+        <input matInput [matDatepicker]="pickerDateFrom" [(ngModel)]="dateFrom" readonly/>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerDateFrom"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDateFrom></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Date To *</mat-label>
+        <input matInput [matDatepicker]="pickerDateTo" [(ngModel)]="dateTo" readonly/>
+        <mat-datepicker-toggle matIconSuffix [for]="pickerDateTo"></mat-datepicker-toggle>
+        <mat-datepicker #pickerDateTo></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="generateReport()"
+              class="w-100"
+              [disabled]="!dateFrom || !dateTo">
+        Generate Report
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>

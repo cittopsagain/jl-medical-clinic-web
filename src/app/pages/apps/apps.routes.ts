@@ -54,6 +54,8 @@ import {
 import {
   ViewPatientMedicalRecordsComponent
 } from "./diagnosis/medical-records/view-patient-medical-records/view-patient-medical-records.component";
+import {MedicineComponent} from "./inventory-pharmacy/medicine/medicine.component";
+import {ReportComponent} from "./sales/report/report.component";
 
 
 export const AppsRoutes: Routes = [
@@ -199,6 +201,17 @@ export const AppsRoutes: Routes = [
         }
       },
       {
+        path: 'inventory-pharmacy/medicines',
+        component: MedicineComponent,
+        data: {
+          title: 'Medicines',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Medicines' },
+          ]
+        }
+      },
+      {
         path: 'sales/pos',
         component: PosComponent,
         data: {
@@ -206,6 +219,17 @@ export const AppsRoutes: Routes = [
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'POS (Point of Sale)' },
+          ]
+        }
+      },
+      {
+        path: 'sales/report',
+        component: ReportComponent,
+        data: {
+          title: 'Sales Report',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Sales Report' },
           ]
         }
       },

@@ -67,7 +67,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Medicines',
     iconName: 'pill',
-    //route: 'front-pages/homepage',
+    route: 'apps/inventory-pharmacy/medicines',
   },
   {
     displayName: 'Stock Adjustments',
@@ -86,8 +86,8 @@ export const navItems: NavItem[] = [
     navCap: 'Reporting',
   },
   {
-    displayName: 'Financial Reports',
+    displayName: 'Sales Report',
     iconName: 'chart-histogram',
-    //route: 'front-pages/homepage'
+    route: 'apps/sales/report'
   }
 ];
