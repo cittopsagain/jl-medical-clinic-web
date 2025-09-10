@@ -32,6 +32,18 @@ export class PosService {
     return this.httpClient.post<any>(href, purchasedProducts);
   }
 
+  getTodaysSales() {
+    const href = `${environment.POS_API_URL}/sales/today`;
+    return this.httpClient.get<any>(href);
+  }
+
+  getReceipt(posId: number) {
+    const href = `${environment.PDF_API_URL}/pharmacy/sales/${posId}`;
+
+    return this.httpClient.get(href, {
+      responseType: 'blob' // important: expect binary
+    });
+  }
 }
 
 export interface ProductApi {

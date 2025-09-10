@@ -3,11 +3,12 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/mat
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
-import {provideNativeDateAdapter} from "@angular/material/core";
+import {MatOption, provideNativeDateAdapter} from "@angular/material/core";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {MatDivider} from "@angular/material/divider";
 import {ReportService} from "./report.service";
 import {ToastrService} from "ngx-toastr";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-report',
@@ -27,7 +28,9 @@ import {ToastrService} from "ngx-toastr";
     MatDatepickerInput,
     MatDatepickerToggle,
     MatSuffix,
-    MatDivider
+    MatDivider,
+    MatOption,
+    MatSelect
   ],
   providers: [
     provideNativeDateAdapter()
@@ -39,6 +42,11 @@ export class ReportComponent {
 
   dateFrom: string;
   dateTo: string;
+  reportType: string = '';
+  type: string[] = [
+    'Summary',
+    'Detail'
+  ];
 
   constructor(private reportService: ReportService, private toastR: ToastrService) {
 
@@ -49,6 +57,17 @@ export class ReportComponent {
   }
 
   generateReport() {
+    console.log('Report Type: ', this.reportType);
+    if (this.reportType === 'Summary') {
+      this.getSalesReport();
+    }
+
+    if (this.reportType === 'Detail') {
+      this.getDetailSalesReport();
+    }
+  }
+
+  public getSalesReport() {
     this.reportService.getSalesReport(
       this.formatDate(new Date(this.dateFrom)),
       this.formatDate(new Date(this.dateTo))
@@ -76,7 +95,9 @@ export class ReportComponent {
         this.toastR.error(err.error.message, 'Oops!');
       }
     });
+  }
 
+  public getDetailSalesReport() {
     this.reportService.getDetailSalesReport(
       this.formatDate(new Date(this.dateFrom)),
       this.formatDate(new Date(this.dateTo))

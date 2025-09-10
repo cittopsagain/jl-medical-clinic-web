@@ -20,9 +20,20 @@
         <mat-datepicker #pickerDateTo></mat-datepicker>
       </mat-form-field>
 
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Report Type *</mat-label>
+        <mat-select disableOptionCentering [(ngModel)]="reportType" placeholder="Report Type">
+          @for (type of type; track type) {
+            <mat-option [value]="type">
+              {{ type }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
       <button mat-flat-button color="primary" (click)="generateReport()"
               class="w-100"
-              [disabled]="!dateFrom || !dateTo">
+              [disabled]="!dateFrom || !dateTo || !reportType">
         Generate Report
       </button>
     </mat-card-content>
