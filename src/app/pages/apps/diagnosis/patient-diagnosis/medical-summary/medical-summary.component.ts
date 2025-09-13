@@ -26,7 +26,7 @@ export class MedicalSummaryComponent implements OnInit {
     this.diagnosisForm = this.fb.group({
       patientComplaintsNotes: [''],
       diagnosis: ['', Validators.required],
-      followUpCheckupRemarks: ['Follow-up check up / Remarks'],
+      followUpCheckupRemarks: ['Follow up on 7th day if symptoms persists'],
       remarksForMedicalCertificate: [''],
     });
   }

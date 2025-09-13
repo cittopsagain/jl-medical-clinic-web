@@ -52,7 +52,7 @@ export const navItems: NavItem[] = [
     //route: 'front-pages/homepage'
   },*/
   {
-    navCap: 'Inventory/Pharmacy',
+    navCap: 'Pharmacy',
   },
   {
     displayName: 'Suppliers',
@@ -76,7 +76,8 @@ export const navItems: NavItem[] = [
   },
   {
     displayName: 'Stock Receiving',
-    iconName: 'building-warehouse'
+    iconName: 'building-warehouse',
+    route: 'apps/inventory-pharmacy/stock-receiving',
   },
   {
     displayName: 'Expiration Date Monitoring',

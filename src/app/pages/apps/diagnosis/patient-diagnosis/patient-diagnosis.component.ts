@@ -111,7 +111,13 @@ export class PatientDiagnosisComponent {
         this.vitalSigns = data.data.vitalSigns;
 
         this.prescriptionComponent.prescriptionList = [];
+
         this.medicalSummaryComponent.diagnosisForm.reset();
+
+        this.medicalSummaryComponent.diagnosisForm.patchValue({
+          followUpCheckupRemarks: 'Follow up on 7th day if symptoms persists'
+        });
+
         this.showPrintMedicalCertificateButton = false;
         this.showSaveButton = true;
       },
