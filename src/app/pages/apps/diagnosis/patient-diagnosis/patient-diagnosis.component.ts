@@ -104,7 +104,7 @@ export class PatientDiagnosisComponent {
     this.patientDiagnosisService.getPatientDiagnosis().subscribe({
       next: (data: any) => {
         if (data.data == null) {
-          // this.toastR.error('No patients waiting for check-up or consultation.', 'Oops!');
+          // this.toastR.error('No patients waiting for check-up or consultation.', 'Error');
         }
 
         this.patientInformation = data.data.patient;
@@ -122,14 +122,15 @@ export class PatientDiagnosisComponent {
         this.showSaveButton = true;
       },
       error: (error) => {
-        this.toastR.error(error.error.message, 'Oops!');
+        // this.toastR.error(error.error.message, 'Error');
+        this.toastR.error(error.error?.message || 'Failed to load patient diagnosis', 'Error');
       }
     });
   }
 
   savePatientDiagnosis() {
     if (this.medicalSummaryComponent.diagnosisForm.invalid) {
-      this.toastR.error('Please fill out all required fields in the Diagnosis form.', 'Oops!');
+      this.toastR.error('Please fill out all required fields in the Diagnosis form.', 'Error');
       return;
     }
 
@@ -156,11 +157,11 @@ export class PatientDiagnosisComponent {
 
           this.printPatientPrescription();
         } else {
-          this.toastR.error(data.message, 'Oops!');
+          this.toastR.error(data.message, 'Error');
         }
       },
       error: (error) => {
-        this.toastR.error(error.error.message, 'Oops!');
+        this.toastR.error(error.error.message, 'Error');
       }
     });
   }
@@ -170,14 +171,15 @@ export class PatientDiagnosisComponent {
       {
         next: (data: any) => {
           if (data.data == false) {
-            this.toastR.error('Either no patients are marked as In-Progress, or no patients are waiting.', 'Oops!');
+            this.toastR.error('Either no patients are marked as In-Progress, or no patients are waiting.', 'Error');
             return;
           }
 
           this.getPatientDiagnosis();
         },
         error: (error) => {
-          this.toastR.error(error.error.message, 'Oops!');
+          // this.toastR.error(error.error.message, 'Error');
+          this.toastR.error(error.error?.message || 'Failed to patient diagnosis', 'Error');
         }
       }
     );
@@ -204,7 +206,7 @@ export class PatientDiagnosisComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (err) => {
-        this.toastR.error(err.error.message, 'Oops!');
+        this.toastR.error(err.error.message, 'Error');
       }
     });
   }
@@ -240,7 +242,7 @@ export class PatientDiagnosisComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (error) => {
-        this.toastR.error(error.error.message, 'Oops!');
+        this.toastR.error(error.error.message, 'Error');
       }
     });
   }

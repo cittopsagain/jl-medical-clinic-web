@@ -112,7 +112,8 @@ export class MedicalRecordsComponent {
 
           return data.data.items;
         }),
-        catchError(() => {
+        catchError((error: any) => {
+          this.toastR.error(error.error?.message || 'Failed to load medical records', 'Error');
           this.isLoadingResults = false;
           this.isError = true;
           return observableOf([]);

@@ -1,0 +1,149 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-lg-12">
+            <mat-form-field appearance="outline" class="w-100 hide-hint">
+              <mat-label>Medicine Name</mat-label>
+              <input
+                matInput
+                placeholder="Medicine Name"
+                [(ngModel)]="medicineName"
+                (keyup.enter)="applyFilter()"
+                #medicineNameInput
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="example-table-container responsive-table m-t-10">
+          <table mat-table [dataSource]="data" matSort matSortActive="brand_name" matSortDisableClear
+                 matSortDirection="asc" class="hover-table">
+            <!-- Number Column -->
+            <ng-container matColumnDef="number">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                #
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ ((paginator.pageIndex * pageSize ) + i ) + 1 }}</td>
+            </ng-container>
+
+            <!-- Medicine Name -->
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Medicine Name
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                  {{ row.brandName }}
+                </h6>
+                <span class="f-s-14 f-s-12">
+                  {{ row.productName }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Dosage -->
+            <ng-container matColumnDef="unit">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Unit
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ row.unitName | uppercase }}</td>
+            </ng-container>
+
+            <!-- Action -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Action
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <a
+                  mat-icon-button
+                  class="d-flex align-items-center justify-content-center"
+                >
+                  <i-tabler
+                    name="pencil"
+                    class="icon-18 d-flex align-items-center"
+                  ></i-tabler>
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick(row);"></tr>
+          </table>
+        </div>
+        <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+      </div>
+
+      <div class="col-sm-6">
+        <mat-card>
+          <mat-card-content>
+            <small class="text-muted">* Required fields are marked with an asterisk</small>
+            <form [formGroup]="detailForm" class="m-t-20">
+              <div class="d-flex gap-6 m-t-10">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Medicine Name</mat-label>
+                  <div class="d-flex flex-column">
+                    <input matInput readonly name="brandName" formControlName="brandName"/>
+                    <input matInput readonly name="medicineName" formControlName="medicineName" class="m-t-8"/>
+                  </div>
+                </mat-form-field>
+              </div>
+
+              <div class="d-flex gap-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Unit</mat-label>
+                  <input matInput readonly placeholder="Unit" name="unit" formControlName="unit"/>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Batch No</mat-label>
+                  <input matInput placeholder="Batch No." name="batchNo" formControlName="batchNo"/>
+                </mat-form-field>
+              </div>
+
+              <div class="d-flex gap-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Quantity</mat-label>
+                  <input matInput type="number" placeholder="Quantity" name="quantity" formControlName="quantity"/>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Price</mat-label>
+                  <input matInput type="number" placeholder="Price" name="price" formControlName="price"/>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Free</mat-label>
+                  <input matInput type="number" placeholder="Free" name="free" formControlName="free"/>
+                </mat-form-field>
+              </div>
+
+              <div class="d-flex gap-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Lot Number</mat-label>
+                  <input matInput type="text" placeholder="Lot Number" name="lotNumber" formControlName="lotNumber"/>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Expiry Date</mat-label>
+                  <input matInput [matDatepicker]="expiryDate" readonly formControlName="expiryDate"/>
+                  <mat-datepicker-toggle matIconSuffix [for]="expiryDate"></mat-datepicker-toggle>
+                  <mat-datepicker #expiryDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </form>
+
+            <button mat-flat-button color="primary w-100"
+                    (click)="addToItems();"
+                    [disabled]="detailForm.invalid">
+              Add to Items
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+

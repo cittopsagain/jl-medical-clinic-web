@@ -193,7 +193,7 @@ export class MedicineComponent implements OnInit {
         this.setUnitNameFilter();
       },
       error: error => {
-        this.toastR.error(error.error.message, 'Oops!');
+        this.toastR.error(error.error?.message || 'Failed to load brands', 'Error');
       }
     });
   }
@@ -216,10 +216,8 @@ export class MedicineComponent implements OnInit {
           return data.data.items;
         }),
         catchError((error: any) => {
-          if (error.error.message != undefined) {
-            this.errorMessage = error.error.message;
-            this.paginator.pageIndex = 0;
-          }
+          this.paginator.pageIndex = 0;
+          this.toastR.error(error.error?.message || 'Failed to load medicines', 'Error');
 
           this.isLoadingResults = false;
           this.isError = true;
@@ -246,7 +244,7 @@ export class MedicineComponent implements OnInit {
       }).subscribe({
         next: data => {
           if (data.statusCode == 200) {
-            this.toastR.success(data.message, 'Success!');
+            this.toastR.success(data.message, 'Success');
             // Clear the form
             this.brandForm.reset();
             this.selectedBrandName = '';
@@ -268,7 +266,7 @@ export class MedicineComponent implements OnInit {
       this.medicineService.saveMedicine(params).subscribe({
         next: data => {
           if (data.statusCode === 201) {
-            this.toastR.success(data.message, 'Success!');
+            this.toastR.success(data.message, 'Success');
             // Clear the form
             this.brandForm.reset();
             this.selectedBrandName = '';
@@ -277,7 +275,7 @@ export class MedicineComponent implements OnInit {
             // Refresh the table
             this.getMedicine();
           } else {
-            this.toastR.error(data.message, 'Oops!');
+            this.toastR.error(data.message, 'Error');
           }
         },
         error: error => {

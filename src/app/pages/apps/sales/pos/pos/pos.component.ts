@@ -119,7 +119,7 @@ export class PosComponent {
         this.todaysSales = response.data;
       },
       error: (error) => {
-        this.toastR.error(error.error.message, 'Oops!');
+        this.toastR.error(error.error?.message || 'Failed to load today\'s sales', 'Error');
       }
     });
   }
@@ -146,7 +146,9 @@ export class PosComponent {
 
           return data.data.items;
         }),
-        catchError(() => {
+        catchError((error: any) => {
+          this.toastR.error(error.error?.message || 'Failed to load products', 'Error');
+
           this.isLoadingResults = false;
           this.isError = true;
           return observableOf([]);
@@ -281,7 +283,7 @@ export class PosComponent {
           return;
         }
 
-        this.toastR.success(response.message, 'Success!');
+        this.toastR.success(response.message, 'Success');
         this.getProducts();
         this.purchasedItems = [];
         this.proceedToPayment = false;
@@ -311,7 +313,7 @@ export class PosComponent {
         this.getPharmacySales(posId);
       },
       error: (error) => {
-        this.toastR.error(error.error.message, 'Oops!');
+        this.toastR.error(error.error.message, 'Error');
       }
     });
   }
@@ -335,8 +337,8 @@ export class PosComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (err: any) => {
-        this.toastR.error(err.error.message, 'Oops!');
+        this.toastR.error(err.error.message, 'Error');
       }
-    })
+    });
   }
 }

@@ -30,7 +30,6 @@ export class StockAdjustmentService {
     const href = environment.STOCK_ADJUSTMENT_API_URL;
     return this.httpClient.put<any>(href, product);
   }
-
 }
 
 export interface ProductApi {

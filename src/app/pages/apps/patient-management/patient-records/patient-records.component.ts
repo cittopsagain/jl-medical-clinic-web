@@ -137,7 +137,9 @@ export class PatientRecordsComponent {
 
           return data.data.items;
         }),
-        catchError(() => {
+        catchError((err: any) => {
+          this.toastr.error(err.error?.message || 'Failed to load patient records', 'Error');
+
           this.isLoadingResults = false;
           this.isError = true;
           return observableOf([]);
@@ -152,11 +154,11 @@ export class PatientRecordsComponent {
       if (result) {
         this.patientRecordService.deletePatientRecord(patientId).subscribe({
           next: (response: any) => {
-            this.toastr.success(response.message, 'Success!');
+            this.toastr.success(response.message, 'Success');
             this.getPatientRecords();
           },
           error: (error) => {
-            this.toastr.error(error.error.message, 'Oops!');
+            this.toastr.error(error.error.message, 'Error');
           }
         });
       }

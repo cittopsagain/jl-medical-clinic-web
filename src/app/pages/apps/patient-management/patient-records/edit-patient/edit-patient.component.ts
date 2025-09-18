@@ -119,7 +119,7 @@ export class EditPatientComponent {
           // this.visitsService.setPatientId(data.patientId);
         },
         error: (error) => {
-          this.toastr.error(error.error.message, 'Oops!');
+          this.toastr.error(error.error.message, 'Error');
         }
       });
     }
@@ -140,7 +140,7 @@ export class EditPatientComponent {
 
     this.patientService.updatePatientRecord(this.patientForm.value).subscribe({
       next: (response: any) => {
-        this.toastr.success(response.message, 'Success!');
+        this.toastr.success(response.message, 'Success');
         this.patientForm.reset();
         // this.router.navigate(['/apps/patient-management/patient-records']);
         this.router.navigate([
@@ -149,7 +149,7 @@ export class EditPatientComponent {
         ]);
       },
       error: (error) => {
-        this.toastr.error(error.error.message, 'Oops!');
+        this.toastr.error(error.error.message, 'Error');
       }
     });
   }

@@ -67,11 +67,11 @@ export class MedicalHistoryComponent {
           this.patientPrescriptions = data.patientPrescriptionsList;
         },
         error: (error) => {
-          this.toastr.error('Unable to retrieve medical history', 'Oops!');
+          this.toastr.error('Unable to retrieve medical history', 'Error');
         }
       });
     } else {
-      this.toastr.error('Unable to retrieve medical history: Patient ID is required', 'Oops!');
+      this.toastr.error('Unable to retrieve medical history: Patient ID is required', 'Error');
     }
   }
 

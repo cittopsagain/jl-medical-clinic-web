@@ -61,7 +61,7 @@ export class ViewPatientComponent {
           this.visitsService.setPatientId(data.patientId);
         },
         error: (error) => {
-          this.toastr.error(error.error.message, 'Oops!');
+          this.toastr.error(error.error.message, 'Error');
         }
       });
     }

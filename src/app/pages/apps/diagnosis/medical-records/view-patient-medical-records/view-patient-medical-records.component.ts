@@ -88,7 +88,7 @@ export class ViewPatientMedicalRecordsComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (error) => {
-        this.toastR.error(error.error.message, 'Oops!');
+        this.toastR.error(error.error.message, 'Error');
       }
     });
   }

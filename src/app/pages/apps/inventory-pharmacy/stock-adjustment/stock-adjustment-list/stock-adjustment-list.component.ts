@@ -140,7 +140,8 @@ export class StockAdjustmentListComponent {
 
           return data.data.items;
         }),
-        catchError(() => {
+        catchError((error: any) => {
+          this.toastr.error(error.error?.message || 'Failed to load products', 'Error');
           this.isLoadingResults = false;
           this.isError = true;
           return observableOf([]);
@@ -219,7 +220,7 @@ export class StockAdjustmentListComponent {
     }).subscribe({
       next: (response: any) => {
         this.getProducts();
-        this.toastr.success(response.message, 'Success!');
+        this.toastr.success(response.message, 'Success');
         if (this.adjustmentType == 'qty') {
           this.selectedRow.qtyOnHand = this.newQuantityOnHand;
           this.currentQuantityOnHand = this.selectedRow.qtyOnHand;
@@ -243,7 +244,7 @@ export class StockAdjustmentListComponent {
         this.adjustmentReason = '';
       },
       error: (error) => {
-        this.toastr.error(error.error.message, 'Oops!');
+        this.toastr.error(error.error.message, 'Error');
       }
     });
   }

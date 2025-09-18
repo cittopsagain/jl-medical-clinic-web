@@ -1,1 +1,141 @@
-<p>stock-receiving-list works!</p>
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-lg-9">
+            <mat-form-field appearance="outline" class="w-100 hide-hint">
+              <mat-label>Supplier Name</mat-label>
+              <input
+                matInput
+                placeholder="Supplier Name"
+                (keyup.enter)="applyFilter()"
+                #supplierNameInput
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-lg-3 d-flex align-items-center justify-content-end">
+            <button mat-flat-button
+                    color="primary"
+                    [routerLink]="['/apps/inventory-pharmacy/stock-receiving/add-stock']">
+              Add Stock
+            </button>
+          </div>
+        </div>
+        <div class="example-table-container responsive-table m-t-10">
+          <table mat-table [dataSource]="data" matSort matSortActive="brand_name" matSortDisableClear
+                 matSortDirection="asc" class="hover-table">
+            <!-- Number Column -->
+            <ng-container matColumnDef="number">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                #
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ ((paginator.pageIndex * pageSize ) + i ) + 1 }}</td>
+            </ng-container>
+
+            <!-- Purchase No -->
+            <ng-container matColumnDef="purchaseNo">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Purchase No
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <span class="f-s-14 f-s-12">
+                  {{ row.purchaseId }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Invoice No -->
+            <ng-container matColumnDef="invoiceNo">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Invoice No
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ row.invoiceNumber }}</td>
+            </ng-container>
+
+            <!-- Invoice Date -->
+            <ng-container matColumnDef="invoiceDate">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Invoice Date
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">{{ row.invoiceDate }}</td>
+            </ng-container>
+
+            <!-- Supplier -->
+            <ng-container matColumnDef="supplier">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Supplier
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <span class="f-s-14 f-s-12">
+                  {{ row.supplierName }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Agent -->
+            <ng-container matColumnDef="agent">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Agent
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <span class="f-s-14 f-s-12">
+                  {{ row.agentName }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Date Created -->
+            <ng-container matColumnDef="dateCreated">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Date Created
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <span class="f-s-14 f-s-12">
+                  {{ row.dateTimeCreated | date: 'MM/dd/yyyy hh:mm a' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Action -->
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Action
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <a
+                  mat-icon-button
+                  class="d-flex align-items-center justify-content-center"
+                  [routerLink]="['/apps/inventory-pharmacy/stock-receiving/view-stock', row.purchaseId]"
+                >
+                  <i-tabler
+                    name="eye"
+                    class="icon-18 d-flex align-items-center"
+                  ></i-tabler>
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- @if(isLoadingResults || isError) {
+  <div class="example-loading-shade" style="margin-top: 20px;">
+    @if(isLoadingResults) {
+      <mat-spinner></mat-spinner>
+    } @if(isError) {
+    <div class="example-rate-limit-reached">
+      {{ errorMessage }}
+    </div>
+  }
+  </div>
+} -->

@@ -13,7 +13,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AppSettings } from 'src/app/config';
 
@@ -48,13 +48,15 @@ interface quicklinks {
 
 @Component({
     selector: 'app-header',
-    imports: [
-        RouterModule,
-        CommonModule,
-        NgScrollbarModule,
-        TablerIconsModule,
-        MaterialModule,
-    ],
+  imports: [
+    RouterModule,
+    CommonModule,
+    NgScrollbarModule,
+    TablerIconsModule,
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
     templateUrl: './header.component.html',
     encapsulation: ViewEncapsulation.None
 })

@@ -20,6 +20,7 @@ import {
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
   MatTable
 } from "@angular/material/table";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-brand-list',
@@ -69,7 +70,7 @@ export class BrandListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
-  constructor(private brandsService: BrandsService) {
+  constructor(private brandsService: BrandsService, private toastR: ToastrService) {
 
   }
 
@@ -103,9 +104,7 @@ export class BrandListComponent {
           return data.data.items;
         }),
         catchError((error: any) => {
-          if (error.error.message != undefined) {
-            this.errorMessage = error.error.message;
-          }
+          this.toastR.error(error.error?.message || 'Failed to brands', 'Error');
 
           this.isLoadingResults = false;
           this.isError = true;

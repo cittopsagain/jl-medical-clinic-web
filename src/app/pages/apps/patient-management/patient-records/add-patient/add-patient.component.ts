@@ -99,7 +99,7 @@ export class AddPatientComponent {
       this.patientService.savePatientRecord(this.patientForm.value)
         .subscribe({
           next: (response: any) => {
-            this.toastr.success(response.message, 'Success!');
+            this.toastr.success(response.message, 'Success');
             // this.patientForm.reset();
             if (response.data.consultationId != null && response.data.consultationId != undefined
             && this.patientForm.value.markForConsultation == 1) {
@@ -110,7 +110,7 @@ export class AddPatientComponent {
             }
           },
           error: (error) => {
-            this.toastr.error(error.error.message, 'Oops!');
+            this.toastr.error(error.error.message, 'Error');
           }
         });
     } else {

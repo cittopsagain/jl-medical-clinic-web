@@ -116,12 +116,12 @@ export class EditPatientConsultationComponent implements OnInit {
     this.patientConsultationForm.value.consultationId = this.patientConsultation.consultationId;
     this.patientConsultationService.updatePatientConsultation(this.patientConsultationForm.value).subscribe({
       next: (data: any) => {
-        this.toastr.success(data.message, 'Success!');
+        this.toastr.success(data.message, 'Success');
         this.patientConsultationForm.reset();
         this.getPatientConsultationById(this.patientConsultation.consultationId);
       },
       error: (error) => {
-        this.toastr.error(error.error.message, 'Oops!');
+        this.toastr.error(error.error.message, 'Error');
       }
     });
   }

@@ -20,6 +20,7 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {MatChipsModule} from "@angular/material/chips";
 import {NgClass} from "@angular/common";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-patient-consultation-list',
@@ -65,7 +66,8 @@ export class PatientConsultationListComponent implements OnDestroy {
 
   @ViewChild('patientNameInput') patientNameInput: ElementRef;
 
-  constructor(private patientConsultationService: PatientConsultationService, private route: ActivatedRoute) {
+  constructor(private patientConsultationService: PatientConsultationService, private route: ActivatedRoute,
+              private toastr: ToastrService) {
     // Initialize the patient name and address
     this.patientName = '';
   }
@@ -102,9 +104,7 @@ export class PatientConsultationListComponent implements OnDestroy {
         return data.data;
       }),
       catchError((error: any) => {
-        if (error.error.message != undefined) {
-          this.errorMessage = error.error.message;
-        }
+        this.toastr.error(error.error?.message || 'Failed to load patient consultation', 'Error');
 
         this.isLoadingResults = false;
         this.isError = true;

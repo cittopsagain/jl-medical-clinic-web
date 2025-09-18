@@ -145,9 +145,9 @@ export class VisitsComponent {
       remarks
     ).subscribe({
       next: (data) => {
-        this.toastR.success(data.message, 'Success!');
+        this.toastR.success(data.message, 'Success');
       }, error: (err) => {
-        this.toastR.error(err.error.message, 'Oops!');
+        this.toastR.error(err.error.message, 'Error');
       }
     });
   }
@@ -198,7 +198,7 @@ export class VisitsComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (err) => {
-        this.toastR.error(err.error.message, 'Oops!');
+        this.toastR.error(err.error.message, 'Error');
       }
     });
   }

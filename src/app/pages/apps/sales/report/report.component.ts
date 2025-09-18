@@ -9,6 +9,9 @@ import {MatDivider} from "@angular/material/divider";
 import {ReportService} from "./report.service";
 import {ToastrService} from "ngx-toastr";
 import {MatSelect} from "@angular/material/select";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MedicalRecordsComponent} from "../../diagnosis/medical-records/medical-records.component";
+import {PatientDiagnosisComponent} from "../../diagnosis/patient-diagnosis/patient-diagnosis.component";
 
 @Component({
   selector: 'app-report',
@@ -30,7 +33,11 @@ import {MatSelect} from "@angular/material/select";
     MatSuffix,
     MatDivider,
     MatOption,
-    MatSelect
+    MatSelect,
+    MatTab,
+    MatTabGroup,
+    MedicalRecordsComponent,
+    PatientDiagnosisComponent
   ],
   providers: [
     provideNativeDateAdapter()
@@ -91,8 +98,7 @@ export class ReportComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (err) => {
-        console.log(err);
-        this.toastR.error(err.error.message, 'Oops!');
+        this.toastR.error(err.error?.message || 'Failed to get print report', 'Error');
       }
     });
   }
@@ -121,8 +127,7 @@ export class ReportComponent {
         URL.revokeObjectURL(fileURL);
       },
       error: (err) => {
-        console.log(err);
-        this.toastR.error(err.error.message, 'Oops!');
+        this.toastR.error(err.error?.message || 'Failed to get print report', 'Error');
       }
     });
   }

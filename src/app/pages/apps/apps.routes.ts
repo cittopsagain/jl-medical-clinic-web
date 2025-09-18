@@ -59,6 +59,12 @@ import {ReportComponent} from "./sales/report/report.component";
 import {
   StockReceivingListComponent
 } from "./inventory-pharmacy/stock-receiving/stock-receiving-list/stock-receiving-list.component";
+import {
+  AddStockReceivingComponent
+} from "./inventory-pharmacy/stock-receiving/add-stock-receiving/add-stock-receiving.component";
+import {
+  ViewStockReceivingComponent
+} from "./inventory-pharmacy/stock-receiving/view-stock-receiving/view-stock-receiving.component";
 
 
 export const AppsRoutes: Routes = [
@@ -151,10 +157,10 @@ export const AppsRoutes: Routes = [
         path: 'diagnosis/patient-diagnosis',
         component: DiagnosisAndMedicalRecordsComponent,
         data: {
-          title: 'Patient Diagnosis',
+          title: 'Diagnosis & Records',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Patient Diagnosis' },
+            { title: 'Diagnosis & Records' },
           ]
         }
       },
@@ -244,6 +250,30 @@ export const AppsRoutes: Routes = [
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Stock Receiving' },
+          ]
+        }
+      },
+      {
+        path: 'inventory-pharmacy/stock-receiving/add-stock',
+        component: AddStockReceivingComponent,
+        data: {
+          title: 'Stock Receiving',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Stock Receiving', url: '/apps/inventory-pharmacy/stock-receiving' },
+            { title: 'Add Stock' },
+          ]
+        }
+      },
+      {
+        path: 'inventory-pharmacy/stock-receiving/view-stock/:id',
+        component: ViewStockReceivingComponent,
+        data: {
+          title: 'Stock Receiving',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Stock Receiving', url: '/apps/inventory-pharmacy/stock-receiving' },
+            { title: 'View Stock' },
           ]
         }
       },
