@@ -4,8 +4,8 @@ import {
   MatDatepickerModule
 } from "@angular/material/datepicker";
 import { TablerIconComponent } from "angular-tabler-icons";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { provideNativeDateAdapter } from '@angular/material/core';
+import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {MatOption, provideNativeDateAdapter} from '@angular/material/core';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {PatientDiagnosisService} from "./patient-diagnosis.service";
 import {ToastrService} from "ngx-toastr";
@@ -16,19 +16,18 @@ import {
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {PatientInformationComponent} from "../medical-records/patient-information/patient-information.component";
 import {MedicalRecordsService, Patient, VitalSigns} from "../medical-records/medical-records.service";
-import {VitalSignsComponent} from "../medical-records/vital-signs/vital-signs.component";
 import {MedicalSummaryComponent} from "./medical-summary/medical-summary.component";
 import {PrescriptionComponent} from "./prescription/prescription.component";
-import {
-  MedicalHistoryComponent
-} from "../../patient-management/patient-records/medical-history/medical-history.component";
 import {PrescriptionsComponent} from "../medical-records/prescriptions/prescriptions.component";
 import {VisitsComponent} from "../medical-records/visits/visits.component";
 import {VisitsService} from "../medical-records/visits/visits.service";
-import {NgIf} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {PrescriptionsService} from "../medical-records/prescriptions/prescriptions.service";
+import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
+import {MatSelect} from "@angular/material/select";
+import {PatientRecordsService} from "../../patient-management/patient-records/patient-records.service";
+import {PatientConsultationService} from "../../patient-management/patient-consultation/patient-consultation.service";
 
 @Component({
   selector: 'app-patient-diagnosis',
@@ -46,8 +45,6 @@ import {PrescriptionsService} from "../medical-records/prescriptions/prescriptio
     MatTabGroup,
     MatTabLabel,
     MatTableModule,
-    PatientInformationComponent,
-    VitalSignsComponent,
     MedicalSummaryComponent,
     PrescriptionComponent,
     MatCardHeader,
@@ -55,7 +52,14 @@ import {PrescriptionsService} from "../medical-records/prescriptions/prescriptio
     NgIf,
     MatCardTitle,
     PrescriptionsComponent,
-    MatIconButton
+    MatIconButton,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatFormField,
+    MatSuffix,
+    MatOption,
+    MatSelect
   ],
   providers: [
     provideNativeDateAdapter()
@@ -76,6 +80,9 @@ import {PrescriptionsService} from "../medical-records/prescriptions/prescriptio
 
 export class PatientDiagnosisComponent {
 
+  patientForm: UntypedFormGroup | any;
+  vitalSignsForm: UntypedFormGroup | any;
+
   @ViewChild(PrescriptionComponent) prescriptionComponent: PrescriptionComponent;
   @ViewChild(MedicalSummaryComponent) medicalSummaryComponent: MedicalSummaryComponent;
   @ViewChild(VisitsComponent) visitsComponent: VisitsComponent;
@@ -85,19 +92,54 @@ export class PatientDiagnosisComponent {
 
   showPrintMedicalCertificateButton: boolean = false;
   showSaveButton: boolean = true;
+  showUpdateButton: boolean = false;
 
   patientId: number = 0;
   visitId: number = 0;
+  diagnosisId: number = 0;
 
-  constructor(private patientDiagnosisService: PatientDiagnosisService,
+  visitType: string[] = ['Consultation', 'Follow-up Checkup'];
+  gender: string[] = [
+    'Male',
+    'Female'
+  ];
+
+  constructor(private patientDiagnosisService: PatientDiagnosisService, private fb: UntypedFormBuilder,
               private toastR: ToastrService, private visitsService: VisitsService,
               private patientPrescription: PrescriptionsService,
-              private medicalRecordsService: MedicalRecordsService) {
+              private medicalRecordsService: MedicalRecordsService, private patientRecordsService: PatientRecordsService,
+              private patientConsultationService: PatientConsultationService) {
+    this.patientForm = this.fb.group({
+      visitId: '',
+      patientId: '',
+      lastName: ['', Validators.required],
+      firstName: ['', Validators.required],
+      middleName: '',
+      address: ['', Validators.required],
+      birthDate: ['', Validators.required],
+      sex: ['', Validators.required],
+      contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      markForConsultation: [0],
+      visitType: ['', Validators.required]
+    });
+
+    this.vitalSignsForm = this.fb.group({
+      consultationId: ['', Validators.required],
+      weight: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
+      height: ['', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
+      temperature: ['', [Validators.required, Validators.pattern('^([0-9]|[1-3][0-9]|4[0-2])(\\.\\d{1,2})?$'), Validators.min(0), Validators.max(42)]],
+      bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
+      heartRate: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
+      oxygenSaturation: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
+      status: 'true' // Will be interpreted to IN_PROGRESS in the backend
+    });
   }
 
   ngAfterViewInit() {
     this.patientPrescription.setPrescriptions([]);
     this.getPatientDiagnosis();
+
+    this.refreshPatientDiagnosis();
   }
 
   getPatientDiagnosis() {
@@ -108,7 +150,37 @@ export class PatientDiagnosisComponent {
         }
 
         this.patientInformation = data.data.patient;
+
+        this.patientForm.patchValue(
+          {
+            patientId: data.data.patient.patientId,
+            visitId: data.data.patient.visitId,
+            lastName: data.data.patient.lastName,
+            firstName: data.data.patient.firstName,
+            middleName: data.data.patient.middleName,
+            address: data.data.patient.address,
+            birthDate: data.data.patient.birthDate,
+            sex: data.data.patient.gender,
+            contactNumber: data.data.patient.contactNumber,
+            markForConsultation: 0,
+            visitType: data.data.patient.visitType
+          }
+        );
+
         this.vitalSigns = data.data.vitalSigns;
+        this.visitId = data.data.vitalSigns.visitId;
+
+        this.vitalSignsForm.patchValue(
+          {
+            consultationId: data.data.vitalSigns.visitId,
+            weight: data.data.vitalSigns.weight,
+            height: data.data.vitalSigns.height,
+            temperature: data.data.vitalSigns.temperature,
+            bloodPressure: data.data.vitalSigns.bloodPressure,
+            heartRate: data.data.vitalSigns.heartRate,
+            oxygenSaturation: data.data.vitalSigns.oxygenSaturation
+          }
+        );
 
         this.prescriptionComponent.prescriptionList = [];
 
@@ -129,6 +201,11 @@ export class PatientDiagnosisComponent {
   }
 
   savePatientDiagnosis() {
+    if (this.patientForm.invalid || this.vitalSignsForm.invalid) {
+      this.toastR.error('Please fill out all required fields in the Patient Information and Vital Signs forms.', 'Error');
+      return;
+    }
+
     if (this.medicalSummaryComponent.diagnosisForm.invalid) {
       this.toastR.error('Please fill out all required fields in the Diagnosis form.', 'Error');
       return;
@@ -136,7 +213,7 @@ export class PatientDiagnosisComponent {
 
     let patientMedicalSummary = {
       ...this.medicalSummaryComponent.diagnosisForm.value,
-      visitId: this.vitalSigns.visitId,
+      visitId: this.visitId,
       patientId: this.patientInformation.patientId
     };
 
@@ -151,9 +228,48 @@ export class PatientDiagnosisComponent {
           this.toastR.success(data.message, 'Success');
           this.showPrintMedicalCertificateButton = true;
           this.showSaveButton = false;
+          this.showUpdateButton = true;
 
           this.patientId = data.data.patientId;
           this.visitId = data.data.visitId;
+          this.diagnosisId = data.data.diagnosisId;
+
+          this.printPatientPrescription();
+        } else {
+          this.toastR.error(data.message, 'Error');
+        }
+      },
+      error: (error) => {
+        this.toastR.error(error.error.message, 'Error');
+      }
+    });
+  }
+
+  updatePatientDiagnosis() {
+    if (this.medicalSummaryComponent.diagnosisForm.invalid) {
+      this.toastR.error('Please fill out all required fields in the Diagnosis form.', 'Error');
+      return;
+    }
+
+    let patientMedicalSummary = {
+      ...this.medicalSummaryComponent.diagnosisForm.value,
+      visitId: this.vitalSigns.visitId,
+      patientId: this.patientInformation.patientId,
+      diagnosisId: this.diagnosisId,
+    };
+
+    let data = {
+      patientMedicalSummary: patientMedicalSummary,
+      prescriptions: this.prescriptionComponent.prescriptionList
+    };
+
+    this.patientDiagnosisService.updatePatientDiagnosis(data).subscribe({
+      next: (data: any) => {
+        if (data.statusCode == 200) {
+          this.toastR.success(data.message, 'Success');
+          this.showPrintMedicalCertificateButton = true;
+          this.showSaveButton = false;
+          this.showUpdateButton = true;
 
           this.printPatientPrescription();
         } else {
@@ -176,6 +292,9 @@ export class PatientDiagnosisComponent {
           }
 
           this.getPatientDiagnosis();
+
+          this.showUpdateButton = false;
+          this.showSaveButton = true;
         },
         error: (error) => {
           // this.toastR.error(error.error.message, 'Error');
@@ -183,6 +302,59 @@ export class PatientDiagnosisComponent {
         }
       }
     );
+  }
+
+  updatePatientInformation() {
+    this.patientRecordsService.updatePatientRecord(this.patientForm.value).subscribe({
+      next: (data: any) => {
+        if (data.statusCode == 200) {
+          this.toastR.success(data.message, 'Success');
+          // this.patientInformation = this.patientForm.value;
+
+          this.patientForm.patchValue({
+            visitId: this.visitId,
+            patientId: this.patientForm.value.patientId,
+            lastName: this.patientForm.value.lastName,
+            firstName: this.patientForm.value.firstName,
+            middleName: this.patientForm.value.middleName,
+            address: this.patientForm.value.address,
+            birthDate: this.patientForm.value.birthDate
+          });
+        } else {
+          this.toastR.error(data.message, 'Error');
+        }
+      },
+      error: (error) => {
+        this.toastR.error(error.error?.message || 'Failed to update patient information', 'Error');
+      }
+    });
+  }
+
+  updateVitalSigns() {
+    this.patientConsultationService.updatePatientConsultation(this.vitalSignsForm.value).subscribe({
+      next: (data: any) => {
+        if (data.statusCode == 200) {
+          this.toastR.success(data.message, 'Success');
+          // this.vitalSigns = this.vitalSignsForm.value;
+
+          this.vitalSignsForm.patchValue({
+            consultationId: this.visitId,
+            weight: this.vitalSignsForm.value.weight,
+            height: this.vitalSignsForm.value.height,
+            temperature: this.vitalSignsForm.value.temperature,
+            bloodPressure: this.vitalSignsForm.value.bloodPressure,
+            heartRate: this.vitalSignsForm.value.heartRate,
+            oxygenSaturation: this.vitalSignsForm.value.oxygenSaturation,
+            status: 'true' // Will be interpreted to IN_PROGRESS in the backend
+          });
+        } else {
+          this.toastR.error(data.message, 'Error');
+        }
+      },
+      error: (error) => {
+        this.toastR.error(error.error?.message || 'Failed to update vital signs', 'Error');
+      }
+    });
   }
 
   printMedicalCertificate() {
@@ -195,7 +367,7 @@ export class PatientDiagnosisComponent {
         const issuedDate = this.formatDate(new Date());
 
         // Trigger download
-        const a = document.createElement('a');
+        /* const a = document.createElement('a');
         a.href = fileURL;
         a.download = `MedicalCertificate_${this.patientId}_Issued${issuedDate}.pdf`;
         document.body.appendChild(a);
@@ -203,7 +375,7 @@ export class PatientDiagnosisComponent {
         document.body.removeChild(a);
 
         // Cleanup
-        URL.revokeObjectURL(fileURL);
+        URL.revokeObjectURL(fileURL); */
       },
       error: (err) => {
         this.toastR.error(err.error.message, 'Error');
@@ -231,7 +403,7 @@ export class PatientDiagnosisComponent {
         const issuedDate = this.formatDate(new Date());
 
         // Trigger download
-        const a = document.createElement('a');
+        /* const a = document.createElement('a');
         a.href = fileURL;
         a.download = `Prescription_${this.patientId}_Issued${issuedDate}.pdf`;
         document.body.appendChild(a);
@@ -239,7 +411,7 @@ export class PatientDiagnosisComponent {
         document.body.removeChild(a);
 
         // Cleanup
-        URL.revokeObjectURL(fileURL);
+        URL.revokeObjectURL(fileURL);  */
       },
       error: (error) => {
         this.toastR.error(error.error.message, 'Error');

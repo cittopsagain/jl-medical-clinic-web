@@ -11,8 +11,6 @@ export class PatientDiagnosisService {
   constructor(private httpClient: HttpClient) { }
   private limit = 30; // Default limit for pagination
 
-
-
   getPatientDiagnosis(): Observable<PatientDiagnosis> {
     const href = environment.PATIENT_DIAGNOSIS_API_URL;
     return this.httpClient.get<PatientDiagnosis>(href);
@@ -28,7 +26,7 @@ export class PatientDiagnosisService {
     }
 
     const href = environment.POS_API_URL;
-    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}`;
+    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}&includeNonStock=1`;
 
     return this.httpClient.get<ProductApi>(requestUrl);
   }
@@ -43,12 +41,9 @@ export class PatientDiagnosisService {
     return this.httpClient.get<any>(href);
   }
 
-  setPatientMedicalSummary() {
-
-  }
-
-  setPatientPrescription() {
-
+  updatePatientDiagnosis(diagnosis: any): Observable<any> {
+    const href = environment.PATIENT_DIAGNOSIS_API_URL;
+    return this.httpClient.put<any>(href, diagnosis);
   }
 }
 

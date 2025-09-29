@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
@@ -43,12 +43,19 @@ export class HeaderComponent {
   agents: any[] = [];
   suppliers: any[] = [];
   selectedAgentName: string;
+  selectedSupplierName: string;
 
   agentGroups: GroupedAgents[] = [];
   agentGroupOptions: Observable<GroupedAgents[]>;
 
+  supplierGroups: GroupedSuppliers[] = [];
+  supplierGroupOptions: Observable<GroupedSuppliers[]>;
+
   selectedAgentId: number | null = null;
   selectedSupplierId: number | null = null;
+
+  @ViewChild('agentNameInput') agentNameInput: ElementRef;
+  @ViewChild('supplierNameInput') supplierNameInput: ElementRef;
 
   terms: any[] = [
     {
@@ -66,6 +73,7 @@ export class HeaderComponent {
               private toastR: ToastrService) {
     this.headerForm = this.fb.group({
       agentGroup: ['', Validators.required],
+      supplierGroup: ['', Validators.required],
       invoiceNo: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       invoiceDate: ['', Validators.required],
       supplier: ['', Validators.required],
@@ -81,16 +89,20 @@ export class HeaderComponent {
   getAgents() {
     this.stockReceivingService.getAgents().subscribe({
       next: data => {
-        this.agents = data.data.agents || [];
         this.suppliers = data.data.suppliers || [];
 
-        this.agentGroups = this.groupByFirstLetter(data.data.agents || []);
-        this.setAgentFilter();
+        this.agents = data.data.agents || [];
+
+        /* this.agentGroups = this.groupByFirstLetter(data.data.agents || []);
+        this.setAgentFilter(); */
+
+        this.supplierGroups = this.groupSupplierByFirstLetter(data.data.suppliers || []);
+        this.setSupplierFilter();
       },
       error: error => {
         this.toastR.error(error.error?.message || 'Failed to load agents', 'Error');
       }
-    })
+    });
   }
 
   groupByFirstLetter(data: Agent[]): GroupedAgents[] {
@@ -111,12 +123,39 @@ export class HeaderComponent {
     return Object.values(grouped).sort((a, b) => a.letter.localeCompare(b.letter));
   }
 
+  groupSupplierByFirstLetter(data: Supplier[]): GroupedSuppliers[] {
+    const grouped = data.reduce<Record<string, GroupedSuppliers>>((acc, item) => {
+      const firstLetter = item.supplierName[0].toUpperCase();
+
+      if (!acc[firstLetter]) {
+        acc[firstLetter] = { letter: firstLetter, names: [] };
+      }
+
+      // Only add the agent name if it doesn't agentName exist in the array
+      if (!acc[firstLetter].names.includes(item.supplierName)) {
+        acc[firstLetter].names.push(item.supplierName);
+      }
+      return acc;
+    }, {});
+
+    return Object.values(grouped).sort((a, b) => a.letter.localeCompare(b.letter));
+  }
+
   setAgentFilter() {
     this.agentGroupOptions = this.headerForm
       .get('agentGroup')!
       .valueChanges.pipe(
         startWith(''),
         map((value: string | null) => this._filterGroup(value || ''))
+      );
+  }
+
+  setSupplierFilter() {
+    this.supplierGroupOptions = this.headerForm
+      .get('supplierGroup')!
+      .valueChanges.pipe(
+        startWith(''),
+        map((value: string | null) => this._filterSupplierGroup(value || ''))
       );
   }
 
@@ -145,6 +184,49 @@ export class HeaderComponent {
     return this.agentGroups;
   }
 
+  private _filterSupplierGroup(value: string): GroupedSuppliers[] {
+    this.selectedSupplierName = ''; // Reset the selected Supplier Name when filtering
+    this.selectedAgentName = '';
+    this.selectedAgentId = null;
+    this.selectedSupplierId = null;
+
+    // this.agents = [];
+
+    if (value) {
+      const filteredGroups = this.supplierGroups
+        .map((group) => ({
+          letter: group.letter,
+          names: _filter(group.names, value),
+        }))
+        .filter((group) => group.names.length > 0);
+
+      if (filteredGroups.length <= 0) {
+        this.toastR.warning('Supplier not found in the list', 'Invalid Input');
+        this.agentNameInput.nativeElement.value = '';
+        return [];
+      }
+
+      return filteredGroups;
+    }
+
+    return this.supplierGroups;
+  }
+
+  onInputAgentClick() {
+    const agents= this.agents.filter(b => b.supplierId === this.selectedSupplierId);
+
+    this.agentGroups = this.groupByFirstLetter(agents || []);
+    this.setAgentFilter();
+  }
+
+  onInputSupplierClick() {
+    if (this.supplierNameInput.nativeElement.value === '') {
+      this.agentNameInput.nativeElement.value = '';
+      this.selectedSupplierId = null;
+      this.selectedAgentId = null;
+    }
+  }
+
   onAgentSelected(selected: string) {
     this.selectedAgentName = selected;
     const found = this.agents.find(b => b.agentName.toLowerCase() === selected.toLowerCase());
@@ -153,11 +235,33 @@ export class HeaderComponent {
     const supplier = this.suppliers.find(b => b.supplierId === supplierId);
 
     this.headerForm.patchValue({
-     supplier: supplier ? supplier.supplierName : ''
+      supplierId: supplierId,
+      supplier: supplier ? supplier.supplierName : '',
+      agentId: found.agentId
     });
 
     this.selectedAgentId = found.agentId;
     this.selectedSupplierId = supplierId;
+
+    console.log(this.headerForm.value);
+  }
+
+  onSupplierSelected(selected: string) {
+    this.selectedSupplierName = selected;
+    this.selectedAgentName = '';
+    this.selectedAgentId = null;
+
+    const found = this.suppliers.find(b => b.supplierName.toLowerCase() === selected.toLowerCase());
+    const supplierId = found ? found.supplierId : null;
+
+    const supplier = this.suppliers.find(b => b.supplierId === supplierId);
+
+    this.headerForm.patchValue({
+      supplier: supplier ? supplier.supplierName : ''
+    });
+
+    this.selectedSupplierId = supplierId;
+    // this.agents = [];
   }
 }
 
@@ -172,7 +276,17 @@ type Agent = {
   agentName: string;
 }
 
+type Supplier = {
+  supplierId: number;
+  supplierName: string;
+}
+
 type GroupedAgents = {
   letter: string;
   names: string[];
 };
+
+type GroupedSuppliers = {
+  letter: string;
+  names: string[];
+}

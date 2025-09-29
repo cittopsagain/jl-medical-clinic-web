@@ -16,7 +16,7 @@ import {
 } from "@angular/material/table";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {NgIf, UpperCasePipe} from "@angular/common";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {ToastrService} from "ngx-toastr";
 
@@ -53,12 +53,13 @@ export class PrescriptionComponent {
   selectedPrescription: any;
 
   productData: Products[] = [];
-  prescriptionList: Prescription[] = [];
+  prescriptionList: any[] = [];
 
   prescriptionColumns: string[] = ['productName', 'unit', 'qty', 'action'];
   displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
 
   showEditPrescription: boolean = false;
+  showAddNonStock: boolean = false;
   isLoadingResults = true;
   isError = false;
   resultsLength = 0;
@@ -70,11 +71,22 @@ export class PrescriptionComponent {
   instructions: string = '';
   qty: number = 0;
 
+  prescriptionForm: UntypedFormGroup | any;
+
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
-  constructor(private patientDiagnosisService: PatientDiagnosisService, private toastR: ToastrService) {
+  constructor(private fb: UntypedFormBuilder, private patientDiagnosisService: PatientDiagnosisService,
+              private toastR: ToastrService) {
+    this.prescriptionForm = this.fb.group({
+      brandName: ['', Validators.required],
+      productName: ['', Validators.required],
+      unit: ['', Validators.required],
+      qty: ['', Validators.required],
+      dosage: ['', Validators.required],
+      instructions: ['', Validators.required]
+    });
   }
 
   ngAfterViewInit() {
@@ -126,14 +138,14 @@ export class PrescriptionComponent {
     const existingItem = this.prescriptionList
       .find(item => item.productId === row.productId && item.productHistoryId === row.productHistoryId);
 
-    if (existingItem) {
-      if (existingItem.quantity >= row.qtyOnHand) {
-        return;
-      }
+    if (this.showAddNonStock || this.showEditPrescription) {
+      return;
+    }
 
-      if (existingItem.quantity >= row.qtyOnHand) {
+    if (existingItem) {
+      /* if (existingItem.quantity >= row.qtyOnHand) {
         return;
-      }
+      } */
 
       // If item exists, increment quantity
       existingItem.quantity = (existingItem.quantity || 1) + 1;
@@ -197,4 +209,26 @@ export class PrescriptionComponent {
     this.showEditPrescription = false;
   }
 
+  addNonStock() {
+    this.prescriptionList = [
+      ...this.prescriptionList,
+      {
+        "productHistoryId": 0,
+        "productId": 0,
+        "brandId": 0,
+        "brandName": this.prescriptionForm.value.brandName,
+        "productName": this.prescriptionForm.value.productName,
+        "qtyOnHand": 0,
+        "sellingPrice": 0,
+        "expiryDate": "00/0000",
+        "unit": this.prescriptionForm.value.unit,
+        "dosage": this.prescriptionForm.value.dosage,
+        "quantity": this.prescriptionForm.value.qty,
+        "instructions": this.prescriptionForm.value.instructions
+      }
+    ];
+
+    this.showAddNonStock = false;
+    this.prescriptionForm.reset();
+  }
 }

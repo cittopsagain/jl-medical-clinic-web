@@ -2,9 +2,9 @@
   <mat-card-content>
     <div class="row justify-content-end">
       <div class="col-sm-4 text-right">
-        <a routerLink="/apps/inventory-pharmacy/stock-receiving" mat-flat-button class="bg-error text-white m-r-10">
+        <!--<a routerLink="/apps/inventory-pharmacy/stock-receiving" mat-flat-button class="bg-error text-white m-r-10">
           Cancel
-        </a>
+        </a>-->
         <button mat-flat-button color="primary"
                 [disabled]="header?.headerForm?.invalid || items?.items?.length === 0"
                 (click)="saveStock()">

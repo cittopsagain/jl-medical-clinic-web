@@ -1,8 +1,8 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {Header, StockReceivingService} from "../services/stock-receiving.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {merge, Observable, of as observableOf} from "rxjs";
+import {interval, merge, Observable, of as observableOf, Subscription} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {AsyncPipe, DatePipe, UpperCasePipe} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -21,6 +21,9 @@ import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {ToastrService} from "ngx-toastr";
 import {RouterLink} from "@angular/router";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {AddStockReceivingComponent} from "../add-stock-receiving/add-stock-receiving.component";
+import {ViewStockReceivingComponent} from "../view-stock-receiving/view-stock-receiving.component";
 
 @Component({
   selector: 'app-stock-receiving-list',
@@ -50,20 +53,28 @@ import {RouterLink} from "@angular/router";
     MatFormField,
     MatHeaderCellDef,
     RouterLink,
-    DatePipe
+    DatePipe,
+    MatTabGroup,
+    MatTab,
+    AddStockReceivingComponent,
+    ViewStockReceivingComponent
   ],
   templateUrl: './stock-receiving-list.component.html',
   styleUrl: './stock-receiving-list.component.scss'
 })
-export class StockReceivingListComponent {
+export class StockReceivingListComponent implements OnDestroy {
 
   data: Header[] = [];
 
+  selectedIndex = 0;
   resultsLength = 0;
   isLoadingResults = true;
   isError = false;
   pageSize = 30;
   errorMessage: string = 'Problem loading data. Please try again later.';
+  selectedPurchaseId: number;
+
+  private refreshSubscription: Subscription;
 
   @ViewChild('supplierNameInput') supplierNameInput: ElementRef;
 
@@ -78,6 +89,18 @@ export class StockReceivingListComponent {
 
   ngAfterViewInit() {
     this.getStockReceivingList();
+
+    // Set up automatic refresh every 10 seconds
+    this.refreshSubscription = interval(10000).subscribe(() => {
+      this.getStockReceivingList();
+    });
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription to prevent memory leaks
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
   }
 
   getStockReceivingList() {
@@ -116,5 +139,10 @@ export class StockReceivingListComponent {
   applyFilter() {
     this.paginator.pageIndex = 0;
     this.getStockReceivingList();
+  }
+
+  viewStockReceiving(purchaseId: number) {
+    this.selectedIndex = 2;
+    this.selectedPurchaseId = purchaseId;
   }
 }

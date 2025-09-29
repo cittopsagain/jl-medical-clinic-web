@@ -1,0 +1,53 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex justify-content-between align-items-center">
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
+      <button mat-flat-button (click)="saveMedicine()"
+              [disabled]="medicineForm.invalid"
+              color="primary">
+        Save Medicine
+      </button>
+    </div>
+
+    <form [formGroup]="medicineForm">
+      <mat-form-field appearance="outline" class="w-100 m-t-10">
+        <mat-label>Brand Name</mat-label>
+        <input type="text" matInput required [matAutocomplete]="autoGroup"  formControlName="brandName" />
+        <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="onBrandSelected($event.option.value)">
+          @for(group of groupedBrandObservable | async; track group) {
+            <mat-optgroup [label]="group.letter">
+              @for(name of group.names; track name) {
+                <mat-option [value]="name">
+                  {{ name }}
+                </mat-option>
+              }
+            </mat-optgroup>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Generic Name</mat-label>
+        <input matInput placeholder="Product Name" name="productName" formControlName="genericName">
+      </mat-form-field>
+
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Unit Name</mat-label>
+        <input type="text" #unitNameInput placeholder="Pick one" aria-label="Number" matInput formControlName="unitName"
+               [matAutocomplete]="auto" />
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="onUnitSelected($event.option.value)">
+          @for(unit of unitNameObservable | async; track unit) {
+            <mat-option [value]="unit.unitName | uppercase">
+              {{ unit.unitName | uppercase }}
+            </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Dosage</mat-label>
+        <input matInput  #dosageInput placeholder="Dosage" name="dosage" formControlName="dosage"/>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+</mat-card>

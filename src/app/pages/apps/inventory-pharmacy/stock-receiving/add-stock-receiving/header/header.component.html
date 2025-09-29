@@ -16,9 +16,26 @@
     </mat-form-field>
   </div>
 
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Supplier</mat-label>
+    <input matInput placeholder="Supplier" #supplierNameInput required [matAutocomplete]="supplierAutoGroup" (click)="onInputSupplierClick();" name="supplier" [formControl]="headerForm.controls.supplierGroup"/>
+
+    <mat-autocomplete #supplierAutoGroup="matAutocomplete" (optionSelected)="onSupplierSelected($event.option.value)">
+      @for(group1 of supplierGroupOptions | async; track group1) {
+        <mat-optgroup [label]="group1.letter">
+          @for(name of group1.names; track name) {
+            <mat-option [value]="name">
+              {{ name }}
+            </mat-option>
+          }
+        </mat-optgroup>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
   <mat-form-field appearance="outline" class="w-100 m-t-10">
     <mat-label>Agent</mat-label>
-    <input type="text" matInput required [matAutocomplete]="autoGroup" [formControl]="headerForm.controls.agentGroup" />
+    <input type="text" matInput required #agentNameInput [matAutocomplete]="autoGroup" (click)="onInputAgentClick();" [formControl]="headerForm.controls.agentGroup" />
     <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="onAgentSelected($event.option.value)">
       @for(group of agentGroupOptions | async; track group) {
         <mat-optgroup [label]="group.letter">
@@ -30,11 +47,6 @@
         </mat-optgroup>
       }
     </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Supplier</mat-label>
-    <input matInput placeholder="Supplier" readonly name="supplier" formControlName="supplier"/>
   </mat-form-field>
 
   <div class="d-flex gap-8">

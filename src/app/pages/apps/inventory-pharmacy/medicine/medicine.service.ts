@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {environment} from "../../../../../environments/environment";
+import {MedicineApi} from "./models/medicine";
 
 @Injectable({
   providedIn: 'root'
@@ -41,21 +42,4 @@ export class MedicineService {
     const href = `${environment.MEDICINE_API_URL}`;
     return this.httpClient.put<any>(href, medicine);
   }
-}
-
-export interface MedicineApi {
-  items: Medicine[];
-  totalCount: number;
-}
-
-export interface Medicine {
-  productId: number;
-  productName: string;
-  brandName: string;
-  dosage: string;
-}
-
-export interface Brands {
-  brandId: number;
-  brandName: string;
 }

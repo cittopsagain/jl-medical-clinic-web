@@ -10,8 +10,13 @@
         <a mat-flat-button class="bg-error text-white m-r-10" *ngIf="showPrintMedicalCertificateButton" (click)="printMedicalCertificate()">
           Print Medical Certificate
         </a>
+        <button mat-flat-button color="primary" (click)="updatePatientDiagnosis()"
+                *ngIf="medicalSummaryComponent && showUpdateButton"
+                [disabled]="medicalSummaryComponent.diagnosisForm.invalid">
+          Update Patient Diagnosis
+        </button>
         <button mat-flat-button color="primary" (click)="savePatientDiagnosis()"
-                *ngIf="medicalSummaryComponent && showSaveButton"
+                *ngIf="medicalSummaryComponent && showSaveButton && !showUpdateButton"
                 [disabled]="medicalSummaryComponent.diagnosisForm.invalid">
           Save Patient Diagnosis
         </button>
@@ -31,8 +36,117 @@
       </div>
       Patient Information
     </ng-template>
-    <div class="f-s-14 p-16 rounded m-t-12">
-      <app-patient-information-medical-records [patientInformation]="patientInformation"></app-patient-information-medical-records>
+    <div class="f-s-14 p-16 rounded">
+      <div class="text-right">
+        <button mat-flat-button color="primary" class="m-b-20"
+                (click)="updatePatientInformation()"
+                [disabled]="patientForm.invalid">Update Patient Information</button>
+      </div>
+      <!-- <app-patient-information-medical-records [patientInformation]="patientInformation"></app-patient-information-medical-records> -->
+      <form [formGroup]="patientForm">
+        <div class="row">
+          <!-- Patient Id -->
+          <div class="col-lg-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Patient Id</mat-label>
+              <input matInput readonly placeholder="Patient Id" formControlName="patientId" name="patientId" />
+            </mat-form-field>
+          </div>
+
+          <!-- Visit Id -->
+          <div class="col-lg-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Visit Id</mat-label>
+              <input matInput readonly placeholder="Visit Id" formControlName="visitId" name="visitId" />
+            </mat-form-field>
+          </div>
+
+          <!-- Visit Type -->
+          <div class="col-lg-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Visit Type</mat-label>
+              <mat-select formControlName="visitType" disableOptionCentering placeholder="Visit Type" required>
+                @for (visit of visitType; track visit) {
+                  <!--<mat-option [value]="gender === 'Male' ? 'M' : (gender === 'Female' ? 'F' : gender)">-->
+                  <mat-option [value]="visit">
+                    {{ visit }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+            <!-- Last Name -->
+            <div class="col-lg-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Last Name</mat-label>
+                <input matInput placeholder="Last Name" formControlName="lastName" name="lastName" />
+              </mat-form-field>
+            </div>
+
+            <!-- First Name -->
+            <div class="col-lg-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>First Name</mat-label>
+                <input matInput placeholder="First Name" formControlName="firstName" name="firstName" />
+              </mat-form-field>
+            </div>
+
+            <!-- Middle Name -->
+            <div class="col-lg-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Middle Name</mat-label>
+                <input matInput placeholder="Middle Name" formControlName="middleName" name="middleName" />
+              </mat-form-field>
+            </div>
+
+            <!-- Birth Date -->
+            <div class="col-lg-6">
+              <!--<mat-form-field appearance="outline" class="w-100">
+                <mat-label>Birth Date</mat-label>
+                <input matInput placeholder="Middle Name" value="{{ patientInformation?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
+              </mat-form-field>-->
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Birth Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required/>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <!-- Address -->
+            <div class="col-lg-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Address</mat-label>
+                <input matInput placeholder="Address" formControlName="address" name="address" />
+              </mat-form-field>
+            </div>
+
+            <!-- Gender -->
+            <div class="col-lg-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Gender</mat-label>
+                <mat-select formControlName="sex" disableOptionCentering placeholder="Gender" required>
+                  @for (gender of gender; track gender) {
+                    <!--<mat-option [value]="gender === 'Male' ? 'M' : (gender === 'Female' ? 'F' : gender)">-->
+                    <mat-option [value]="gender">
+                      {{ gender }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="col-lg-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Contact Number</mat-label>
+                <input matInput placeholder="Contact Number" formControlName="contactNumber" name="sex" />
+              </mat-form-field>
+            </div>
+        </div>
+      </form>
     </div>
   </mat-tab>
 
@@ -47,7 +161,75 @@
       Vital Signs
     </ng-template>
     <div class="f-s-14 p-16 rounded m-t-12">
-      <app-vital-signs [vitalSigns]="vitalSigns"></app-vital-signs>
+      <div class="text-right">
+        <button mat-flat-button color="primary" class="m-b-20"
+                (click)="updateVitalSigns()"
+                [disabled]="vitalSignsForm.invalid">Update Vital Signs</button>
+      </div>
+
+      <form [formGroup]="vitalSignsForm">
+        <div class="row">
+          <!-- Weight -->
+          <div class="col-lg-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Weight(kg)</mat-label>
+              <input matInput placeholder="Weight(kg)"
+                     formControlName="weight"
+                     name="weight" />
+            </mat-form-field>
+          </div>
+
+          <!-- Height -->
+          <div class="col-lg-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Height(cm)</mat-label>
+              <input matInput placeholder="Height(cm)"
+                     formControlName="height"
+                     name="height" />
+            </mat-form-field>
+          </div>
+
+          <!-- Temperature -->
+          <div class="col-lg-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Temperature</mat-label>
+              <input matInput placeholder="Temperature"
+                     formControlName="temperature"
+                     name="temperature" />
+            </mat-form-field>
+          </div>
+
+          <!-- Blood Pressure -->
+          <div class="col-lg-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Blood Pressure</mat-label>
+              <input matInput placeholder="Blood Pressure"
+                     formControlName="bloodPressure"
+                     name="bloodPressure" />
+            </mat-form-field>
+          </div>
+
+          <!-- Heart Rate -->
+          <div class="col-lg-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Heart Rate</mat-label>
+              <input matInput placeholder="Heart Rate"
+                     formControlName="heartRate"
+                     name="heartRate" />
+            </mat-form-field>
+          </div>
+
+          <!-- Oxygen Saturation -->
+          <div class="col-lg-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Oxygen Saturation</mat-label>
+              <input matInput placeholder="Oxygen Saturation"
+                     formControlName="oxygenSaturation"
+                     name="oxygenSaturation" />
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
     </div>
   </mat-tab>
 

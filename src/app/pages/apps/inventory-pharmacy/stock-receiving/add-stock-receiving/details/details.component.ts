@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {Medicine, MedicineService} from "../../../medicine/medicine.service";
+import {MedicineService} from "../../../medicine/medicine.service";
 import {ToastrService} from "ngx-toastr";
 import {
   FormBuilder,
@@ -31,6 +31,7 @@ import {TablerIconComponent} from "angular-tabler-icons";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {ItemsService} from "../items/items.service";
+import {Medicine} from "../../../medicine/models/medicine";
 
 @Component({
   selector: 'app-details',
@@ -151,8 +152,8 @@ export class DetailsComponent {
   onRowClick(row: any) {
     this.detailForm.patchValue({
       brandName: row.brandName,
-      medicineName: row.productName,
-      medicineId: row.productId,
+      medicineName: row.genericName,
+      medicineId: row.medicineId,
       unitId: row.unitId,
       unit: row.unitName == null ? '' : row.unitName.toUpperCase()
     });

@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {Patient} from "../medical-records.service";
 import {DatePipe} from "@angular/common";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-patient-information-medical-records',
@@ -9,7 +10,8 @@ import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
     DatePipe,
     MatFormField,
     MatInput,
-    MatLabel
+    MatLabel,
+    FormsModule
   ],
   templateUrl: './patient-information.component.html',
   styleUrl: './patient-information.component.scss'
