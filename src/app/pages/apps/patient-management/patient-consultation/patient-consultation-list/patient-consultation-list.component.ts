@@ -55,7 +55,7 @@ import {ToastrService} from "ngx-toastr";
 export class PatientConsultationListComponent implements OnDestroy {
   patientName: string;
 
-  displayedColumns: string[] = ['patientId', 'consultationId', 'visitType', 'patientName', 'address', 'status', 'action'];
+  displayedColumns: string[] = ['number', 'patientId', 'consultationId', 'visitType', 'patientName', 'address', 'status', 'action'];
   data: PatientConsultation[] = [];
   isLoadingResults = true;
   isError = false;

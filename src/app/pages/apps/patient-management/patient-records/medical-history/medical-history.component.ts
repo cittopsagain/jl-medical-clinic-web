@@ -61,8 +61,6 @@ export class MedicalHistoryComponent {
     if (this.patientId) {
       this.patientService.getMedicalHistory(this.patientId).subscribe({
         next: (data: MedicalHistoryApi) => {
-          console.log(data);
-
           this.patientVisits = data.patientVisits;
           this.patientPrescriptions = data.patientPrescriptionsList;
         },
