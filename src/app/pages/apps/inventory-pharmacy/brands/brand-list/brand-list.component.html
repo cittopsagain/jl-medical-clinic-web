@@ -1,74 +1,74 @@
-<div class="example-container">
-  <mat-card class="cardWithShadow">
-    <mat-card-content>
-      <!--      <div class="row justify-content-between gap-16">-->
-      <div class="row gap-6">
-        <div class="col-lg-4">
-          <mat-form-field appearance="outline" class="w-100 hide-hint">
-            <mat-label>Brand Name</mat-label>
-            <input
-              matInput
-              placeholder="Brand Name"
-              [(ngModel)]="brandName"
-              (keyup.enter)="applyFilter()"
-              #brandNameInput
-            />
-          </mat-form-field>
+<mat-tab-group [(selectedIndex)]="selectedTabIndex">
+  <mat-tab label="Brand List">
+    <div class="example-container">
+      <mat-card class="cardWithShadow">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-lg-12">
+              <mat-form-field appearance="outline" class="w-100 hide-hint">
+                <mat-label>Brand Name</mat-label>
+                <input
+                  matInput
+                  placeholder="Brand Name"
+                  [(ngModel)]="brandName"
+                  (keyup.enter)="applyFilter()"
+                  #brandNameInput
+                />
+              </mat-form-field>
+            </div>
+            <!--<div class="col-lg-4">
+              <button mat-flat-button (click)="applyFilter()" color="primary">
+                Search
+              </button>
+            </div> -->
+          </div>
+          <div class="example-table-container responsive-table">
+            <table mat-table [dataSource]="data" matSort matSortActive="date_created" matSortDisableClear
+                   matSortDirection="desc" class="hover-table">
+              <!-- Number Column -->
+              <ng-container matColumnDef="number">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  #
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">{{ ((paginator.pageIndex * pageSize ) + i ) + 1 }}</td>
+              </ng-container>
+
+              <!-- Brand Name -->
+              <ng-container matColumnDef="brandName">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Brand Name
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">{{ row.brandName }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+
+          <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+        </mat-card-content>
+      </mat-card>
+
+      <!--@if(isLoadingResults || isError) {
+        <div class="example-loading-shade" style="margin-top: 20px;">
+          @if(isLoadingResults) {
+            <mat-spinner></mat-spinner>
+          } @if(isError) {
+          <div class="example-rate-limit-reached">
+            {{ errorMessage }}
+          </div>
+        }
         </div>
-        <div class="col-lg-4">
-          <button mat-flat-button (click)="applyFilter()" color="primary">
-            Search
-          </button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card class="cardWithShadow">
-    <mat-card-content>
-      <div class="col-lg-12 d-flex align-items-center justify-content-end">
-        <button mat-flat-button [routerLink]="['/apps/inventory-pharmacy/brands/add-brand']" color="primary">
-          Add Brand
-        </button>
-      </div>
-
-      <div class="example-table-container responsive-table">
-        <table mat-table [dataSource]="data" matSort matSortActive="date_created" matSortDisableClear
-               matSortDirection="desc" class="hover-table">
-          <!-- Number Column -->
-          <ng-container matColumnDef="number">
-            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-              #
-            </th>
-            <td mat-cell *matCellDef="let row; let i = index">{{ ((paginator.pageIndex * pageSize ) + i ) + 1 }}</td>
-          </ng-container>
-
-          <!-- Brand Name -->
-          <ng-container matColumnDef="brandName">
-            <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-              Brand Name
-            </th>
-            <td mat-cell *matCellDef="let row; let i = index">{{ row.brandName }}</td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-      </div>
-
-      <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
-    </mat-card-content>
-  </mat-card>
-
-  <!--@if(isLoadingResults || isError) {
-    <div class="example-loading-shade" style="margin-top: 20px;">
-      @if(isLoadingResults) {
-        <mat-spinner></mat-spinner>
-      } @if(isError) {
-      <div class="example-rate-limit-reached">
-        {{ errorMessage }}
-      </div>
-    }
+      }-->
     </div>
-  }-->
-</div>
+  </mat-tab>
+
+  <mat-tab label="Add Brand">
+    <app-add-brand></app-add-brand>
+  </mat-tab>
+
+  <mat-tab label="Edit Brand">
+    <!-- Edit Brand -->
+  </mat-tab>
+</mat-tab-group>

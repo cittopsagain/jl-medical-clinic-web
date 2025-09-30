@@ -1,8 +1,8 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {Brands, BrandsApi, BrandsService} from "../brands.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {merge, Observable, of as observableOf} from "rxjs";
+import {interval, merge, Observable, of as observableOf, Subscription} from "rxjs";
 import {PatientRecords} from "../../../patient-management/patient-records/patient-records.service";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {MatButton} from "@angular/material/button";
@@ -21,6 +21,8 @@ import {
   MatTable
 } from "@angular/material/table";
 import {ToastrService} from "ngx-toastr";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {AddBrandComponent} from "../add-brand/add-brand.component";
 
 @Component({
   selector: 'app-brand-list',
@@ -46,15 +48,19 @@ import {ToastrService} from "ngx-toastr";
     MatHeaderRowDef,
     MatRow,
     MatRowDef,
-    MatPaginator
+    MatPaginator,
+    MatTab,
+    MatTabGroup,
+    AddBrandComponent
   ],
   templateUrl: './brand-list.component.html',
   styleUrl: './brand-list.component.scss'
 })
-export class BrandListComponent {
+export class BrandListComponent implements OnDestroy {
 
   @ViewChild('brandNameInput') brandNameInput: ElementRef;
 
+  selectedTabIndex: number = 0;
   displayedColumns: string[] = ['number', 'brandName'];
   data: Brands[] = [];
   resultsLength = 0;
@@ -69,9 +75,17 @@ export class BrandListComponent {
 
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
+  private refreshSubscription: Subscription;
 
   constructor(private brandsService: BrandsService, private toastR: ToastrService) {
 
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription to prevent memory leaks
+    if (this.refreshSubscription) {
+      this.refreshSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {
@@ -80,6 +94,10 @@ export class BrandListComponent {
     }
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.getBrands();
+
+    this.refreshSubscription = interval(10000).subscribe(() => {
+      this.getBrands();
+    });
   }
 
   applyFilter() {

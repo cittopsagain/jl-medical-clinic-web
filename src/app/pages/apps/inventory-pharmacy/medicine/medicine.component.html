@@ -77,6 +77,15 @@
           </table>
         </div>
         <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
+
+        @if(isLoadingResults || isError) {
+          <div class="example-loading-shade">
+            @if(isLoadingResults) {
+              <mat-spinner></mat-spinner>
+            }
+          </div>
+        }
+
       </mat-card-content>
     </mat-card>
   </mat-tab>
@@ -89,11 +98,3 @@
     <app-edit-medicine [medicine]="selectedMedicine"></app-edit-medicine>
   </mat-tab>
 </mat-tab-group>
-
-@if(isLoadingResults || isError) {
-  <div class="example-loading-shade">
-    @if(isLoadingResults) {
-      <mat-spinner></mat-spinner>
-    }
-  </div>
-}
