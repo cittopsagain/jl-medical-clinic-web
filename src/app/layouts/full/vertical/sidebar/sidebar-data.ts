@@ -41,7 +41,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Diagnosis & Records',
     iconName: 'clipboard-heart',
-    route: 'apps/diagnosis/patient-diagnosis',
+    route: 'apps/diagnosis/patient-diagnosis/0',
   },
   /*{
     navCap: 'Medical Records',
@@ -69,6 +69,11 @@ export const navItems: NavItem[] = [
     iconName: 'pill',
     route: 'apps/inventory-pharmacy/medicines',
   },
+  /*{
+    displayName: 'Medicine Dosage',
+    iconName: 'pill',
+    route: 'apps/inventory-pharmacy/medicines1',
+  },*/
   {
     displayName: 'Stock Adjustments',
     iconName: 'clipboard',
@@ -79,6 +84,11 @@ export const navItems: NavItem[] = [
     iconName: 'building-warehouse',
     route: 'apps/inventory-pharmacy/stock-receiving',
   },
+  /*{
+    displayName: 'Stock Card Viewer',
+    iconName: 'building-warehouse',
+    route: 'apps/inventory-pharmacy/stock-receiving',
+  },*/
   {
     displayName: 'Expiration Date Monitoring',
     iconName: 'calendar-x',
