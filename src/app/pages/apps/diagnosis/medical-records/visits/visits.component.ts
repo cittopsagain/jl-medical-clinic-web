@@ -72,6 +72,7 @@ export class VisitsComponent {
   }
 
   @ViewChild('remarksInput') remarksInput: ElementRef;
+  @ViewChild('diagnosisInput') diagnosisInput: ElementRef;
 
   constructor(private medicalRecordsService: MedicalRecordsService,
               private vitalSignsService: VitalSignsService,
@@ -142,10 +143,12 @@ export class VisitsComponent {
     this.medicalRecordsService.updatePatientVisitRemarks(
       this.patientId ?? 0,
       this.visits[this.currentPatientVisitRowIndex].visitId,
-      remarks
+      remarks,
+      this.diagnosisInput?.nativeElement?.value || ''
     ).subscribe({
       next: (data) => {
         this.toastR.success(data.message, 'Success');
+        this.getMedicalRecords();
       }, error: (err) => {
         this.toastR.error(err.error.message, 'Error');
       }

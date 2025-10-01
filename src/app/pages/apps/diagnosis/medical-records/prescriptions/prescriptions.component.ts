@@ -10,7 +10,7 @@ import {
   MatHeaderRowDef,
   MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
-import {UpperCasePipe} from "@angular/common";
+import {NgIf, UpperCasePipe} from "@angular/common";
 import {MatIconButton} from "@angular/material/button";
 import {TablerIconComponent} from "angular-tabler-icons";
 
@@ -29,7 +29,8 @@ import {TablerIconComponent} from "angular-tabler-icons";
     UpperCasePipe,
     MatHeaderCellDef,
     MatIconButton,
-    TablerIconComponent
+    TablerIconComponent,
+    NgIf
   ],
   templateUrl: './prescriptions.component.html',
   styleUrl: './prescriptions.component.scss'
@@ -38,8 +39,10 @@ export class PrescriptionsComponent {
 
   prescriptions: Prescription[] = [];
   prescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit'];
+  showEditPrescriptionDiv: boolean = false;
 
   constructor(private prescriptionsService: PrescriptionsService) {
+
   }
 
   ngAfterViewInit() {
@@ -50,4 +53,8 @@ export class PrescriptionsComponent {
     });
   }
 
+  showEditDiv(patientId: number, visitId: number) {
+    // console.log('Patient Id: ', patientId, 'Visit Id: ', visitId);
+    // this.showEditPrescriptionDiv = true;
+  }
 }

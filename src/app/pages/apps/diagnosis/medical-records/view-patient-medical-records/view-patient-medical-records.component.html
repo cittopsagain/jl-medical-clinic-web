@@ -2,10 +2,10 @@
   <mat-card-content>
     <div class="row justify-content-end">
       <div class="col-sm-4 text-right">
-        <a routerLink="/apps/diagnosis/patient-diagnosis"
+        <a routerLink="/apps/diagnosis/patient-diagnosis/1"
            (click)="clearLocalStorage();"
            mat-flat-button class="bg-error text-white m-r-10">
-          Back to Diagnosis & Records
+          Back to Medical Records List
         </a>
       </div>
     </div>
@@ -50,12 +50,20 @@
     <mat-card>
       <mat-card-header class="d-flex justify-content-between align-items-center">
         <mat-card-title>Patient Prescriptions</mat-card-title>
-        <a mat-icon-button (click)="printPatientPrescription()">
-          <i-tabler
-            name="printer"
-            class="icon-18"
-          ></i-tabler>
-        </a>
+        <div class="d-flex align-items-center">
+          <a mat-icon-button (click)="updatePrescription()" class="m-r-10">
+            <i-tabler
+              name="pencil"
+              class="icon-18"
+            ></i-tabler>
+          </a>
+          <a mat-icon-button (click)="printPatientPrescription()">
+            <i-tabler
+              name="printer"
+              class="icon-18"
+            ></i-tabler>
+          </a>
+        </div>
       </mat-card-header>
       <mat-card-content>
         <app-prescriptions></app-prescriptions>

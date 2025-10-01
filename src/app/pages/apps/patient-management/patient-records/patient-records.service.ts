@@ -82,6 +82,8 @@ export interface PatientRecords {
   markForInProgress: number,
   contactNumber: string,
   visitType: string;
+  visitStatus: string;
+  visitId: number
 }
 
 export interface MedicalHistoryApi {

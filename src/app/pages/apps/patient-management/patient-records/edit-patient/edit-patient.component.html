@@ -17,7 +17,8 @@
     </div>
 
     <form [formGroup]="patientForm" class="m-t-20">
-      <div class="p-16 bg-light-primary rounded m-t-10 m-b-20" *ngIf="patientRecord?.visitType && patientRecord?.visitType !== ''">
+      <div class="p-16 bg-light-primary rounded m-t-10 m-b-20"
+           *ngIf="patientRecord?.visitType && patientRecord?.visitType !== '' && patientRecord?.visitStatus !== 'COMPLETED'">
         <h5 class="f-s-14 text-primary d-flex align-items-center f-w-600">
           <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
           >Patient has been scheduled for a {{ patientRecord?.visitType }}
@@ -92,7 +93,7 @@
         </div>
 
         <div class="col-12">
-          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Visit Type *</label>
+          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Visit Type</label>
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="visitType">
             @for(visit of visitType; track visit) {
               <mat-radio-button class="example-radio-button" color="primary" [value]="visit">

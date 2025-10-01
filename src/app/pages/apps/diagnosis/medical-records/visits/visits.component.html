@@ -42,8 +42,9 @@
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Diagnosis</mat-label>
-        <textarea matInput readonly placeholder="Diagnosis"
+        <textarea matInput placeholder="Diagnosis"
                   value="{{ currentDiagnosis.diagnosis }}"
+                  #diagnosisInput
                   name="diagnosis"></textarea>
       </mat-form-field>
     </div>
@@ -61,7 +62,7 @@
     <div class="col-6 d-flex">
       <button mat-flat-button color="primary" class="w-100"
               (click)="updatePatientRemarks(); showRemarksDiv = false">
-        Update Remarks
+        Update
       </button>
     </div>
     <div class="col-6 d-flex">
@@ -73,73 +74,75 @@
 </div>
 
 
-<table mat-table [dataSource]="visits" class="hover-table" *ngIf="!showRemarksDiv">
-  <!-- Visit Id -->
-  <ng-container matColumnDef="visitId">
-    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-      Visit Id
-    </th>
-    <td mat-cell *matCellDef="let row">
-      {{ row.visitId }}
-    </td>
-  </ng-container>
+<div style="position: relative; max-height: 515px; overflow: auto;">
+  <table mat-table [dataSource]="visits" class="hover-table" *ngIf="!showRemarksDiv">
+    <!-- Visit Id -->
+    <ng-container matColumnDef="visitId">
+      <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+        Visit Id
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.visitId }}
+      </td>
+    </ng-container>
 
-  <!-- Date Time Visit -->
-  <ng-container matColumnDef="dateTimeVisit">
-    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-      Visit Date
-    </th>
-    <td mat-cell *matCellDef="let row">
-      {{ row.visitDateTime | date: 'MM/dd/yyyy' }}
-    </td>
-  </ng-container>
+    <!-- Date Time Visit -->
+    <ng-container matColumnDef="dateTimeVisit">
+      <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+        Visit Date
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.visitDateTime | date: 'MM/dd/yyyy' }}
+      </td>
+    </ng-container>
 
-  <!-- Diagnosis -->
-  <ng-container matColumnDef="diagnosis">
-    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-      Diagnosis
-    </th>
-    <td mat-cell *matCellDef="let row">
-      {{ getDiagnosisByPatientIdAndVisitId(row.visitId) }}
-      <h6 class="mat-subtitle-1 f-s-14 f-w-600 text-primary">
-        Remarks: {{ getRemarksByPatientIdAndVisitId(row.visitId) }}
-      </h6>
-    </td>
-  </ng-container>
+    <!-- Diagnosis -->
+    <ng-container matColumnDef="diagnosis">
+      <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+        Diagnosis
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ getDiagnosisByPatientIdAndVisitId(row.visitId) }}
+        <h6 class="mat-subtitle-1 f-s-14 f-w-600 text-primary">
+          Remarks: {{ getRemarksByPatientIdAndVisitId(row.visitId) }}
+        </h6>
+      </td>
+    </ng-container>
 
-  <!-- Action -->
-  <ng-container matColumnDef="action" *ngIf="showActionsButton">
-    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-      Action
-    </th>
-    <td mat-cell *matCellDef="let row; let i = index;">
-      <div class="d-flex align-items-center gap-8">
-        <!-- Print -->
-        <a
-          mat-icon-button
-          class="d-flex align-items-center justify-content-center" (click)="printMedicalCertificate(row.visitId);">
-          <i-tabler
-            name="printer"
-            class="icon-18 d-flex align-items-center"
-          ></i-tabler>
-        </a>
+    <!-- Action -->
+    <ng-container matColumnDef="action" *ngIf="showActionsButton">
+      <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+        Action
+      </th>
+      <td mat-cell *matCellDef="let row; let i = index;">
+        <div class="d-flex align-items-center gap-8">
+          <!-- Print -->
+          <a
+            mat-icon-button
+            class="d-flex align-items-center justify-content-center" (click)="printMedicalCertificate(row.visitId);">
+            <i-tabler
+              name="printer"
+              class="icon-18 d-flex align-items-center"
+            ></i-tabler>
+          </a>
 
-        <!-- Edit -->
-        <a
-          mat-icon-button
-          class="d-flex align-items-center justify-content-center"
-          (click)="showRemarksDiv = true; currentDiagnosis = diagnosis[i];"
-        >
-          <i-tabler
-            name="pencil"
-            class="icon-18 d-flex align-items-center"
-          ></i-tabler>
-        </a>
-      </div>
-    </td>
-  </ng-container>
+          <!-- Edit -->
+          <a
+            mat-icon-button
+            class="d-flex align-items-center justify-content-center"
+            (click)="showRemarksDiv = true; currentDiagnosis = diagnosis[i];"
+          >
+            <i-tabler
+              name="pencil"
+              class="icon-18 d-flex align-items-center"
+            ></i-tabler>
+          </a>
+        </div>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="visitsDisplayedColumns; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: visitsDisplayedColumns; let i = index"
-  (click)="currentPatientVisitRowIndex = i; onPatientVisitRowClick(row.visitId);"></tr>
-</table>
+    <tr mat-header-row *matHeaderRowDef="visitsDisplayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: visitsDisplayedColumns; let i = index"
+        (click)="currentPatientVisitRowIndex = i; onPatientVisitRowClick(row.visitId);"></tr>
+  </table>
+</div>

@@ -93,6 +93,7 @@ export class PatientDiagnosisComponent {
   showPrintMedicalCertificateButton: boolean = false;
   showSaveButton: boolean = true;
   showUpdateButton: boolean = false;
+  showMoveToWaitingButton: boolean = true;
 
   patientId: number = 0;
   visitId: number = 0;
@@ -120,7 +121,8 @@ export class PatientDiagnosisComponent {
       sex: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       markForConsultation: [0],
-      visitType: ['', Validators.required]
+      visitType: ['', Validators.required],
+      age: ''
     });
 
     this.vitalSignsForm = this.fb.group({
@@ -163,7 +165,8 @@ export class PatientDiagnosisComponent {
             sex: data.data.patient.gender,
             contactNumber: data.data.patient.contactNumber,
             markForConsultation: 0,
-            visitType: data.data.patient.visitType
+            visitType: data.data.patient.visitType,
+            age: this.calculateAge(data.data.patient.birthDate)
           }
         );
 
@@ -227,6 +230,7 @@ export class PatientDiagnosisComponent {
         if (data.statusCode == 201) {
           this.toastR.success(data.message, 'Success');
           this.showPrintMedicalCertificateButton = true;
+          this.showMoveToWaitingButton = false;
           this.showSaveButton = false;
           this.showUpdateButton = true;
 
@@ -419,6 +423,39 @@ export class PatientDiagnosisComponent {
     });
   }
 
+  moveToWaitingStatus() {
+    if (this.patientInformation?.patientId == null) {
+      this.toastR.warning('No patient selected to move to waiting status', 'Warning');
+      return;
+    }
+
+    this.patientDiagnosisService.updatePatientStatusToWaiting({
+      patientId: this.patientInformation.patientId,
+      visitId: this.visitId,
+    }).subscribe({
+      next: (data: any) => {
+        if (data.statusCode == 200) {
+          this.patientForm.reset();
+          this.vitalSignsForm.reset();
+          this.showMoveToWaitingButton = false;
+          this.toastR.success(data.message, 'Success');
+          return;
+        }
+
+        this.toastR.error(data.message, 'Error');
+      },
+      error: (error) => {
+        this.toastR.error('Failed to move patient to waiting status', 'Error');
+      }
+    });
+  }
+
+  onBirthDateSelected() {
+    this.patientForm.patchValue({
+      age: this.calculateAge(this.patientForm.value.birthDate)
+    });
+  }
+
   // Todo: Transfer it to utility class
   formatDate(date: Date) {
     const yyyy = date.getFullYear();
@@ -434,5 +471,20 @@ export class PatientDiagnosisComponent {
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     return `${yyyy}${mm}${dd}`;
+  }
+
+  calculateAge(value: string): string {
+    const birthDate = new Date(value);
+    const today = new Date();
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+
+    // Adjust years and months if needed
+    if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+      years--;
+      months += 12;
+    }
+
+    return `${years} years ${months} months`;
   }
 }

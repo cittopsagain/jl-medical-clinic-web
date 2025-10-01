@@ -84,7 +84,8 @@ export class EditPatientComponent {
       sex: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       markForConsultation: [0],
-      visitType: ['', Validators.required]
+      visitType: '',
+      visitId: ''
     });
 
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
@@ -113,7 +114,8 @@ export class EditPatientComponent {
             sex: data.sex,
             markForConsultation: data.markForConsultation,
             contactNumber: data.contactNumber,
-            visitType: data.visitType
+            visitType: data.visitStatus == 'COMPLETED' ? '' : data.visitType,
+            visitId: data.visitId
           });
 
           // this.visitsService.setPatientId(data.patientId);
@@ -141,12 +143,21 @@ export class EditPatientComponent {
     this.patientService.updatePatientRecord(this.patientForm.value).subscribe({
       next: (response: any) => {
         this.toastr.success(response.message, 'Success');
-        this.patientForm.reset();
         // this.router.navigate(['/apps/patient-management/patient-records']);
-        this.router.navigate([
-          '/apps/patient-management/patient-consultation/edit-patient-for-consultation',
-          response.data
-        ]);
+        console.log(response.data);
+        if (this.patientForm.value.visitType != null && this.patientForm.value.visitType != '') {
+          this.router.navigate([
+            '/apps/patient-management/patient-consultation/edit-patient-for-consultation',
+            response.data
+          ]);
+        } else {
+          this.router.navigate([
+            'apps/patient-management/patient-records'
+          ]);
+
+          this.patientForm.reset();
+        }
+
       },
       error: (error) => {
         this.toastr.error(error.error.message, 'Error');

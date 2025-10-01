@@ -1,4 +1,8 @@
-<div class="example-table-container responsive-table">
+<div *ngIf="showEditPrescriptionDiv ">
+  Here!
+</div>
+
+<div class="example-table-container responsive-table" *ngIf="!showEditPrescriptionDiv">
   <table mat-table [dataSource]="prescriptions" class="hover-table">
     <!-- Visit Id -->
     <ng-container matColumnDef="visitId">

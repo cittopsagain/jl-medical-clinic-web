@@ -45,6 +45,11 @@ export class PatientDiagnosisService {
     const href = environment.PATIENT_DIAGNOSIS_API_URL;
     return this.httpClient.put<any>(href, diagnosis);
   }
+
+  updatePatientStatusToWaiting(details: any) {
+    const href = `${environment.PATIENT_DIAGNOSIS_API_URL}/move-to-waiting-status`;
+    return this.httpClient.put<any>(href, details);
+  }
 }
 
 export interface ProductApi {

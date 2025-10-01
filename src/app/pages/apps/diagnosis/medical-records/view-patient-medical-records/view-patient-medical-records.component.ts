@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Router, RouterLink} from "@angular/router";
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -35,6 +35,7 @@ export class ViewPatientMedicalRecordsComponent {
 
   patientInformation: Patient;
   visitId: number;
+  @ViewChild(PrescriptionsComponent) prescriptionComponent : PrescriptionsComponent;
 
   constructor(private vitalSignsService: VitalSignsService, private prescriptionService: PrescriptionsService,
               private router: Router, private medicalRecordsService: MedicalRecordsService,
@@ -91,6 +92,10 @@ export class ViewPatientMedicalRecordsComponent {
         this.toastR.error(error.error.message, 'Error');
       }
     });
+  }
+
+  updatePrescription() {
+    this.prescriptionComponent.showEditDiv(this.patientInformation.patientId, this.visitId);
   }
 
   clearLocalStorage() {

@@ -154,7 +154,7 @@ export const AppsRoutes: Routes = [
         }
       },
       {
-        path: 'diagnosis/patient-diagnosis',
+        path: 'diagnosis/patient-diagnosis/:id',
         component: DiagnosisAndMedicalRecordsComponent,
         data: {
           title: 'Diagnosis & Records',

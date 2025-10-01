@@ -2,8 +2,11 @@
   <mat-card-content>
     <div class="row">
       <div class="col-sm-4 text-left">
-        <a mat-flat-button class="bg-error text-white" (click)="refreshPatientDiagnosis()">
+        <a mat-flat-button class="bg-error text-white m-r-10" (click)="refreshPatientDiagnosis()">
           Refresh
+        </a>
+        <a mat-flat-button class="bg-info text-white" *ngIf="showMoveToWaitingButton" (click)="moveToWaitingStatus()">
+          Move to Waiting
         </a>
       </div>
       <div class="col-sm-8 text-right">
@@ -109,7 +112,7 @@
 
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Birth Date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required/>
+                <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required (dateChange)="onBirthDateSelected()"/>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -137,6 +140,14 @@
                 </mat-select>
               </mat-form-field>
             </div>
+
+          <!-- Age -->
+          <div class="col-lg-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Age</mat-label>
+              <input matInput readonly placeholder="Age" formControlName="age" name="age" />
+            </mat-form-field>
+          </div>
 
             <!-- Contact Number -->
             <div class="col-lg-6">
