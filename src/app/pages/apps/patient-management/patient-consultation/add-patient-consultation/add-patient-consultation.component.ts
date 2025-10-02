@@ -48,7 +48,7 @@ export class AddPatientConsultationComponent {
   }
 
   applyFilter() {
-    this.patientConsultation.getPatientConsultation('dave').subscribe();
+    // this.patientConsultation.getPatientConsultation('dave').subscribe();
   }
 
 }
