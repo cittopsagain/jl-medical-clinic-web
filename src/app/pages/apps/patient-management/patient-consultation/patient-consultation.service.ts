@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Observable} from "rxjs";
 
@@ -10,10 +10,21 @@ export class PatientConsultationService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getPatientConsultation(patientName: string): Observable<PatientConsultation> {
-    const href = `${environment.PATIENT_CONSULTATION_API_URL}/${encodeURIComponent(patientName)}`;
+  getPatientConsultation(patientName: string, status: string): Observable<PatientConsultation> {
+    let params = new HttpParams();
 
-    return this.httpClient.get<PatientConsultation>(href);
+    if (patientName) {
+      params = params.set('patientName', patientName);
+    }
+
+    if (status) {
+      params = params.set('status', status);
+    }
+
+    return this.httpClient.get<PatientConsultation>(
+      environment.PATIENT_CONSULTATION_API_URL,
+      { params }
+    );
   }
 
   getPatientConsultationById(consultationId: number): Observable<PatientConsultation> {

@@ -19,7 +19,7 @@ import {interval, merge, of as observableOf, Subscription} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {MatChipsModule} from "@angular/material/chips";
-import {NgClass} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
@@ -47,7 +47,8 @@ import {ToastrService} from "ngx-toastr";
     MatIconButton,
     TablerIconComponent,
     MatChipsModule,
-    NgClass
+    NgClass,
+    NgIf
   ],
   templateUrl: './patient-consultation-list.component.html',
   styleUrl: './patient-consultation-list.component.scss'
@@ -61,6 +62,7 @@ export class PatientConsultationListComponent implements OnDestroy {
   isError = false;
 
   refreshInterval: Subscription;
+  status: string = '';
 
   errorMessage: string = 'Problem loading data. Please try again later.';
 
@@ -95,7 +97,7 @@ export class PatientConsultationListComponent implements OnDestroy {
     merge().pipe(
       startWith({}),
       switchMap(() => {
-        return this.patientConsultationService!.getPatientConsultation(this.patientName);
+        return this.patientConsultationService!.getPatientConsultation(this.patientName, this.status);
       }),
       map((data: any) => {
         this.isLoadingResults = false;
@@ -127,6 +129,11 @@ export class PatientConsultationListComponent implements OnDestroy {
       default:
         return 'status-default';
     }
+  }
+
+  filterByStatus(status: string) {
+    this.status = status;
+    this.getPatientConsultation();
   }
 
   ngOnDestroy() {

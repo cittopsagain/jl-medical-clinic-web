@@ -130,6 +130,7 @@ export class PatientDiagnosisComponent {
       weight: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
       height: ['', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
       temperature: ['', [Validators.required, Validators.pattern('^([0-9]|[1-3][0-9]|4[0-2])(\\.\\d{1,2})?$'), Validators.min(0), Validators.max(42)]],
+      // bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
       bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
       heartRate: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
       oxygenSaturation: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
@@ -476,11 +477,21 @@ export class PatientDiagnosisComponent {
   calculateAge(value: string): string {
     const birthDate = new Date(value);
     const today = new Date();
-    let years = today.getFullYear() - birthDate.getFullYear();
-    let months = today.getMonth() - birthDate.getMonth();
 
-    // Adjust years and months if needed
-    if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+    // Determine which date is earlier and later
+    const earlier = birthDate < today ? birthDate : today;
+    const later = birthDate < today ? today : birthDate;
+
+    let years = later.getFullYear() - earlier.getFullYear();
+    let months = later.getMonth() - earlier.getMonth();
+
+    // Adjust years and months if needed based on the day of month
+    if (later.getDate() < earlier.getDate()) {
+      months--;
+    }
+
+    // Adjust negative months
+    if (months < 0) {
       years--;
       months += 12;
     }

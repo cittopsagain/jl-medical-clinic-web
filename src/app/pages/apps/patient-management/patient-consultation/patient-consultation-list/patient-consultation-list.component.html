@@ -2,22 +2,40 @@
   <mat-card class="cardWithShadow">
     <mat-card-content>
       <div class="row">
+        <div class="col-lg-8">
+          <div class="d-flex gap-4">
+            <button mat-flat-button *ngIf="status === ''" color="primary"
+                    (click)="filterByStatus('')">All</button>
+            <button mat-stroked-button *ngIf="status !== ''"
+                    (click)="filterByStatus('')">All</button>
+
+            <button mat-flat-button *ngIf="status === 'WAITING'" color="primary"
+                    (click)="filterByStatus('WAITING')">Waiting</button>
+            <button mat-stroked-button *ngIf="status !== 'WAITING'"
+                    (click)="filterByStatus('WAITING')">Waiting</button>
+
+            <button mat-flat-button *ngIf="status === 'IN_PROGRESS'" color="primary"
+                    (click)="filterByStatus('IN_PROGRESS')">In Progress</button>
+            <button mat-stroked-button *ngIf="status !== 'IN_PROGRESS'"
+                    (click)="filterByStatus('IN_PROGRESS')">In Progress</button>
+
+            <button mat-flat-button *ngIf="status === 'COMPLETED'" color="primary"
+                    (click)="filterByStatus('COMPLETED')">Completed</button>
+            <button mat-stroked-button *ngIf="status !== 'COMPLETED'"
+                    (click)="filterByStatus('COMPLETED')">Completed</button>
+          </div>
+        </div>
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100 hide-hint">
-            <mat-label>Patient Name</mat-label>
+            <mat-label>Search Patient Name</mat-label>
             <input
               matInput
-              placeholder="Patient Name"
+              placeholder="Search Patient Name"
               [(ngModel)]="patientName"
               (keyup.enter)="applyFilter()"
               #patientNameInput
             />
           </mat-form-field>
-        </div>
-        <div class="col-lg-4">
-          <button mat-flat-button (click)="applyFilter()" color="primary">
-            Search
-          </button>
         </div>
       </div>
     </mat-card-content>
