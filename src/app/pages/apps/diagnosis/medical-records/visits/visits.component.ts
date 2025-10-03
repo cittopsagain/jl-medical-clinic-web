@@ -95,7 +95,9 @@ export class VisitsComponent {
     return this.medicalRecordsService.getMedicalRecords(this.patientId ?? 0 ?? 0).subscribe({
       next: (res: any) => {
         for (let i = 0; i < res.prescriptions.length; i++) {
-          this.prescriptions.push(res.prescriptions[i].prescriptions);
+          // console.log(res.prescriptions[i]);
+          // this.prescriptions.push(res.prescriptions[i].prescriptions);
+          this.prescriptions.push(res.prescriptions[i]);
         }
 
         const mapped = {
