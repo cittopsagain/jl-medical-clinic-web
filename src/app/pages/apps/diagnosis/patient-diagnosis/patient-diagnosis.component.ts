@@ -28,6 +28,7 @@ import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/inp
 import {MatSelect} from "@angular/material/select";
 import {PatientRecordsService} from "../../patient-management/patient-records/patient-records.service";
 import {PatientConsultationService} from "../../patient-management/patient-consultation/patient-consultation.service";
+import {VitalSignsComponent} from "../medical-records/vital-signs/vital-signs.component";
 
 @Component({
   selector: 'app-patient-diagnosis',
@@ -59,7 +60,8 @@ import {PatientConsultationService} from "../../patient-management/patient-consu
     MatFormField,
     MatSuffix,
     MatOption,
-    MatSelect
+    MatSelect,
+    VitalSignsComponent
   ],
   providers: [
     provideNativeDateAdapter()
