@@ -13,23 +13,13 @@
 </mat-card>
 
 <div class="row">
-  <div class="col-6">
+  <div class="col-12">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Patient Information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <app-patient-information-medical-records [patientInformation]="patientInformation"></app-patient-information-medical-records>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <div class="col-6">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Vital Signs</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-vital-signs></app-vital-signs>
       </mat-card-content>
     </mat-card>
   </div>
@@ -48,12 +38,21 @@
   </div>
   <div class="col-6">
     <mat-card>
+      <mat-card-header>
+        <mat-card-title>Vital Signs</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-vital-signs></app-vital-signs>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
       <mat-card-header class="d-flex justify-content-between align-items-center">
         <mat-card-title>Patient Prescriptions</mat-card-title>
         <div class="d-flex align-items-center">
           <a mat-icon-button (click)="updatePrescription()" class="m-r-10">
             <i-tabler
-              name="pencil"
+              name="plus"
               class="icon-18"
             ></i-tabler>
           </a>
