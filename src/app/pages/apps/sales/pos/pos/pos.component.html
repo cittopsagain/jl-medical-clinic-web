@@ -8,17 +8,34 @@
 <mat-card class="cardWithShadow">
   <mat-card-content>
     <div class="row">
-      <div class="col-sm-7">
-        <mat-form-field appearance="outline" class="w-100 hide-hint">
-          <mat-label>Search</mat-label>
-          <input
-            matInput
-            placeholder="Search..."
-            [(ngModel)]="medicineName"
-            (keyup.enter)="applyFilter()"
-            #medicineNameInput
-          />
-        </mat-form-field>
+      <div class="col-sm-5">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Filter By</mat-label>
+              <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="getProducts()"
+                          disableOptionCentering placeholder="Filter By">
+                @for (filter of filter; track filter) {
+                  <mat-option [value]="filter.value">
+                    {{ filter.name }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-8">
+            <mat-form-field appearance="outline" class="w-100 hide-hint">
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                placeholder="Search..."
+                [(ngModel)]="medicineName"
+                (keyup.enter)="applyFilter()"
+                #medicineNameInput
+              />
+            </mat-form-field>
+          </div>
+        </div>
 
         <div class="example-table-container responsive-table">
           <table mat-table [dataSource]="data" matSort matSortActive="product_name" matSortDisableClear
@@ -95,14 +112,14 @@
       </div>
 
       <!-- Customer Order -->
-      <div class="col" style="margin-top: 15px;">
-        <h3 class="text-center">Customer Order</h3>
+      <div class="col-4" style="margin-top: 15px;">
+        <h3 class="text-center">Cart</h3>
 
         <mat-divider class="m-t-20"></mat-divider>
 
         <div class="col-12 m-t-10">
           <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Customer Order Type *</label>
-          <mat-radio-group [(ngModel)]="selectedCustomerType" aria-labelledby="example-radio-group-label" class="example-radio-group">
+          <mat-radio-group [(ngModel)]="selectedCustomerType" (ngModelChange)="showPatientModal($event)" aria-labelledby="example-radio-group-label" class="example-radio-group">
             @for(type of customerType; track type) {
               <mat-radio-button class="example-radio-button" color="primary" [value]="type">
                 {{ type }}
@@ -154,8 +171,17 @@
                 <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
                   Qty
                 </th>
-                <td mat-cell *matCellDef="let row; let i = index" (click)="removeItemFromCustomerOrders(row)">
-                  {{ row.qty }}
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <div *ngIf="showQtyInput && qtyInputIndex == i; else displayQty">
+                    <mat-form-field appearance="outline" class="m-t-20" style="width: 90px;">
+                      <input matInput name="qty" type="number"
+                             #qtyInput
+                             [value]="row.qty" (keyup.enter)="updateCustomerOrderQty(row, i)" />
+                    </mat-form-field>
+                  </div>
+                  <ng-template #displayQty>
+                    <span (click)="removeItemFromCustomerOrders(row)">{{ row.qty }}</span>
+                  </ng-template>
                 </td>
               </ng-container>
 
@@ -166,6 +192,25 @@
                 </th>
                 <td mat-cell *matCellDef="let row; let i = index">
                   {{ row.sellingPrice }}
+                </td>
+              </ng-container>
+
+              <!-- Action -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                  Action
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                  <a
+                    mat-icon-button
+                    class="d-flex align-items-center justify-content-center"
+                    (click)="showQtyInput = true; qtyInputIndex = i;"
+                  >
+                    <i-tabler
+                      name="pencil"
+                      class="icon-18 d-flex align-items-center"
+                    ></i-tabler>
+                  </a>
                 </td>
               </ng-container>
 
@@ -201,7 +246,7 @@
           <!-- Payment -->
           <div style="margin-top: 15px;">
             <button mat-flat-button color="primary" class="w-100"
-                    [disabled]="purchasedItems.length <= 0 || !selectedCustomerType"
+                    [disabled]="purchasedItems.length <= 0 || !selectedCustomerType || patient == null"
                     (click)="processPayment(true)">
               Proceed and Pay
             </button>
@@ -252,6 +297,41 @@
                 Back to Customer Order
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Patient Information -->
+      <div class="col-3" style="margin-top: 15px;">
+        <h3 class="text-center">Patient Information</h3>
+
+        <mat-divider class="m-t-20"></mat-divider>
+
+        <div class="col-12 m-t-20">
+
+          <div>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Prescription Id</mat-label>
+              <input matInput readonly placeholder="Prescription Id" type="text" value="{{ patient?.patientDiagnosisId  }}" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Visit Id</mat-label>
+              <input matInput readonly placeholder="Visit Id" type="text" value="{{ patient?.visitId  }}" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Patient Name</mat-label>
+              <input matInput readonly placeholder="Patient Name" type="text" value="{{ patient?.patientName  }}" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Address</mat-label>
+              <input matInput readonly placeholder="Address" type="text" value="{{ patient?.address  }}" />
+            </mat-form-field>
           </div>
         </div>
       </div>

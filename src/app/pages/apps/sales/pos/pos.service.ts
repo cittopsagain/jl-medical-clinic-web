@@ -21,8 +21,12 @@ export class PosService {
       search.productName = '';
     }
 
+    if (search.filterBy == null || search.filterBy === undefined) {
+      search.filterBy = '';
+    }
+
     const href = environment.POS_API_URL;
-    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}`;
+    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}&filterBy=${encodeURIComponent(search.filterBy)}`;
 
     return this.httpClient.get<ProductApi>(requestUrl);
   }
@@ -43,6 +47,20 @@ export class PosService {
     return this.httpClient.get(href, {
       responseType: 'blob' // important: expect binary
     });
+  }
+
+  getCompletedPatientVisit(search: any) {
+    if (search.search == null || search.search === undefined) {
+      search.search = '';
+    }
+
+    if (search.filterBy == null || search.filterBy === undefined) {
+      search.filterBy = '';
+    }
+
+    const href = `${environment.POS_API_URL}/completed-patient-visit?search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
+
+    return this.httpClient.get<Patient>(href);
   }
 }
 
@@ -74,4 +92,15 @@ export interface PurchasedProducts {
   sellingPrice: number;
   totalAmount: number;
   expiryDate: string;
+}
+
+export interface Patient {
+  patientId: number;
+  patientDiagnosisId: number;
+  patientName: string;
+  address: string;
+  contactNumber: string;
+  visitId: number;
+  visitDate: string;
+  visitType: string;
 }

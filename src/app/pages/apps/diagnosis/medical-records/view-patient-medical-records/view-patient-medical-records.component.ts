@@ -95,6 +95,7 @@ export class ViewPatientMedicalRecordsComponent {
   }
 
   updatePrescription() {
+    console.log(this.patientInformation);
     this.prescriptionComponent.showEditDiv(this.patientInformation.patientId, this.visitId);
   }
 

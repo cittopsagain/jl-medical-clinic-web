@@ -19,6 +19,8 @@ import {NgIf, UpperCasePipe} from "@angular/common";
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {ToastrService} from "ngx-toastr";
+import {MatSelect} from "@angular/material/select";
+import {MatOption} from "@angular/material/core";
 
 @Component({
   selector: 'app-prescription',
@@ -43,7 +45,9 @@ import {ToastrService} from "ngx-toastr";
     TablerIconComponent,
     UpperCasePipe,
     MatHeaderCellDef,
-    FormsModule
+    FormsModule,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './prescription.component.html',
   styleUrl: './prescription.component.scss'
@@ -71,9 +75,22 @@ export class PrescriptionComponent {
   instructions: string = '';
   qty: number = 0;
 
+  filter: any[] = [
+    {
+      name: 'Brand Name',
+      value: 'brand_name'
+    },
+    {
+      name: 'Generic Name',
+      value: 'product_name'
+    }
+  ];
+  selectedFilter: string = 'brand_name';
+
   prescriptionForm: UntypedFormGroup | any;
 
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
+  @ViewChild('filterByInput') filterByInput: MatSelect;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
@@ -96,6 +113,7 @@ export class PrescriptionComponent {
   }
 
   getProducts() {
+    console.log('Filter By Value: ', this.filterByInput.value);
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
@@ -104,6 +122,7 @@ export class PrescriptionComponent {
           return this.patientDiagnosisService.getProducts(
             {
               productName: this.medicineNameInput?.nativeElement.value || '',
+              filterBy: this.filterByInput?.value || 'Brand Name'
             },
             this.sort.active,
             this.sort.direction,

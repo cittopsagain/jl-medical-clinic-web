@@ -25,8 +25,12 @@ export class PatientDiagnosisService {
       search.productName = '';
     }
 
+    if (search.filterBy == null || search.filterBy === undefined) {
+      search.filterBy = '';
+    }
+
     const href = `${environment.POS_API_URL}/diagnosis`;
-    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}`;
+    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}&filterBy=${encodeURIComponent(search.filterBy)}`;
 
     return this.httpClient.get<ProductApi>(requestUrl);
   }

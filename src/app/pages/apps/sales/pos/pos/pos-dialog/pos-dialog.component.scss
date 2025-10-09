@@ -44,26 +44,3 @@
   background-color: #f5f5f5 !important;
   cursor: pointer;
 }
-
-::ng-deep .no-vertical-scroll .mat-mdc-dialog-container {
-  .mdc-dialog__surface {
-    overflow-y: hidden !important;
-  }
-}
-
-::ng-deep .no-scroll-dialog {
-  .mat-mdc-dialog-container {
-    .mdc-dialog__surface {
-      overflow-y: hidden !important;
-      overflow: hidden !important;
-    }
-
-    .mdc-dialog__content {
-      overflow: hidden !important;
-    }
-
-    .mat-mdc-dialog-content {
-      overflow: hidden !important;
-    }
-  }
-}

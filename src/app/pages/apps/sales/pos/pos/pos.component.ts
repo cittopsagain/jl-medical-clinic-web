@@ -2,7 +2,7 @@ import {Component, ElementRef, numberAttribute, ViewChild} from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {PosService, Products, PurchasedProducts} from "../pos.service";
+import {Patient, PosService, Products, PurchasedProducts} from "../pos.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {merge, of as observableOf} from "rxjs";
@@ -22,6 +22,14 @@ import {MatButton} from "@angular/material/button";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {ToastrService} from "ngx-toastr";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
+import {TablerIconComponent} from "angular-tabler-icons";
+import {MatSelect} from "@angular/material/select";
+import {MatOption} from "@angular/material/core";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  EditPrescriptionComponent
+} from "../../../diagnosis/medical-records/prescriptions/edit-prescription/edit-prescription.component";
+import {PosDialogComponent} from "./pos-dialog/pos-dialog.component";
 
 @Component({
   selector: 'app-pos',
@@ -53,7 +61,10 @@ import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
     UpperCasePipe,
     MatRadioButton,
     MatRadioGroup,
-    MatCardTitle
+    MatCardTitle,
+    TablerIconComponent,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './pos.component.html',
   styleUrl: './pos.component.scss'
@@ -80,22 +91,40 @@ export class PosComponent {
   change: number = 0;
   cash: number = 0;
 
+  filter: any[] = [
+    {
+      name: 'Brand Name',
+      value: 'brand_name'
+    },
+    {
+      name: 'Generic Name',
+      value: 'product_name'
+    }
+  ];
+  selectedFilter: string = 'brand_name';
+
   selectedCustomerType: string;
 
   todaysSales: number = 0.00;
+  showQtyInput: boolean = false;
+  qtyInputIndex: number = -1;
 
   customerType: string[] = ['Prescription', 'Walk-in'];
 
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
+  @ViewChild('qtyInput') qtyInput: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
   @ViewChild('cashInput') cashInput: ElementRef;
+  @ViewChild('filterByInput') filterByInput: MatSelect;
 
   displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
-  purchasedItemsColumns: string[] = ['productName', 'unit', 'qty', 'price'];
+  purchasedItemsColumns: string[] = ['productName', 'unit', 'qty', 'price', 'action'];
 
-  constructor(private posService: PosService, private toastR: ToastrService) {
+  patient: any;
+
+  constructor(private posService: PosService, private toastR: ToastrService, private matDialog: MatDialog) {
   }
 
   ngAfterViewInit() {
@@ -132,7 +161,8 @@ export class PosComponent {
           this.isLoadingResults = true;
           return this.posService.getProducts(
             {
-              productName: this.medicineName
+              productName: this.medicineName,
+              filterBy: this.filterByInput.value
             },
             this.sort.active,
             this.sort.direction,
@@ -157,11 +187,36 @@ export class PosComponent {
       .subscribe((data: Products[]) => (this.data = data));
   }
 
+  showPatientModal(event: any) {
+    if (this.selectedCustomerType == 'Prescription') {
+      const dialogRef = this.matDialog.open(PosDialogComponent, {
+        data: {
+
+        },
+        width: '1300px',
+        maxWidth: '95vw', // Add max width as viewport width
+        height: 'auto',
+        panelClass: 'full-width-dialog',
+        // panelClass: ['full-width-dialog', 'no-scroll-dialog'], // Custom class for additional styling
+        autoFocus: false
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.patient = result;
+        }
+      });
+    } else {
+      this.patient = null;
+    }
+  }
+
   addItemsToCustomerOrders(index: number) {
     if (this.proceedToPayment) {
       return;
     }
 
+    this.showQtyInput = false;
     let row = this.data[index];
 
     // Check if item already exists in the purchased items
@@ -174,7 +229,7 @@ export class PosComponent {
       }
 
       // If item exists, increment quantity
-      existingItem.qty = (existingItem.qty || 1) + 1;
+      existingItem.qty = +(existingItem.qty || 1) + 1;
       existingItem.totalAmount = existingItem.qty * row.sellingPrice;
     } else {
       // If item doesn't exist, add it with qty = 1
@@ -188,9 +243,45 @@ export class PosComponent {
     this.calculateTotalItemsPurchased();
   }
 
+  updateCustomerOrderQty(row: any, index: number) {
+    const qtyValue = this.qtyInput.nativeElement.value;
+    if (qtyValue == 0) {
+      this.purchasedItems.splice(index, 1);
+      this.purchasedItems = [...this.purchasedItems];
+      this.calculateTotalItemsPurchased();
+      this.showQtyInput = false;
+      return;
+    }
+
+    if (qtyValue < 0 || qtyValue === null) {
+      this.toastR.error("Please enter a valid qty value");
+      return;
+    }
+
+    if (qtyValue > row.qtyOnHand) {
+      this.toastR.error('Quantity exceeds available stock', 'Error');
+      return;
+    }
+
+    // Check if item already exists in the purchased items
+    const found = this.purchasedItems
+      .find(item => item.productId === row.productId && item.productHistoryId === row.productHistoryId);
+
+    if (found) {
+      found.qty = qtyValue;
+      found.totalAmount = found.qty * row.sellingPrice;
+    }
+
+    this.calculateTotalItemsPurchased();
+
+    this.showQtyInput = false;
+    this.qtyInputIndex = index;
+  }
+
   removeItemFromCustomerOrders(row: Products) {
     // Find the index of the item to be removed
-    const index = this.purchasedItems.findIndex(item => item.productId === row.productId);
+    const index = this.purchasedItems.findIndex(
+      item => item.productId === row.productId && item.productHistoryId === row.productHistoryId);
 
     if (index !== -1) {
       const item = this.purchasedItems[index];
@@ -272,7 +363,10 @@ export class PosComponent {
         discountPercent: this.discountPercent,
         totalAmountDue: this.totalItemsPurchasedDue,
         totalAmountPaid: this.cash,
-        customerOrderType: this.selectedCustomerType
+        customerOrderType: this.selectedCustomerType,
+        patientId: this.patient.patientId,
+        visitId: this.patient.visitId,
+        diagnosisId: this.patient.patientDiagnosisId
       },
       details: this.purchasedItems
     }).subscribe({
@@ -290,6 +384,7 @@ export class PosComponent {
         this.change = 0.00;
         this.cash = 0;
         this.selectedCustomerType = '';
+        this.patient = null;
 
         // Reset the medicine name input
         if (this.medicineNameInput) {

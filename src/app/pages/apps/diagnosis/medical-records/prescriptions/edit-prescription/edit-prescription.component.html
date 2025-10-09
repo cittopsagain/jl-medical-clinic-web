@@ -1,0 +1,34 @@
+<div class="d-flex align-items-center justify-content-between m-b-16 p-x-20 p-t-16">
+  <h3>Add Additional Prescription</h3>
+  <button
+    mat-icon-button
+    mat-dialog-close
+    class="d-flex justify-content-center"
+  >
+    <i-tabler name="x" class="icon-20 d-flex"></i-tabler>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <mat-card>
+    <mat-card-content>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex flex-column gap-10">
+          <div class="d-flex align-items-center">
+            <span class="me-2"><strong>Patient Id:</strong></span>
+            <span>{{ data.patientId }}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <span class="me-2"><strong>Visit Id:</strong></span>
+            <span>{{ data.visitId }}</span>
+          </div>
+        </div>
+        <button mat-flat-button color="primary" color="primary" (click)="addPrescription()">Save Changes</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="f-s-14 p-16 rounded m-t-12 w-100">
+    <app-prescription></app-prescription>
+  </div>
+</mat-dialog-content>
