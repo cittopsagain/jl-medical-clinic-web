@@ -26,8 +26,8 @@
         </mat-form-field>
       </div>
     </div>
-    <mat-checkbox [(ngModel)]="includeZeroQty" (ngModelChange)="getProducts()" color="primary">Include medicines with 0 Qty On Hand</mat-checkbox>
-    <mat-checkbox [(ngModel)]="includeExpired" (ngModelChange)="getProducts()" color="primary">Include expired medicines</mat-checkbox>
+    <mat-checkbox [(ngModel)]="includeZeroQty" (ngModelChange)="getProducts()" color="primary">Show Out-of-Stock Medicines</mat-checkbox>
+    <mat-checkbox [(ngModel)]="includeExpired" (ngModelChange)="getProducts()" color="primary">Show Expired Medicines</mat-checkbox>
     <div class="example-table-container responsive-table">
       <table mat-table [dataSource]="productData" matSort matSortActive="product_name" matSortDisableClear
              matSortDirection="asc" class="hover-table">

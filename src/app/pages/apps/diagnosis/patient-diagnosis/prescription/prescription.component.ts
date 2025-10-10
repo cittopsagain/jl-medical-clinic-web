@@ -130,8 +130,8 @@ export class PrescriptionComponent {
             {
               productName: this.medicineNameInput?.nativeElement.value || '',
               filterBy: this.filterByInput?.value || 'Brand Name',
-              includeZeroQty: this.includeZeroQty? 1 : 0,
-              includeExpired: this.includeExpired? 1 : 0
+              showZeroQty: this.includeZeroQty? 1 : 0,
+              showExpired: this.includeExpired? 1 : 0
             },
             this.sort.active,
             this.sort.direction,
@@ -142,7 +142,6 @@ export class PrescriptionComponent {
           this.isLoadingResults = false;
           this.isError = false;
           this.resultsLength = data.data.totalCount;
-
           return data.data.items;
         }),
         catchError((error) => {
