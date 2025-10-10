@@ -107,7 +107,8 @@ export class EditPatientConsultationComponent implements OnInit {
         });
       },
       error: (error) => {
-        console.error('Error fetching patient consultation:', error);
+        // console.error('Error fetching patient consultation:', error);
+        this.toastr.error("Error fetching patient information", 'Error');
       }
     });
   }
