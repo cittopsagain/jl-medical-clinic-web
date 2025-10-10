@@ -30,7 +30,7 @@ export class PatientDiagnosisService {
     }
 
     const href = `${environment.POS_API_URL}/diagnosis`;
-    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}&filterBy=${encodeURIComponent(search.filterBy)}`;
+    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&productName=${encodeURIComponent(search.productName)}&filterBy=${encodeURIComponent(search.filterBy)}&includeZeroQty=${search.includeZeroQty}&includeExpired=${search.includeExpired}`;
 
     return this.httpClient.get<ProductApi>(requestUrl);
   }

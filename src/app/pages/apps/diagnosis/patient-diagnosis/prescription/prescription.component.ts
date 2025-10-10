@@ -21,6 +21,8 @@ import {TablerIconComponent} from "angular-tabler-icons";
 import {ToastrService} from "ngx-toastr";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
+import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-prescription',
@@ -47,7 +49,10 @@ import {MatOption} from "@angular/material/core";
     MatHeaderCellDef,
     FormsModule,
     MatOption,
-    MatSelect
+    MatSelect,
+    MatRadioGroup,
+    MatRadioButton,
+    MatCheckbox
   ],
   templateUrl: './prescription.component.html',
   styleUrl: './prescription.component.scss'
@@ -74,6 +79,9 @@ export class PrescriptionComponent {
   dosage: string = '';
   instructions: string = '';
   qty: number = 0;
+
+  includeExpired: boolean;
+  includeZeroQty: boolean;
 
   filter: any[] = [
     {
@@ -113,7 +121,6 @@ export class PrescriptionComponent {
   }
 
   getProducts() {
-    console.log('Filter By Value: ', this.filterByInput.value);
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
@@ -122,7 +129,9 @@ export class PrescriptionComponent {
           return this.patientDiagnosisService.getProducts(
             {
               productName: this.medicineNameInput?.nativeElement.value || '',
-              filterBy: this.filterByInput?.value || 'Brand Name'
+              filterBy: this.filterByInput?.value || 'Brand Name',
+              includeZeroQty: this.includeZeroQty? 1 : 0,
+              includeExpired: this.includeExpired? 1 : 0
             },
             this.sort.active,
             this.sort.direction,
