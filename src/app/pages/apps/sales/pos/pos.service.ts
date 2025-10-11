@@ -49,18 +49,24 @@ export class PosService {
     });
   }
 
-  getCompletedPatientVisit(search: any) {
-    if (search.search == null || search.search === undefined) {
-      search.search = '';
+  getPatientRecord(search: any,
+                   sort: string,
+                   order: string,
+                   page: number): Observable<PatientApi> {
+    {
+      if (search.search == null || search.search === undefined) {
+        search.search = '';
+      }
+
+      if (search.filterBy == null || search.filterBy === undefined) {
+        search.filterBy = '';
+      }
+
+      const href = `${environment.POS_API_URL}/patient-record`;
+      const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=10&search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
+
+      return this.httpClient.get<PatientApi>(requestUrl);
     }
-
-    if (search.filterBy == null || search.filterBy === undefined) {
-      search.filterBy = '';
-    }
-
-    const href = `${environment.POS_API_URL}/completed-patient-visit?search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
-
-    return this.httpClient.get<Patient>(href);
   }
 }
 
@@ -92,6 +98,11 @@ export interface PurchasedProducts {
   sellingPrice: number;
   totalAmount: number;
   expiryDate: string;
+}
+
+export interface PatientApi {
+  items: Patient[];
+  totalCount: number;
 }
 
 export interface Patient {

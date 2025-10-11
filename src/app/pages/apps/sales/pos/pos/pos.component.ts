@@ -30,6 +30,7 @@ import {
   EditPrescriptionComponent
 } from "../../../diagnosis/medical-records/prescriptions/edit-prescription/edit-prescription.component";
 import {PosDialogComponent} from "./pos-dialog/pos-dialog.component";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
 
 @Component({
   selector: 'app-pos',
@@ -64,7 +65,9 @@ import {PosDialogComponent} from "./pos-dialog/pos-dialog.component";
     MatCardTitle,
     TablerIconComponent,
     MatOption,
-    MatSelect
+    MatSelect,
+    MatTabGroup,
+    MatTab
   ],
   templateUrl: './pos.component.html',
   styleUrl: './pos.component.scss'
@@ -112,6 +115,7 @@ export class PosComponent {
   customerType: string[] = ['Prescription', 'Walk-in'];
 
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
+  @ViewChild('patientNameInput') patientNameInput: ElementRef;
   @ViewChild('qtyInput') qtyInput: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
@@ -188,27 +192,23 @@ export class PosComponent {
   }
 
   showPatientModal(event: any) {
-    if (this.selectedCustomerType == 'Prescription') {
-      const dialogRef = this.matDialog.open(PosDialogComponent, {
-        data: {
+    const dialogRef = this.matDialog.open(PosDialogComponent, {
+      data: {
 
-        },
-        width: '1300px',
-        maxWidth: '95vw', // Add max width as viewport width
-        height: 'auto',
-        panelClass: 'full-width-dialog',
-        // panelClass: ['full-width-dialog', 'no-scroll-dialog'], // Custom class for additional styling
-        autoFocus: false
-      });
+      },
+      width: '1300px',
+      maxWidth: '95vw', // Add max width as viewport width
+      height: 'auto',
+      panelClass: 'full-width-dialog',
+      // panelClass: ['full-width-dialog', 'no-scroll-dialog'], // Custom class for additional styling
+      autoFocus: false
+    });
 
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.patient = result;
-        }
-      });
-    } else {
-      this.patient = null;
-    }
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.patient = result;
+      }
+    });
   }
 
   addItemsToCustomerOrders(index: number) {
@@ -364,9 +364,10 @@ export class PosComponent {
         totalAmountDue: this.totalItemsPurchasedDue,
         totalAmountPaid: this.cash,
         customerOrderType: this.selectedCustomerType,
-        patientId: this.patient.patientId,
-        visitId: this.patient.visitId,
-        diagnosisId: this.patient.patientDiagnosisId
+        patientName: this.patientNameInput.nativeElement.value || '',
+        patientId: this.patient ? this.patient.patientId : 0,
+        visitId: this.patient ? this.patient.visitId : 0,
+        diagnosisId: this.patient ? this.patient.patientDiagnosisId : 0
       },
       details: this.purchasedItems
     }).subscribe({

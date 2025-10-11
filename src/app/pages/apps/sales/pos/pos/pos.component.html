@@ -5,337 +5,345 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card class="cardWithShadow">
-  <mat-card-content>
-    <div class="row">
-      <div class="col-sm-5">
+<mat-tab-group>
+  <mat-tab label="Pharmacy & Patients">
+    <mat-card class="cardWithShadow">
+      <mat-card-content>
         <div class="row">
-          <div class="col-4">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Filter By</mat-label>
-              <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="getProducts()"
-                          disableOptionCentering placeholder="Filter By">
-                @for (filter of filter; track filter) {
-                  <mat-option [value]="filter.value">
-                    {{ filter.name }}
-                  </mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-8">
-            <mat-form-field appearance="outline" class="w-100 hide-hint">
-              <mat-label>Search</mat-label>
-              <input
-                matInput
-                placeholder="Search..."
-                [(ngModel)]="medicineName"
-                (keyup.enter)="applyFilter()"
-                #medicineNameInput
-              />
-            </mat-form-field>
-          </div>
-        </div>
+          <div class="col-sm-5">
+            <div class="row">
+              <div class="col-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Filter By</mat-label>
+                  <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="getProducts()"
+                              disableOptionCentering placeholder="Filter By">
+                    @for (filter of filter; track filter) {
+                      <mat-option [value]="filter.value">
+                        {{ filter.name }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-8">
+                <mat-form-field appearance="outline" class="w-100 hide-hint">
+                  <mat-label>Search</mat-label>
+                  <input
+                    matInput
+                    placeholder="Search..."
+                    [(ngModel)]="medicineName"
+                    (keyup.enter)="applyFilter()"
+                    #medicineNameInput
+                  />
+                </mat-form-field>
+              </div>
+            </div>
 
-        <div class="example-table-container responsive-table">
-          <table mat-table [dataSource]="data" matSort matSortActive="product_name" matSortDisableClear
-                 matSortDirection="asc" class="hover-table">
+            <div class="example-table-container responsive-table">
+              <table mat-table [dataSource]="data" matSort matSortActive="product_name" matSortDisableClear
+                     matSortDirection="asc" class="hover-table">
 
-            <!-- Product Name -->
-            <ng-container matColumnDef="productName">
-              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                Product Name
-              </th>
-              <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
-                <div class="m-l-16" >
-                  <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                    {{ row.brandName }}
-                  </h6>
-                  <span class="f-s-14 f-s-12">
+                <!-- Product Name -->
+                <ng-container matColumnDef="productName">
+                  <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                    Product Name
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
+                    <div class="m-l-16" >
+                      <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                        {{ row.brandName }}
+                      </h6>
+                      <span class="f-s-14 f-s-12">
                     {{ row.productName }}
                   </span>
-                </div>
-              </td>
-            </ng-container>
+                    </div>
+                  </td>
+                </ng-container>
 
-            <!-- Unit -->
-            <ng-container matColumnDef="unit">
-              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                Unit
-              </th>
-              <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
-                <div class="m-l-16" >
+                <!-- Unit -->
+                <ng-container matColumnDef="unit">
+                  <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                    Unit
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
+                    <div class="m-l-16" >
                   <span class="f-s-14 f-s-12">
                     {{ row.unit | uppercase }}
                   </span>
-                </div>
-              </td>
-            </ng-container>
+                    </div>
+                  </td>
+                </ng-container>
 
-            <!-- Qty On Hand -->
-            <ng-container matColumnDef="qtyOnHand">
-              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                Qty On Hand
-              </th>
-              <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
-                {{ row.qtyOnHand }}
-              </td>
-            </ng-container>
+                <!-- Qty On Hand -->
+                <ng-container matColumnDef="qtyOnHand">
+                  <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                    Qty On Hand
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
+                    {{ row.qtyOnHand }}
+                  </td>
+                </ng-container>
 
-            <!-- Selling Price -->
-            <ng-container matColumnDef="sellingPrice">
-              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                Selling Price
-              </th>
-              <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
-                {{ row.sellingPrice }}
-              </td>
-            </ng-container>
+                <!-- Selling Price -->
+                <ng-container matColumnDef="sellingPrice">
+                  <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                    Selling Price
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
+                    {{ row.sellingPrice }}
+                  </td>
+                </ng-container>
 
-            <!-- Expiry Date -->
-            <ng-container matColumnDef="expiryDate">
-              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                Expiry Date
-              </th>
-              <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
-                <!-- {{ row.expiryDate | date: 'MM/dd/yyyy' }} -->
-                {{ row.expiryDate }}
-              </td>
-            </ng-container>
+                <!-- Expiry Date -->
+                <ng-container matColumnDef="expiryDate">
+                  <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                    Expiry Date
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i = index" (click)="addItemsToCustomerOrders(i)">
+                    <!-- {{ row.expiryDate | date: 'MM/dd/yyyy' }} -->
+                    {{ row.expiryDate }}
+                  </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-          </table>
-        </div>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+            </div>
 
-        <mat-paginator [length]="resultsLength" [pageSize]="`${ pageSize }`"></mat-paginator>
-      </div>
+            <mat-paginator [length]="resultsLength" [pageSize]="`${ pageSize }`"></mat-paginator>
+          </div>
 
-      <!-- Customer Order -->
-      <div class="col-4" style="margin-top: 15px;">
-        <h3 class="text-center">Cart</h3>
+          <!-- Customer Order -->
+          <div class="col-4" style="margin-top: 15px;">
+            <h3 class="text-center">Cart</h3>
 
-        <mat-divider class="m-t-20"></mat-divider>
+            <mat-divider class="m-t-20"></mat-divider>
 
-        <div class="col-12 m-t-10">
-          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Customer Order Type *</label>
-          <mat-radio-group [(ngModel)]="selectedCustomerType" (ngModelChange)="showPatientModal($event)" aria-labelledby="example-radio-group-label" class="example-radio-group">
-            @for(type of customerType; track type) {
-              <mat-radio-button class="example-radio-button" color="primary" [value]="type">
-                {{ type }}
-              </mat-radio-button>
-            }
-          </mat-radio-group>
-        </div>
-        <mat-divider class="m-t-10"></mat-divider>
+            <div class="col-12 m-t-10">
+              <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Customer Order Type *</label>
+              <mat-radio-group [(ngModel)]="selectedCustomerType" (ngModelChange)="showPatientModal($event)" aria-labelledby="example-radio-group-label" class="example-radio-group">
+                @for(type of customerType; track type) {
+                  <mat-radio-button class="example-radio-button" color="primary" [value]="type">
+                    {{ type }}
+                  </mat-radio-button>
+                }
+              </mat-radio-group>
+            </div>
+            <mat-divider class="m-t-10"></mat-divider>
 
-        <!-- Purchased Items -->
-        <div *ngIf="proceedToPayment === false">
-          <div class="example-table-container responsive-table" style="max-height: 480px;">
-            <table mat-table [dataSource]="purchasedItems" matSort matSortActive="product_name" matSortDisableClear
-                   matSortDirection="asc" class="hover-table">
+            <!-- Purchased Items -->
+            <div *ngIf="proceedToPayment === false">
+              <div class="example-table-container responsive-table" style="max-height: 480px;">
+                <table mat-table [dataSource]="purchasedItems" matSort matSortActive="product_name" matSortDisableClear
+                       matSortDirection="asc" class="hover-table">
 
-              <!-- Product Name -->
-              <ng-container matColumnDef="productName">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                  Product Name
-                </th>
-                <td mat-cell *matCellDef="let row; let i = index">
-                  <div class="m-l-16" >
-                    <h6 class="mat-subtitle-1 f-s-14 f-w-600">
-                      {{ row.brandName }}
-                    </h6>
-                    <span class="f-s-14 f-s-12">
+                  <!-- Product Name -->
+                  <ng-container matColumnDef="productName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                      Product Name
+                    </th>
+                    <td mat-cell *matCellDef="let row; let i = index">
+                      <div class="m-l-16" >
+                        <h6 class="mat-subtitle-1 f-s-14 f-w-600">
+                          {{ row.brandName }}
+                        </h6>
+                        <span class="f-s-14 f-s-12">
                       {{ row.productName }}
                     </span>
-                  </div>
-                </td>
-              </ng-container>
+                      </div>
+                    </td>
+                  </ng-container>
 
-              <!-- Unit -->
-              <ng-container matColumnDef="unit">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                  Unit
-                </th>
-                <td mat-cell *matCellDef="let row; let i = index">
-                  <div class="m-l-16" >
+                  <!-- Unit -->
+                  <ng-container matColumnDef="unit">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                      Unit
+                    </th>
+                    <td mat-cell *matCellDef="let row; let i = index">
+                      <div class="m-l-16" >
                   <span class="f-s-14 f-s-12">
                     {{ row.unit | uppercase }}
                   </span>
-                  </div>
-                </td>
-              </ng-container>
+                      </div>
+                    </td>
+                  </ng-container>
 
-              <!-- Qty -->
-              <ng-container matColumnDef="qty">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                  Qty
-                </th>
-                <td mat-cell *matCellDef="let row; let i = index">
-                  <div *ngIf="showQtyInput && qtyInputIndex == i; else displayQty">
-                    <mat-form-field appearance="outline" class="m-t-20" style="width: 90px;">
-                      <input matInput name="qty" type="number"
-                             #qtyInput
-                             [value]="row.qty" (keyup.enter)="updateCustomerOrderQty(row, i)" />
-                    </mat-form-field>
-                  </div>
-                  <ng-template #displayQty>
-                    <span (click)="removeItemFromCustomerOrders(row)">{{ row.qty }}</span>
-                  </ng-template>
-                </td>
-              </ng-container>
+                  <!-- Qty -->
+                  <ng-container matColumnDef="qty">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                      Qty
+                    </th>
+                    <td mat-cell *matCellDef="let row; let i = index">
+                      <div *ngIf="showQtyInput && qtyInputIndex == i; else displayQty">
+                        <mat-form-field appearance="outline" class="m-t-20" style="width: 90px;">
+                          <input matInput name="qty" type="number"
+                                 #qtyInput
+                                 [value]="row.qty" (keyup.enter)="updateCustomerOrderQty(row, i)" />
+                        </mat-form-field>
+                      </div>
+                      <ng-template #displayQty>
+                        <span (click)="removeItemFromCustomerOrders(row)">{{ row.qty }}</span>
+                      </ng-template>
+                    </td>
+                  </ng-container>
 
-              <!-- Price -->
-              <ng-container matColumnDef="price">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                  Price
-                </th>
-                <td mat-cell *matCellDef="let row; let i = index">
-                  {{ row.sellingPrice }}
-                </td>
-              </ng-container>
+                  <!-- Price -->
+                  <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                      Price
+                    </th>
+                    <td mat-cell *matCellDef="let row; let i = index">
+                      {{ row.sellingPrice }}
+                    </td>
+                  </ng-container>
 
-              <!-- Action -->
-              <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                  Action
-                </th>
-                <td mat-cell *matCellDef="let row; let i = index">
-                  <a
-                    mat-icon-button
-                    class="d-flex align-items-center justify-content-center"
-                    (click)="showQtyInput = true; qtyInputIndex = i;"
-                  >
-                    <i-tabler
-                      name="pencil"
-                      class="icon-18 d-flex align-items-center"
-                    ></i-tabler>
-                  </a>
-                </td>
-              </ng-container>
+                  <!-- Action -->
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                      Action
+                    </th>
+                    <td mat-cell *matCellDef="let row; let i = index">
+                      <a
+                        mat-icon-button
+                        class="d-flex align-items-center justify-content-center"
+                        (click)="showQtyInput = true; qtyInputIndex = i;"
+                      >
+                        <i-tabler
+                          name="pencil"
+                          class="icon-18 d-flex align-items-center"
+                        ></i-tabler>
+                      </a>
+                    </td>
+                  </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="purchasedItemsColumns; sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: purchasedItemsColumns"></tr>
-            </table>
-          </div>
-
-          <mat-divider></mat-divider>
-          <div class="p-3 border-top" style="margin-top: 10px;">
-            <div class="row gap-6">
-              <!-- Total -->
-              <div class="col-12 d-flex justify-content-end">
-                <h3 class="m-0 me-3">Total: </h3>
-                <h3 class="m-0 text-primary">{{ totalItemsPurchased | number: '1.2-2' }}</h3>
+                  <tr mat-header-row *matHeaderRowDef="purchasedItemsColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: purchasedItemsColumns"></tr>
+                </table>
               </div>
 
-              <!-- Less SC/PWD Discount -->
-              <div class="col-12 d-flex justify-content-end">
-                <mat-checkbox color="primary" [checked]="isSeniorCitizenPwdDiscounted" (change)="toggleScPwdDiscount($event)">
+              <mat-divider></mat-divider>
+              <div class="p-3 border-top" style="margin-top: 10px;">
+                <div class="row gap-6">
+                  <!-- Total -->
+                  <div class="col-12 d-flex justify-content-end">
+                    <h3 class="m-0 me-3">Total: </h3>
+                    <h3 class="m-0 text-primary">{{ totalItemsPurchased | number: '1.2-2' }}</h3>
+                  </div>
+
+                  <!-- Less SC/PWD Discount -->
+                  <div class="col-12 d-flex justify-content-end">
+                    <mat-checkbox color="primary" [checked]="isSeniorCitizenPwdDiscounted" (change)="toggleScPwdDiscount($event)">
+                      <h3>Senior Citizen/PWD Discount: {{ discountPercent }}% </h3>
+                    </mat-checkbox>
+                  </div>
+
+                  <!-- Total Amount Due -->
+                  <div class="col-12 d-flex justify-content-end">
+                    <h3 class="m-0 me-3">Total Amount Due: </h3>
+                    <h3 class="m-0 text-primary">{{ totalItemsPurchasedDue | number: '1.2-2' }}</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment -->
+              <div style="margin-top: 15px;">
+                <button mat-flat-button color="primary" class="w-100"
+                        [disabled]="purchasedItems.length <= 0 || !selectedCustomerType"
+                        (click)="processPayment(true)">
+                  Proceed and Pay
+                </button>
+              </div>
+            </div>
+
+            <!-- Payment Confirmation -->
+            <div *ngIf="proceedToPayment === true" style="margin-top: 10px;">
+              <div class="row gap-6">
+                <!-- Total -->
+                <div class="col-12 d-flex justify-content-start">
+                  <h3 class="m-0 me-3">Total: </h3>
+                  <h3 class="m-0 text-primary">{{ totalItemsPurchased | number: '1.2-2' }}</h3>
+                </div>
+
+                <!-- Less SC/PWD Discount -->
+                <div class="col-12 d-flex justify-content-start">
                   <h3>Senior Citizen/PWD Discount: {{ discountPercent }}% </h3>
-                </mat-checkbox>
+                </div>
+
+                <!-- Total Amount Due -->
+                <div class="col-12 d-flex justify-content-start">
+                  <h3 class="m-0 me-3">Total Amount Due: </h3>
+                  <h3 class="m-0 text-primary">{{ totalItemsPurchasedDue | number: '1.2-2' }}</h3>
+                </div>
               </div>
 
-              <!-- Total Amount Due -->
-              <div class="col-12 d-flex justify-content-end">
-                <h3 class="m-0 me-3">Total Amount Due: </h3>
-                <h3 class="m-0 text-primary">{{ totalItemsPurchasedDue | number: '1.2-2' }}</h3>
+              <mat-divider style="margin-top: 10px;"></mat-divider>
+              <mat-form-field appearance="outline" class="w-100" style="margin-top: 10px;">
+                <mat-label>Cash</mat-label>
+                <input matInput placeholder="0" type="number"
+                       (keyup)="calculateChange()" [(ngModel)]="cash" name="cash"/>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Change</mat-label>
+                <input matInput readonly placeholder="Change" type="number" [(ngModel)]="change" name="change"/>
+              </mat-form-field>
+
+              <div class="row">
+                <div class="col-6 d-flex justify-content-end">
+                  <button mat-flat-button color="primary" class="w-100"
+                          (click)="confirmPayment()" [disabled]="cash <= 0 || cash < totalItemsPurchasedDue">
+                    Confirm Payment
+                  </button>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
+                  <button mat-flat-button color="primary" class="w-100" (click)="processPayment(false)">
+                    Back to Customer Order
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Payment -->
-          <div style="margin-top: 15px;">
-            <button mat-flat-button color="primary" class="w-100"
-                    [disabled]="purchasedItems.length <= 0 || !selectedCustomerType || patient == null"
-                    (click)="processPayment(true)">
-              Proceed and Pay
-            </button>
-          </div>
-        </div>
+          <!-- Patient Information -->
+          <div class="col-3" style="margin-top: 15px;">
+            <h3 class="text-center">Patient Information</h3>
 
-        <!-- Payment Confirmation -->
-        <div *ngIf="proceedToPayment === true" style="margin-top: 10px;">
-          <div class="row gap-6">
-            <!-- Total -->
-            <div class="col-12 d-flex justify-content-start">
-              <h3 class="m-0 me-3">Total: </h3>
-              <h3 class="m-0 text-primary">{{ totalItemsPurchased | number: '1.2-2' }}</h3>
-            </div>
+            <mat-divider class="m-t-20"></mat-divider>
 
-            <!-- Less SC/PWD Discount -->
-            <div class="col-12 d-flex justify-content-start">
-                <h3>Senior Citizen/PWD Discount: {{ discountPercent }}% </h3>
-            </div>
+            <div class="col-12 m-t-20">
 
-            <!-- Total Amount Due -->
-            <div class="col-12 d-flex justify-content-start">
-              <h3 class="m-0 me-3">Total Amount Due: </h3>
-              <h3 class="m-0 text-primary">{{ totalItemsPurchasedDue | number: '1.2-2' }}</h3>
-            </div>
-          </div>
-
-          <mat-divider style="margin-top: 10px;"></mat-divider>
-          <mat-form-field appearance="outline" class="w-100" style="margin-top: 10px;">
-            <mat-label>Cash</mat-label>
-            <input matInput placeholder="0" type="number"
-                   (keyup)="calculateChange()" [(ngModel)]="cash" name="cash"/>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Change</mat-label>
-            <input matInput readonly placeholder="Change" type="number" [(ngModel)]="change" name="change"/>
-          </mat-form-field>
-
-          <div class="row">
-            <div class="col-6 d-flex justify-content-end">
-              <button mat-flat-button color="primary" class="w-100"
-                      (click)="confirmPayment()" [disabled]="cash <= 0 || cash < totalItemsPurchasedDue">
-                Confirm Payment
-              </button>
-            </div>
-            <div class="col-6 d-flex justify-content-end">
-              <button mat-flat-button color="primary" class="w-100" (click)="processPayment(false)">
-                Back to Customer Order
-              </button>
+              <div>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Prescription Id</mat-label>
+                  <input matInput placeholder="Prescription Id" type="text" value="{{ patient?.patientDiagnosisId  }}" />
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Visit Id</mat-label>
+                  <input matInput placeholder="Visit Id" type="text" value="{{ patient?.visitId  }}" />
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Patient Name</mat-label>
+                  <input matInput placeholder="Patient Name" #patientNameInput type="text" value="{{ patient?.patientName  }}" />
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Address</mat-label>
+                  <input matInput placeholder="Address" type="text" value="{{ patient?.address  }}" />
+                </mat-form-field>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Patient Information -->
-      <div class="col-3" style="margin-top: 15px;">
-        <h3 class="text-center">Patient Information</h3>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
 
-        <mat-divider class="m-t-20"></mat-divider>
-
-        <div class="col-12 m-t-20">
-
-          <div>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Prescription Id</mat-label>
-              <input matInput readonly placeholder="Prescription Id" type="text" value="{{ patient?.patientDiagnosisId  }}" />
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Visit Id</mat-label>
-              <input matInput readonly placeholder="Visit Id" type="text" value="{{ patient?.visitId  }}" />
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Patient Name</mat-label>
-              <input matInput readonly placeholder="Patient Name" type="text" value="{{ patient?.patientName  }}" />
-            </mat-form-field>
-          </div>
-          <div>
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Address</mat-label>
-              <input matInput readonly placeholder="Address" type="text" value="{{ patient?.address  }}" />
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </mat-card-content>
-</mat-card>
+  <mat-tab label="Patient Purchases">
+    List of Patient Purchases goes here...
+  </mat-tab>
+</mat-tab-group>

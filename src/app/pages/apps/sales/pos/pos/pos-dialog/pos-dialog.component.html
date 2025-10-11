@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-between m-b-16 p-x-20 p-t-16">
-  <h3>Completed Patient Visits</h3>
+  <h3>Patient Records</h3>
   <button
     mat-icon-button
     mat-dialog-close
@@ -16,7 +16,7 @@
         <div class="col-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Filter By</mat-label>
-            <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="getCompletedPatientVisit()"
+            <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="getPatientRecord()"
                         disableOptionCentering placeholder="Filter By">
               @for (filter of filter; track filter) {
                 <mat-option [value]="filter.value">
@@ -39,7 +39,8 @@
         </div>
 
         <div class="example-table-container responsive-table w-100">
-          <table class="hover-table" mat-table [dataSource]="data">
+          <table mat-table [dataSource]="data" matSort matSortActive="date_created" matSortDisableClear
+                 matSortDirection="desc" class="hover-table">
 
             <!-- Visit Id -->
             <ng-container matColumnDef="visitId">
@@ -105,6 +106,8 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick(row)"></tr>
           </table>
         </div>
+
+        <mat-paginator [length]="resultsLength" [pageSize]="10"></mat-paginator>
       </div>
     </mat-card-content>
   </mat-card>
