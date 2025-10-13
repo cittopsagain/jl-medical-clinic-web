@@ -67,3 +67,32 @@
     }
   }
 }
+
+::ng-deep .mat-tab-body-content {
+  overflow: hidden !important;
+}
+
+.responsive-table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+::ng-deep .mat-tab-group {
+  overflow: hidden;
+}
+
+.patient-row {
+  align-items: flex-end; /* 👈 aligns button with bottom of input box */
+}
+
+.browse-btn {
+  height: 56px; /* match Angular Material outline input height */
+  line-height: 56px;
+}

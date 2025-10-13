@@ -106,7 +106,7 @@ export class PosComponent {
   ];
   selectedFilter: string = 'brand_name';
 
-  selectedCustomerType: string;
+  selectedCustomerType: string = '';
 
   todaysSales: number = 0.00;
   showQtyInput: boolean = false;
@@ -114,9 +114,12 @@ export class PosComponent {
 
   customerType: string[] = ['Prescription', 'Walk-in'];
 
+  selectedTabIndex: number = 0;
+
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
   @ViewChild('patientNameInput') patientNameInput: ElementRef;
   @ViewChild('qtyInput') qtyInput: ElementRef;
+  @ViewChild('addressInput') addressInput: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
 
@@ -127,6 +130,7 @@ export class PosComponent {
   purchasedItemsColumns: string[] = ['productName', 'unit', 'qty', 'price', 'action'];
 
   patient: any;
+  showPrescriptionIdAndVisitId: boolean = false;
 
   constructor(private posService: PosService, private toastR: ToastrService, private matDialog: MatDialog) {
   }
@@ -192,26 +196,49 @@ export class PosComponent {
   }
 
   showPatientModal(event: any) {
-    const dialogRef = this.matDialog.open(PosDialogComponent, {
-      data: {
+    if (this.selectedCustomerType == 'Prescription') {
+      const dialogRef = this.matDialog.open(PosDialogComponent, {
+        data: {
 
-      },
-      width: '1300px',
-      maxWidth: '95vw', // Add max width as viewport width
-      height: 'auto',
-      panelClass: 'full-width-dialog',
-      // panelClass: ['full-width-dialog', 'no-scroll-dialog'], // Custom class for additional styling
-      autoFocus: false
-    });
+        },
+        width: '1300px',
+        maxWidth: '95vw', // Add max width as viewport width
+        height: 'auto',
+        panelClass: 'full-width-dialog',
+        // panelClass: ['full-width-dialog', 'no-scroll-dialog'], // Custom class for additional styling
+        autoFocus: false
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.patient = result;
-      }
-    });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.patient = result;
+
+          if (result.visitId && result.patientDiagnosisId) {
+            this.showPrescriptionIdAndVisitId = true;
+          } else {
+            this.showPrescriptionIdAndVisitId = false;
+          }
+        }
+      });
+    }
+  }
+
+  setSelectedTabIndex(event: any) {
+    if (this.selectedCustomerType == 'Prescription') {
+      this.selectedTabIndex = 1;
+    } else {
+      this.showPrescriptionIdAndVisitId = false;
+      this.patient = null;
+      this.patientNameInput.nativeElement.value = '';
+      this.addressInput.nativeElement.value = '';
+    }
   }
 
   addItemsToCustomerOrders(index: number) {
+    if (this.selectedTabIndex == 1) {
+      // Don't add items if on the Patient Information Tab
+      return;
+    }
     if (this.proceedToPayment) {
       return;
     }
@@ -350,6 +377,13 @@ export class PosComponent {
   }
 
   confirmPayment() {
+    if (this.patientNameInput.nativeElement.value === '' && this.selectedCustomerType == 'Prescription') {
+      this.toastR.error('Please provide patient information', 'Error');
+      this.selectedTabIndex = 1;
+      this.patientNameInput.nativeElement.focus();
+      return;
+    }
+
     this.cash = this.cash * 1; // Remove leading zeros, if the user will input 0000, it will be converted to 0
 
     if (this.cash <= 0 || this.cash == null || this.cash < this.totalItemsPurchasedDue) {
@@ -365,6 +399,7 @@ export class PosComponent {
         totalAmountPaid: this.cash,
         customerOrderType: this.selectedCustomerType,
         patientName: this.patientNameInput.nativeElement.value || '',
+        address: this.addressInput.nativeElement.value || '',
         patientId: this.patient ? this.patient.patientId : 0,
         visitId: this.patient ? this.patient.visitId : 0,
         diagnosisId: this.patient ? this.patient.patientDiagnosisId : 0
@@ -380,12 +415,20 @@ export class PosComponent {
 
         this.toastR.success(response.message, 'Success');
         this.getProducts();
+
+        let posId = response.data;
+        this.getPharmacySales(posId);
+
+        return;
         this.purchasedItems = [];
         this.proceedToPayment = false;
         this.change = 0.00;
         this.cash = 0;
         this.selectedCustomerType = '';
         this.patient = null;
+        this.patientNameInput.nativeElement.value = '';
+        this.addressInput.nativeElement.value = '';
+        this.showPrescriptionIdAndVisitId = false;
 
         // Reset the medicine name input
         if (this.medicineNameInput) {
@@ -404,9 +447,6 @@ export class PosComponent {
         this.discountPercent = 0;
 
         this.getTodaysSales();
-
-        let posId = response.data;
-        this.getPharmacySales(posId);
       },
       error: (error) => {
         this.toastR.error(error.error.message, 'Error');
