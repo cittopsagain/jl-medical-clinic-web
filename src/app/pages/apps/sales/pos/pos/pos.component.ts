@@ -419,7 +419,6 @@ export class PosComponent {
         let posId = response.data;
         this.getPharmacySales(posId);
 
-        return;
         this.purchasedItems = [];
         this.proceedToPayment = false;
         this.change = 0.00;
