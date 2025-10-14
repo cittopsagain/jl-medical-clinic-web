@@ -78,12 +78,12 @@ export class ViewPatientMedicalRecordsComponent {
         const issuedDate = this.formatDate(new Date());
 
         // Trigger download
-        const a = document.createElement('a');
+        /*const a = document.createElement('a');
         a.href = fileURL;
         a.download = `Prescription_${patientId}_Issued${issuedDate}.pdf`;
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        document.body.removeChild(a);*/
 
         // Cleanup
         URL.revokeObjectURL(fileURL);
