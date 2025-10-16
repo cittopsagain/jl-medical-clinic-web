@@ -122,7 +122,7 @@ export const AppsRoutes: Routes = [
         path: 'patient-management/patient-consultation',
         component: PatientConsultationListComponent,
         data: {
-          title: 'Patient Consultation',
+          title: 'Patient Consultation & Follow-ups',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Patient Consultation' },
@@ -136,7 +136,7 @@ export const AppsRoutes: Routes = [
           title: 'Add Patient for Consultation',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Patient Consultation', url: '/apps/patient-management/patient-consultation' },
+            { title: 'Patient Consultation & Follow-ups', url: '/apps/patient-management/patient-consultation' },
             { title: 'Add Patient for Consultation' },
           ]
         }
@@ -148,7 +148,7 @@ export const AppsRoutes: Routes = [
           title: 'Edit Patient for Consultation',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Patient Consultation', url: '/apps/patient-management/patient-consultation' },
+            { title: 'Patient Consultation & Follow-ups', url: '/apps/patient-management/patient-consultation' },
             { title: 'Edit Patient for Consultation' },
           ]
         }
