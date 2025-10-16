@@ -96,12 +96,13 @@ export class PatientDiagnosisComponent {
   showSaveButton: boolean = true;
   showUpdateButton: boolean = false;
   showMoveToWaitingButton: boolean = true;
+  directDoctorConsultation: boolean = false;
 
   patientId: number = 0;
   visitId: number = 0;
   diagnosisId: number = 0;
 
-  visitType: string[] = ['Consultation', 'Follow-up Checkup'];
+  visitType: string[] = ['Consultation', 'Follow-up Checkup', 'Direct Doctor Consultation', 'Direct Doctor Follow-up Checkup'];
   gender: string[] = [
     'Male',
     'Female'
@@ -147,11 +148,11 @@ export class PatientDiagnosisComponent {
     this.refreshPatientDiagnosis();
   }
 
-  getPatientDiagnosis() {
-    this.patientDiagnosisService.getPatientDiagnosis().subscribe({
+  getPatientDiagnosis(directVisit: boolean = false) {
+    this.patientDiagnosisService.getPatientDiagnosis(directVisit).subscribe({
       next: (data: any) => {
-        if (data.data == null) {
-          // this.toastR.error('No patients waiting for check-up or consultation.', 'Error');
+        if (data.data == null && directVisit) {
+          this.toastR.error('No patients have been marked as Direct Doctor Consultation or Direct Doctor Follow-up Checkup.', 'Error');
         }
 
         this.patientInformation = data.data.patient;
@@ -198,6 +199,7 @@ export class PatientDiagnosisComponent {
 
         this.showPrintMedicalCertificateButton = false;
         this.showSaveButton = true;
+        this.showMoveToWaitingButton = true;
       },
       error: (error) => {
         // this.toastR.error(error.error.message, 'Error');
@@ -290,6 +292,8 @@ export class PatientDiagnosisComponent {
   }
 
   refreshPatientDiagnosis() {
+    this.directDoctorConsultation = false;
+
     this.patientDiagnosisService.getInProgressPatient().subscribe(
       {
         next: (data: any) => {
@@ -302,6 +306,7 @@ export class PatientDiagnosisComponent {
 
           this.showUpdateButton = false;
           this.showSaveButton = true;
+          this.showMoveToWaitingButton = true;
         },
         error: (error) => {
           // this.toastR.error(error.error.message, 'Error');
@@ -309,6 +314,10 @@ export class PatientDiagnosisComponent {
         }
       }
     );
+  }
+
+  directorDoctorVisit() {
+    this.getPatientDiagnosis(true);
   }
 
   updatePatientInformation() {

@@ -11,8 +11,21 @@ export class PatientDiagnosisService {
   constructor(private httpClient: HttpClient) { }
   private limit = 30; // Default limit for pagination
 
-  getPatientDiagnosis(): Observable<PatientDiagnosis> {
+  getPatientDiagnosis(directVisit: boolean) {
+    if (directVisit) {
+      return this.getDirectVisit();
+    } else {
+      return this.getVisit();
+    }
+  }
+
+  private getVisit() : Observable<PatientDiagnosis> {
     const href = environment.PATIENT_DIAGNOSIS_API_URL;
+    return this.httpClient.get<PatientDiagnosis>(href);
+  }
+
+  private getDirectVisit(): Observable<PatientDiagnosis> {
+    const href = `${environment.PATIENT_DIAGNOSIS_API_URL}/direct-visit`;
     return this.httpClient.get<PatientDiagnosis>(href);
   }
 

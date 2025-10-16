@@ -73,8 +73,18 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="col-sm-6">
+        <!--<div class="col-sm-6">
           <mat-checkbox color="primary" formControlName="markForConsultation" [checked]="true">Schedule the Patient for Consultation</mat-checkbox>
+        </div>-->
+        <div class="col-12">
+          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Visit Type</label>
+          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="visitType">
+            @for(visit of visitType; track visit) {
+              <mat-radio-button class="example-radio-button" color="primary" [value]="visit">
+                {{ visit }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
         </div>
       </div>
     </form>

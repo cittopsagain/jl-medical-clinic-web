@@ -18,6 +18,7 @@ import {MatSelect} from "@angular/material/select";
 import {PatientRecordsService} from "../patient-records.service";
 import {ToastrService} from "ngx-toastr";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 
 @Component({
   selector: 'app-add-patient',
@@ -44,7 +45,9 @@ import {MatCheckbox} from "@angular/material/checkbox";
     MatOption,
     MatSelect,
     ReactiveFormsModule,
-    MatCheckbox
+    MatCheckbox,
+    MatRadioButton,
+    MatRadioGroup
   ],
   providers: [
     provideNativeDateAdapter()
@@ -59,6 +62,7 @@ export class AddPatientComponent {
     'Male',
     'Female'
   ];
+  visitType: string[] = ['Consultation', 'Direct Doctor Consultation', 'Direct Doctor Follow-up Checkup'];
 
   constructor(private fb: UntypedFormBuilder, private cdr: ChangeDetectorRef,
               private patientService: PatientRecordsService, private toastr: ToastrService,
@@ -71,7 +75,8 @@ export class AddPatientComponent {
       birthDate: ['', Validators.required],
       sex: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      markForConsultation: [1] // Initialize with 1 (checked)
+      markForConsultation: [1], // Initialize with 1 (checked)
+      visitType: ['', Validators.required],
     });
   }
 
@@ -92,17 +97,21 @@ export class AddPatientComponent {
 
   savePatient(event: Event) {
     if (this.patientForm.valid) {
-      if (this.patientForm.value.markForConsultation == false) {
+      /*if (this.patientForm.value.markForConsultation == false) {
         this.patientForm.value.markForConsultation = 0; // Unchecked
-      }
+      }*/
 
       this.patientService.savePatientRecord(this.patientForm.value)
         .subscribe({
           next: (response: any) => {
             this.toastr.success(response.message, 'Success');
             // this.patientForm.reset();
-            if (response.data.consultationId != null && response.data.consultationId != undefined
-            && this.patientForm.value.markForConsultation == 1) {
+            // if (response.data.consultationId != null && response.data.consultationId != undefined
+            // && this.patientForm.value.markForConsultation == 1) {
+            if (this.patientForm.value.visitType != null &&
+              this.patientForm.value.visitType != '' &&
+              this.patientForm.value.visitType != 'Direct Doctor Consultation' &&
+              this.patientForm.value.visitType != 'Direct Doctor Follow-up Checkup'){
               // If consultationId is present, navigate to the consultation page
               this.router.navigate(['/apps/patient-management/patient-consultation/edit-patient-for-consultation', response.data.consultationId]);
             } else {

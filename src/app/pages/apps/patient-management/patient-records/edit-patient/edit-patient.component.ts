@@ -68,7 +68,7 @@ export class EditPatientComponent {
   ];
 
   selectedVisitType: string;
-  visitType: string[] = ['Consultation', 'Follow-up Checkup'];
+  visitType: string[] = ['Consultation', 'Follow-up Checkup', 'Direct Doctor Consultation', 'Direct Doctor Follow-up Checkup'];
 
   constructor(private patientRecordsService: PatientRecordsService, private fb: UntypedFormBuilder, private cdr: ChangeDetectorRef,
               private patientService: PatientRecordsService, private toastr: ToastrService, private route: ActivatedRoute,
@@ -145,7 +145,10 @@ export class EditPatientComponent {
         this.toastr.success(response.message, 'Success');
         // this.router.navigate(['/apps/patient-management/patient-records']);
         console.log(response.data);
-        if (this.patientForm.value.visitType != null && this.patientForm.value.visitType != '') {
+        if (this.patientForm.value.visitType != null &&
+          this.patientForm.value.visitType != '' &&
+          this.patientForm.value.visitType != 'Direct Doctor Consultation' &&
+          this.patientForm.value.visitType != 'Direct Doctor Follow-up Checkup'){
           this.router.navigate([
             '/apps/patient-management/patient-consultation/edit-patient-for-consultation',
             response.data
