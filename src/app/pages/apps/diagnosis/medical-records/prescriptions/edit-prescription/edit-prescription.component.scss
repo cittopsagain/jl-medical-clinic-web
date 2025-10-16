@@ -1,3 +1,20 @@
 ::ng-deep .full-width-dialog .mat-mdc-dialog-container {
   max-width: none !important;
 }
+
+.row-between-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* top align the button */
+}
+.col-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* vertical spacing between lines */
+}
+.line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.label { font-weight: 700; }
