@@ -46,11 +46,14 @@ export class MedicalRecordsService {
     });
   }
 
-  updatePatientVisitRemarks(patientId: number, visitId: number, remarks: string, diagnosis: string) {
+  updatePatientVisitDetails(patientId: number, visitId: number, remarks: string,
+                            diagnosis: string, patientComplaintsNotes: string, followup: string) {
     const href = `${environment.MEDICAL_HISTORY_API_URL}/${patientId}/${visitId}`;
     return this.httpClient.put<any>(href, {
       remarks: remarks,
-      diagnosis: diagnosis
+      diagnosis: diagnosis,
+      patientComplaintsNotes: patientComplaintsNotes,
+      followup: followup
     });
   }
 }

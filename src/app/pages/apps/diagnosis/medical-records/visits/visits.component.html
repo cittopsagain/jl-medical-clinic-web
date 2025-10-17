@@ -22,7 +22,8 @@
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Patient Complaints/Notes</mat-label>
-        <textarea matInput readonly placeholder="Patient Complaints/Notes"
+        <textarea matInput placeholder="Patient Complaints/Notes"
+                  #patientComplaintsNotesInput
                   value="{{ currentDiagnosis.patientComplaintsNotes }}"
                   name="patientComplaintsNotes"></textarea>
       </mat-form-field>
@@ -32,7 +33,8 @@
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Follow-up</mat-label>
-        <input matInput readonly placeholder="Follow-up"
+        <input matInput placeholder="Follow-up"
+               #followupInput
                value="{{ currentDiagnosis.followup }}"
                name="followUp" />
       </mat-form-field>
@@ -61,7 +63,7 @@
 
     <div class="col-6 d-flex">
       <button mat-flat-button color="primary" class="w-100"
-              (click)="updatePatientRemarks(); showRemarksDiv = false">
+              (click)="updatePatientVisitDetails(); showRemarksDiv = false">
         Update
       </button>
     </div>

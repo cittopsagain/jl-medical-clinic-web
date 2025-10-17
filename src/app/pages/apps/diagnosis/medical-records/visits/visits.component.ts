@@ -73,6 +73,8 @@ export class VisitsComponent {
 
   @ViewChild('remarksInput') remarksInput: ElementRef;
   @ViewChild('diagnosisInput') diagnosisInput: ElementRef;
+  @ViewChild('patientComplaintsNotesInput') patientComplaintsNotesInput: ElementRef;
+  @ViewChild('followupInput') followupInput: ElementRef;
 
   constructor(private medicalRecordsService: MedicalRecordsService,
               private vitalSignsService: VitalSignsService,
@@ -138,15 +140,17 @@ export class VisitsComponent {
     return '';
   }
 
-  updatePatientRemarks() {
+  updatePatientVisitDetails() {
     let remarks = this.remarksInput.nativeElement.value;
     this.diagnosis[this.currentPatientVisitRowIndex].remarks = remarks;
 
-    this.medicalRecordsService.updatePatientVisitRemarks(
+    this.medicalRecordsService.updatePatientVisitDetails(
       this.patientId ?? 0,
       this.visits[this.currentPatientVisitRowIndex].visitId,
       remarks,
-      this.diagnosisInput?.nativeElement?.value || ''
+      this.diagnosisInput?.nativeElement?.value || '',
+      this.patientComplaintsNotesInput.nativeElement?.value || '',
+      this.followupInput.nativeElement?.value || ''
     ).subscribe({
       next: (data) => {
         this.toastR.success(data.message, 'Success');
