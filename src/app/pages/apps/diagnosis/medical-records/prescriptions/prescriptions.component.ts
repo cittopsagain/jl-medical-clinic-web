@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {PrescriptionsService} from "./prescriptions.service";
 import {Prescription} from "../medical-records.service";
 import {
@@ -11,14 +11,24 @@ import {
   MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
 import {NgIf, UpperCasePipe} from "@angular/common";
-import {MatIconButton} from "@angular/material/button";
+import {MatButtonModule, MatIconButton} from "@angular/material/button";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {Products} from "../../patient-diagnosis/patient-diagnosis.service";
 import {MatIcon} from "@angular/material/icon";
-import {MatDialog} from "@angular/material/dialog";
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from "@angular/material/dialog";
 import {AppEmployeeDialogContentComponent} from "../../../employee/employee.component";
 import {EditPrescriptionComponent} from "./edit-prescription/edit-prescription.component";
 import {ToastrService} from "ngx-toastr";
+import {AppDialogOverviewComponent} from "../../../../ui-components/dialog/dialog.component";
+import {DeletePrescriptionComponent} from "./delete-prescription/delete-prescription.component";
+import {VisitsComponent} from "../visits/visits.component";
 
 @Component({
   selector: 'app-prescriptions',
@@ -45,9 +55,10 @@ import {ToastrService} from "ngx-toastr";
 export class PrescriptionsComponent {
 
   prescriptions: Prescription[] = [];
-  prescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit'];
+  prescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit', 'action'];
   showEditPrescriptionDiv: boolean = false;
   displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
+  @ViewChild(VisitsComponent) visitsComponent: VisitsComponent;
 
   showAddRow = false;
   newPrescription = { visitId: '', brandName: '', productName: '', dosage: '', quantity: 0, unit: '' };
@@ -92,6 +103,35 @@ export class PrescriptionsComponent {
         } else {
           this.prescriptions.push(result);
         }
+      }
+    });
+  }
+
+  deletePrescription(row: any, enterAnimationDuration: string = '0ms', exitAnimationDuration: string = '0ms') {
+    this.matDialog.open(DeletePrescriptionComponent, {
+      width: '400px',
+      data: {
+        medicineName: row.brandName + ' ' + row.productName,
+      },
+      enterAnimationDuration,
+      exitAnimationDuration,
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.prescriptionsService.deletePrescription(row.prescriptionId, row.nonStock).subscribe({
+          next: (res) => {
+            if (res.statusCode == 200) {
+              // Remove the deleted prescription from the local array
+              this.prescriptions = this.prescriptions.filter(p => p.prescriptionId !== row.prescriptionId);
+
+              this.toastR.success(res.message);
+            } else {
+              this.toastR.error(res.message);
+            }
+          },
+          error: err => {
+            this.toastR.error('Failed to delete prescription');
+          }
+        });
       }
     });
   }

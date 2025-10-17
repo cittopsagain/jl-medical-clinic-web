@@ -59,6 +59,25 @@
       </td>
     </ng-container>
 
+    <!-- Action -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+        Action
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <a
+          mat-icon-button
+          class="d-flex align-items-center justify-content-center"
+          (click)="deletePrescription(row)"
+        >
+          <i-tabler
+            name="trash"
+            class="icon-18 d-flex align-items-center"
+          ></i-tabler>
+        </a>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="prescriptionsDisplayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: prescriptionsDisplayedColumns; let i = index"></tr>
   </table>

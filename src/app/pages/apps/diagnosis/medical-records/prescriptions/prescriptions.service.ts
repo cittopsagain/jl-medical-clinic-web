@@ -27,4 +27,11 @@ export class PrescriptionsService {
     const href = `${environment.PATIENT_DIAGNOSIS_API_URL}/prescription`;
     return this.httpClient.put<any>(href, prescription);
   }
+
+  deletePrescription(prescriptionId: number, nonStock: number) {
+    const href = `${environment.MEDICAL_HISTORY_API_URL}/${prescriptionId}`;
+    return this.httpClient.delete<any>(href, {
+      params: { nonstock: nonStock.toString() }
+    });
+  }
 }

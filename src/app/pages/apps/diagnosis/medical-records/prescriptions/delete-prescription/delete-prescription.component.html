@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>Delete Prescription</h2>
+<mat-dialog-content>Are you sure you want to delete the prescription "{{ data.medicineName }}"?</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" mat-dialog-close>Cancel</button>
+  <button mat-flat-button class="bg-error" [mat-dialog-close]="true">Delete</button>
+</mat-dialog-actions>
