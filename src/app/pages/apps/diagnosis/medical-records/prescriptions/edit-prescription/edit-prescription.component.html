@@ -10,27 +10,32 @@
 </div>
 
 <mat-dialog-content>
+<!--  <mat-card>-->
+<!--    <mat-card-content>-->
+      <!-- Bootstrap solution -->
+
+<!--    </mat-card-content>-->
+<!--  </mat-card>-->
+
+
   <mat-card>
     <mat-card-content>
-      <!-- Bootstrap solution -->
       <div class="row-between-top">
         <div class="col-stack">
           <div class="line">
-            <h3>Patient Id:</h3>
-            <h3 class="text-primary">{{ data.patientId }}</h3>
+            <label>Patient Id: {{ data.patientId }}</label>
           </div>
           <div class="line">
-            <h3>Visit Id:</h3>
-            <h3 class="text-primary">{{ data.visitId }}</h3>
+            <label>Visit Id: {{ data.visitId }}</label>
           </div>
         </div>
 
         <button mat-flat-button color="primary" (click)="addPrescription()">Save Changes</button>
       </div>
+      <mat-divider class="m-t-10"></mat-divider>
+      <div class="f-s-14 p-16 rounded m-t-12 w-100">
+        <app-prescription></app-prescription>
+      </div>
     </mat-card-content>
   </mat-card>
-
-  <div class="f-s-14 p-16 rounded m-t-12 w-100">
-    <app-prescription></app-prescription>
-  </div>
 </mat-dialog-content>

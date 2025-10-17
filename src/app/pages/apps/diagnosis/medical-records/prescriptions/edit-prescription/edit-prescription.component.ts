@@ -8,6 +8,7 @@ import {MatCard, MatCardContent} from "@angular/material/card";
 import {PrescriptionsComponent} from "../prescriptions.component";
 import {PrescriptionsService} from "../prescriptions.service";
 import {ToastrService} from "ngx-toastr";
+import {MatDivider} from "@angular/material/divider";
 
 @Component({
   selector: 'app-edit-prescription',
@@ -19,7 +20,8 @@ import {ToastrService} from "ngx-toastr";
     PrescriptionComponent,
     MatCardContent,
     MatCard,
-    MatButton
+    MatButton,
+    MatDivider
   ],
   templateUrl: './edit-prescription.component.html',
   styleUrl: './edit-prescription.component.scss'
