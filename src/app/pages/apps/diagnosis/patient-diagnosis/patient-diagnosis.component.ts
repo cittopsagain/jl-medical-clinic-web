@@ -101,6 +101,8 @@ export class PatientDiagnosisComponent {
   patientId: number = 0;
   visitId: number = 0;
   diagnosisId: number = 0;
+  isSaving: boolean = false;
+  isUpdating: boolean = false;
 
   visitType: string[] = ['Consultation', 'Follow-up Checkup', 'Direct Doctor Consultation', 'Direct Doctor Follow-up Checkup'];
   gender: string[] = [
@@ -209,6 +211,12 @@ export class PatientDiagnosisComponent {
   }
 
   savePatientDiagnosis() {
+    // Prevent multiple submissions while request is in progress
+    if (this.isSaving) {
+      this.toastR.error("Save operation is already in progress. Please wait.", 'Error');
+      return;
+    }
+
     if (this.patientForm.invalid || this.vitalSignsForm.invalid) {
       this.toastR.error('Please fill out all required fields in the Patient Information and Vital Signs forms.', 'Error');
       return;
@@ -230,12 +238,19 @@ export class PatientDiagnosisComponent {
       prescriptions: this.prescriptionComponent.prescriptionList
     };
 
+    // Set flag to indicate saving is in progress
+    this.isSaving = true;
+
     this.patientDiagnosisService.savePatientDiagnosis(data).subscribe({
       next: (data: any) => {
+        // Reset saving flag
+        this.isSaving = false;
+
         if (data.statusCode == 201) {
           this.toastR.success(data.message, 'Success');
           this.showPrintMedicalCertificateButton = true;
           this.showMoveToWaitingButton = false;
+
           this.showSaveButton = false;
           this.showUpdateButton = true;
 
@@ -249,12 +264,20 @@ export class PatientDiagnosisComponent {
         }
       },
       error: (error) => {
+        // Reset saving flag
+        this.isSaving = false;
         this.toastR.error(error.error.message, 'Error');
       }
     });
   }
 
   updatePatientDiagnosis() {
+    // Prevent multiple submissions while request is in progress
+    if (this.isUpdating) {
+      this.toastR.error("Update operation is already in progress. Please wait.", 'Error');
+      return;
+    }
+
     if (this.medicalSummaryComponent.diagnosisForm.invalid) {
       this.toastR.error('Please fill out all required fields in the Diagnosis form.', 'Error');
       return;
@@ -272,8 +295,12 @@ export class PatientDiagnosisComponent {
       prescriptions: this.prescriptionComponent.prescriptionList
     };
 
+    this.isUpdating = true;
+
     this.patientDiagnosisService.updatePatientDiagnosis(data).subscribe({
       next: (data: any) => {
+        this.isUpdating = false;
+
         if (data.statusCode == 200) {
           this.toastR.success(data.message, 'Success');
           this.showPrintMedicalCertificateButton = true;
@@ -286,6 +313,7 @@ export class PatientDiagnosisComponent {
         }
       },
       error: (error) => {
+        this.isUpdating = false;
         this.toastR.error(error.error.message, 'Error');
       }
     });
