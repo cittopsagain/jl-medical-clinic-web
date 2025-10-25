@@ -18,13 +18,18 @@ export class PrescriptionsService {
     this.prescriptionsSubject.next(prescriptions); // notify subscribers
   }
 
-  getPrescriptions() {
-    const stored = localStorage.getItem('prescriptions');
-    return stored ? JSON.parse(stored) : null;
+  getPrescriptions(patientId: number, visitId: number, diagnosisId: number) {
+    const href = `${environment.MEDICAL_HISTORY_API_URL}/prescription/${patientId}/${visitId}/${diagnosisId}`;
+    return this.httpClient.get<any>(href);
+  }
+
+  addAdditionalPrescription(prescription: any) {
+    const href = `${environment.PATIENT_DIAGNOSIS_API_URL}/prescription`;
+    return this.httpClient.put<any>(href, prescription);
   }
 
   updatePrescription(prescription: any) {
-    const href = `${environment.PATIENT_DIAGNOSIS_API_URL}/prescription`;
+    const href = `${environment.MEDICAL_HISTORY_API_URL}/update-prescription/${prescription.patientId}/${prescription.prescriptionId}`;
     return this.httpClient.put<any>(href, prescription);
   }
 

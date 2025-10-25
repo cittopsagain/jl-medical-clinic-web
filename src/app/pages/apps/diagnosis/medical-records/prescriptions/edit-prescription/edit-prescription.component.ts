@@ -44,7 +44,7 @@ export class EditPrescriptionComponent {
   }
 
   addPrescription() {
-    this.prescriptionService.updatePrescription({
+    this.prescriptionService.addAdditionalPrescription({
       patientMedicalSummary: {
         patientId: this.data.patientId,
         visitId: this.data.visitId

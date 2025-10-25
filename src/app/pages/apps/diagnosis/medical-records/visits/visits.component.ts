@@ -161,7 +161,7 @@ export class VisitsComponent {
     });
   }
 
-  onPatientVisitRowClick(visitId: number) {
+  onPatientVisitRowClick(visitId: number, row: any) {
     let vitalSigns = this.vitalSigns[this.currentPatientVisitRowIndex];
     if (vitalSigns) {
       this.vitalSignsService.setVitalSigns(vitalSigns);

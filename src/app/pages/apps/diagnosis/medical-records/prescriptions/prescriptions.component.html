@@ -1,4 +1,5 @@
 <div *ngIf="showEditPrescriptionDiv ">
+  <small class="text-muted">* Required fields are marked with an asterisk</small>
   <div class="row m-t-10">
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
@@ -23,34 +24,29 @@
 
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Qty</mat-label>
-        <input matInput placeholder="Qty" name="qty" type="number" value="{{ selectedPrescription.qty }}" />
+        <mat-label>Qty *</mat-label>
+        <input matInput placeholder="Qty *" #quantityInput name="qty" type="number" value="{{ selectedPrescription.quantity }}" />
       </mat-form-field>
     </div>
 
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Expiry Date</mat-label>
-        <input matInput readonly placeholder="Expiry Date" name="expiryDate" value="{{ selectedPrescription.expiryDate }}" />
-      </mat-form-field>
-    </div>
-
-    <div class="col-12">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Dosage</mat-label>
-        <input matInput placeholder="Dosage" name="dosage" value="{{ selectedPrescription.dosage }}" />
+        <mat-label>Dosage *</mat-label>
+        <input matInput placeholder="Dosage *" #dosageInput name="dosage" value="{{ selectedPrescription.dosage }}" />
       </mat-form-field>
     </div>
 
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Instructions</mat-label>
-        <input matInput placeholder="Instructions" name="instructions" value="{{ selectedPrescription.instructions }}" />
+        <input matInput placeholder="Instructions" #instructionInput name="instructions" value="{{ selectedPrescription.instructions }}" />
       </mat-form-field>
     </div>
 
     <div class="col-6 d-flex">
-      <button mat-flat-button color="primary" class="w-100" (click)="updatePrescription();">
+      <button mat-flat-button color="primary" class="w-100"
+              [disabled]="!dosageInput.value || !quantityInput.value"
+              (click)="updatePrescription();">
         Update
       </button>
     </div>

@@ -145,6 +145,6 @@
 
     <tr mat-header-row *matHeaderRowDef="visitsDisplayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: visitsDisplayedColumns; let i = index"
-        (click)="currentPatientVisitRowIndex = i; onPatientVisitRowClick(row.visitId);"></tr>
+        (click)="currentPatientVisitRowIndex = i; onPatientVisitRowClick(row.visitId, row);"></tr>
   </table>
 </div>
