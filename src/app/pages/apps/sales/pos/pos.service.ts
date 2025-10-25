@@ -68,6 +68,31 @@ export class PosService {
       return this.httpClient.get<PatientApi>(requestUrl);
     }
   }
+
+  getPatientsTransactions(search: any,
+                               sort: string,
+                               order: string,
+                               page: number): Observable<PatientApi> {
+    {
+      if (search.search == null || search.search === undefined) {
+        search.search = '';
+      }
+
+      if (search.filterBy == null || search.filterBy === undefined) {
+        search.filterBy = '';
+      }
+
+      const href = `${environment.POS_API_URL}/patients-transactions`;
+      const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
+
+      return this.httpClient.get<PatientApi>(requestUrl);
+    }
+  }
+
+  getPurchaseDetail(posId: number) {
+    const href = `${environment.POS_API_URL}/purchase-detail/${posId}`;
+    return this.httpClient.get<any>(href);
+  }
 }
 
 export interface ProductApi {
@@ -106,6 +131,7 @@ export interface PatientApi {
 }
 
 export interface Patient {
+  posId: number;
   patientId: number;
   patientDiagnosisId: number;
   patientName: string;
@@ -114,4 +140,7 @@ export interface Patient {
   visitId: number;
   visitDate: string;
   visitType: string;
+  dateCreated: string;
+  customerOrderType: string;
+  totalAmountDue: number;
 }

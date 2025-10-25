@@ -31,6 +31,7 @@ import {
 } from "../../../diagnosis/medical-records/prescriptions/edit-prescription/edit-prescription.component";
 import {PosDialogComponent} from "./pos-dialog/pos-dialog.component";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {PrescriptionPurchasesComponent} from "../prescription-purchases/prescription-purchases.component";
 
 @Component({
   selector: 'app-pos',
@@ -67,7 +68,8 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
     MatOption,
     MatSelect,
     MatTabGroup,
-    MatTab
+    MatTab,
+    PrescriptionPurchasesComponent
   ],
   templateUrl: './pos.component.html',
   styleUrl: './pos.component.scss'
@@ -125,6 +127,8 @@ export class PosComponent {
 
   @ViewChild('cashInput') cashInput: ElementRef;
   @ViewChild('filterByInput') filterByInput: MatSelect;
+
+  @ViewChild(PrescriptionPurchasesComponent) prescriptionPurchases: PrescriptionPurchasesComponent;
 
   displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
   purchasedItemsColumns: string[] = ['productName', 'unit', 'qty', 'price', 'action'];
@@ -470,6 +474,8 @@ export class PosComponent {
 
         // Cleanup
         URL.revokeObjectURL(fileURL);
+
+        this.prescriptionPurchases.getPatientsTransactions();
       },
       error: (err: any) => {
         this.toastR.error(err.error.message, 'Error');
