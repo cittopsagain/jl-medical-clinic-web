@@ -2,20 +2,14 @@
   <mat-card-content>
     <div class="row justify-content-end m-b-24">
       <div class="col-sm-4 text-right">
-        <a routerLink="/apps/patient-management/patient-records" mat-flat-button class="bg-error text-white m-r-10">
-          Cancel
-        </a>
         <button mat-flat-button color="primary" (click)="savePatient($event)" [disabled]="patientForm.invalid">
           Save Patient
         </button>
       </div>
     </div>
 
-    <mat-divider></mat-divider>
-    <div class="col-12 mt-2">
-      <small class="text-muted">* Required fields are marked with an asterisk</small>
-    </div>
     <form [formGroup]="patientForm">
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
       <div class="row p-t-24">
         <div class="col-sm-4">
           <mat-form-field appearance="outline" class="w-100">
@@ -65,7 +59,6 @@
             <mat-label>Gender</mat-label>
             <mat-select formControlName="sex" disableOptionCentering placeholder="Gender">
               @for (gender of gender; track gender) {
-                <!-- <mat-option [value]="gender === 'Male' ? 'M' : (gender === 'Female' ? 'F' : gender)">-->
                 <mat-option [value]="gender">
                   {{ gender }}
                 </mat-option>
@@ -73,11 +66,8 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <!--<div class="col-sm-6">
-          <mat-checkbox color="primary" formControlName="markForConsultation" [checked]="true">Schedule the Patient for Consultation</mat-checkbox>
-        </div>-->
         <div class="col-12">
-          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Visit Type</label>
+          Visit Type:
           <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="visitType">
             @for(visit of visitType; track visit) {
               <mat-radio-button class="example-radio-button" color="primary" [value]="visit">

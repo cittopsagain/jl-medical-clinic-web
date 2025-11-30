@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {PatientRecordsApi} from "../../patient-management/patient-records/patient-records.service";
 import {environment} from "../../../../../environments/environment";
 
 @Injectable({

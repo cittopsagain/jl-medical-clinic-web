@@ -1,8 +1,7 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {VitalSignsService} from "./vital-signs.service";
 import {VitalSigns} from "../medical-records.service";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
-import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-vital-signs',
@@ -17,18 +16,19 @@ import {Subscription} from "rxjs";
 })
 export class VitalSignsComponent implements OnDestroy{
 
-  @Input() vitalSigns: VitalSigns;
+  vitalSigns: VitalSigns | any = null;
 
   constructor(private vitalSignsService: VitalSignsService) {
-
-  }
-
-  ngAfterViewInit() {
     this.vitalSignsService.vitalSigns$.subscribe(vitalSigns => {
+      this.vitalSigns = null;
       if (vitalSigns) {
         this.vitalSigns = vitalSigns;
       }
     });
+  }
+
+  ngAfterViewInit() {
+
   }
 
   ngOnDestroy(): void {

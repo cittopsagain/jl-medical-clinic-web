@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-between m-b-16 p-x-20 p-t-16">
-  <h3>Add Additional Prescription</h3>
+  <h3>Add Additional Prescription - Patient Id: {{ data.patientId }}, Visit Id: {{ data.visitId }}</h3>
   <button
     mat-icon-button
     mat-dialog-close
@@ -10,32 +10,12 @@
 </div>
 
 <mat-dialog-content>
-<!--  <mat-card>-->
-<!--    <mat-card-content>-->
-      <!-- Bootstrap solution -->
+  <div class="d-flex justify-content-end m-b-16">
+    <button mat-flat-button color="primary w-100 col-5" (click)="addPrescription()">Save Changes</button>
+  </div>
+    <div class="f-s-14 p-16 rounded w-100">
 
-<!--    </mat-card-content>-->
-<!--  </mat-card>-->
+      <app-prescription [addAdditionalPrescription]="true"></app-prescription>
 
-
-  <mat-card>
-    <mat-card-content>
-      <div class="row-between-top">
-        <div class="col-stack">
-          <div class="line">
-            <label>Patient Id: {{ data.patientId }}</label>
-          </div>
-          <div class="line">
-            <label>Visit Id: {{ data.visitId }}</label>
-          </div>
-        </div>
-
-        <button mat-flat-button color="primary" (click)="addPrescription()">Save Changes</button>
-      </div>
-      <mat-divider class="m-t-10"></mat-divider>
-      <div class="f-s-14 p-16 rounded m-t-12 w-100">
-        <app-prescription></app-prescription>
-      </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
 </mat-dialog-content>

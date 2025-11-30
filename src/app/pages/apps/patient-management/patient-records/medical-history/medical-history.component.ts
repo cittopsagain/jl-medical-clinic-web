@@ -1,6 +1,5 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
-  MedicalHistoryApi,
   PatientPrescriptionList,
   PatientRecordsService,
   PatientVisits
@@ -17,6 +16,10 @@ import {
   MatTable
 } from "@angular/material/table";
 import {DatePipe, NgIf, UpperCasePipe} from "@angular/common";
+import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
+import {MedicalHistoryService} from "./medicalhistory.service";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-medical-history',
@@ -33,12 +36,15 @@ import {DatePipe, NgIf, UpperCasePipe} from "@angular/common";
     MatHeaderCellDef,
     DatePipe,
     UpperCasePipe,
-    NgIf
+    NgIf,
+    MatCard,
+    MatCardContent,
+    MatCardTitle
   ],
   templateUrl: './medical-history.component.html',
   styleUrl: './medical-history.component.scss'
 })
-export class MedicalHistoryComponent {
+export class MedicalHistoryComponent implements OnChanges, OnInit {
   @Input() patientId: number | undefined;
 
   patientVisits: PatientVisits[] = [];
@@ -48,21 +54,48 @@ export class MedicalHistoryComponent {
 
   patientVisitsDisplayedColumns: string[] = ['visitId', 'dateTimeVisit', 'diagnosis'];
   patientPrescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit'];
+  private destroy$ = new Subject<void>();
 
-  constructor(private patientService: PatientRecordsService, private toastr: ToastrService) {
+  constructor(private patientService: PatientRecordsService,
+              private toastr: ToastrService,
+              private patientRecordMedicalHistory: MedicalHistoryService,
+              private cdr: ChangeDetectorRef) {
 
   }
 
+  ngOnInit(): void {
+    this.patientRecordMedicalHistory.patientRecordMedicalHistoryPatientVisitObservable$.pipe(takeUntil(this.destroy$))
+      .subscribe(patientId => {
+        this.patientVisits = [];
+        this.patientPrescriptions = [];
+        this.cdr.detectChanges();
+      });
+
+    if (this.patientId) {
+      this.getMedicalHistory();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['patientId'] && !changes['patientId'].firstChange) {
+      this.patientPrescriptions = [];
+      if (this.patientId) {
+        this.getMedicalHistory();
+      } else {
+        this.patientVisits = [];
+      }
+    }
+  }
+
   ngAfterViewInit() {
-    this.getMedicalHistory();
+
   }
 
   getMedicalHistory() {
     if (this.patientId) {
       this.patientService.getMedicalHistory(this.patientId).subscribe({
-        next: (data: MedicalHistoryApi) => {
-          this.patientVisits = data.patientVisits;
-          this.patientPrescriptions = data.patientPrescriptionsList;
+        next: (data: any) => {
+          this.patientVisits = data.medicalRecords;
         },
         error: (error) => {
           this.toastr.error('Unable to retrieve medical history', 'Error');
@@ -73,20 +106,26 @@ export class MedicalHistoryComponent {
     }
   }
 
-  onMedicalHistoryRowClick(index: number, row: PatientVisits) {
-    // Get prescriptions related to this visit
-    this.selectedPatientPrescriptionsByVisit = [];
-    this.getPrescriptionsByVisitId(row.visitId);
+  onMedicalHistoryRowClick(index: number, row: any) {
+    this.getPrescription(row.visits.patientId, row.visits.visitId);
   }
 
-  /**
-   * Returns prescriptions that match the given visit ID
-   */
   getPrescriptionsByVisitId(visitId: number){
     for (let i = 0; i < this.patientPrescriptions.length; i++) {
       if (this.patientPrescriptions[i].visitId === visitId) {
         this.selectedPatientPrescriptionsByVisit.push(this.patientPrescriptions[i]);
       }
     }
+  }
+
+  getPrescription(patientId: number, visitId: number) {
+    this.patientService.getPrescription(patientId, visitId).subscribe({
+      next: (data: any) => {
+        this.patientPrescriptions = data;
+      },
+      error: (error) => {
+        this.toastr.error('Unable to retrieve prescription', 'Error');
+      }
+    });
   }
 }

@@ -1,4 +1,18 @@
-<div *ngIf="showEditPrescriptionDiv ">
+<div *ngIf="showEditPrescriptionDiv" class="m-t-10 no-horizontal-scroll">
+  <div class="row justify-content-end ">
+    <div class="col text-right">
+      <button mat-flat-button color="primary m-r-10"
+              [disabled]="!dosageInput.value || !quantityInput.value"
+              (click)="updatePrescription();">
+        Update
+      </button>
+      <button mat-flat-button color="primary" (click)="showEditPrescriptionDiv = false">
+        <mat-icon aria-hidden="true" style="margin-right:8px;">arrow_back</mat-icon>
+        Back to Prescription Details
+      </button>
+    </div>
+  </div>
+
   <small class="text-muted">* Required fields are marked with an asterisk</small>
   <div class="row m-t-10">
     <div class="col-12">
@@ -44,21 +58,26 @@
     </div>
 
     <div class="col-6 d-flex">
-      <button mat-flat-button color="primary" class="w-100"
-              [disabled]="!dosageInput.value || !quantityInput.value"
-              (click)="updatePrescription();">
-        Update
-      </button>
+
     </div>
     <div class="col-6 d-flex">
-      <button mat-flat-button color="primary" class="w-100" (click)="showEditPrescriptionDiv = false">
-        Back to Prescription Details
-      </button>
+
     </div>
   </div>
 </div>
 
-<div class="example-table-container responsive-table" *ngIf="!showEditPrescriptionDiv">
+<div class="example-table-container responsive-table no-horizontal-scroll" *ngIf="!showEditPrescriptionDiv">
+  <div class="row justify-content-end">
+    <div class="col-4 text-right">
+      <button mat-flat-button color="primary m-r-10" (click)="printPatientPrescription()">
+        Print Prescription
+      </button>
+      <button mat-flat-button color="primary" (click)="showEditDiv()">
+        Add Additional Prescription
+      </button>
+    </div>
+  </div>
+
   <table mat-table [dataSource]="prescriptions" class="hover-table">
     <!-- Visit Id -->
     <ng-container matColumnDef="visitId">

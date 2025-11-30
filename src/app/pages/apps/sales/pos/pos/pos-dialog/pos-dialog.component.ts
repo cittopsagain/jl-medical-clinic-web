@@ -1,5 +1,4 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatDialogClose, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {MatIconButton} from "@angular/material/button";
 import {TablerIconComponent} from "angular-tabler-icons";
@@ -8,7 +7,7 @@ import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
-import {catchError, filter, map, startWith, switchMap} from "rxjs/operators";
+import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {
   MatCell,
   MatCellDef,
@@ -28,8 +27,6 @@ import {merge, of as observableOf} from "rxjs";
 @Component({
   selector: 'app-pos-dialog',
   imports: [
-    MatCard,
-    MatCardContent,
     MatDialogClose,
     MatDialogContent,
     MatIconButton,
@@ -78,13 +75,15 @@ export class PosDialogComponent {
       value: 'patient_diagnosis_id'
     },
     {
-      name: 'Prescription Id OR Patient Name',
+      name: 'Prescription Id or Patient Name',
       value: 'patient_diagnosis_id_or_patient_name'
     }
   ];
 
-  constructor(private posService: PosService, private toastR: ToastrService,
-              private dialogRef: MatDialogRef<PosComponent>) {
+  constructor(private posService: PosService,
+              private toastR: ToastrService,
+              private dialogRef: MatDialogRef<PosComponent>
+  ) {
   }
 
   onRowClick(row: Patient) {
@@ -124,16 +123,5 @@ export class PosDialogComponent {
           return observableOf([]);
         })
       ).subscribe((data: Patient[]) => (this.data = data));
-    /* this.posService.getCompletedPatientVisit({
-      search: this.searchNameInput.nativeElement.value,
-      filterBy: this.filterByInput.value == null ? 'patient_diagnosis_id' : this.filterByInput.value
-    }).subscribe({
-      next: (result: any) => {
-        this.data = result.data;
-      },
-      error: (error) => {
-        this.toastR.error('No completed patient visits found.');
-      }
-    }); */
   }
 }

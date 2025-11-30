@@ -1,72 +1,50 @@
-<mat-card>
-  <mat-card-content>
-    <div class="row justify-content-end">
-      <div class="col-sm-4 text-right">
-        <a routerLink="/apps/diagnosis/patient-diagnosis/1"
-           (click)="clearLocalStorage();"
-           mat-flat-button class="bg-error text-white m-r-10">
-          Back to Medical Records List
-        </a>
-      </div>
-    </div>
-  </mat-card-content>
-</mat-card>
-
-<div class="row">
+<div class="row justify-content-end m-t-10">
+  <div class="col-sm-2 text-right">
+    <button mat-flat-button color="primary" (click)="closeView()">
+      <mat-icon aria-hidden="true" style="margin-right:8px;">arrow_back</mat-icon>
+      Back to List
+    </button>
+  </div>
+</div>
+<div class="row m-t-10">
   <div class="col-12">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Patient Information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <app-patient-information-medical-records [patientInformation]="patientInformation"></app-patient-information-medical-records>
+        <app-patient-information-medical-records></app-patient-information-medical-records>
       </mat-card-content>
     </mat-card>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-6">
+<div class="row m-t-10">
+  <div class="col-12">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Patient Visits</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <app-visits [patientId]="patientInformation.patientId"></app-visits>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <div class="col-6">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Vital Signs</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-vital-signs></app-vital-signs>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
-      <mat-card-header class="d-flex justify-content-between align-items-center">
-        <mat-card-title>Patient Prescriptions</mat-card-title>
-        <div class="d-flex align-items-center">
-          <a mat-icon-button (click)="updatePrescription()" class="m-r-10">
-            <i-tabler
-              name="plus"
-              class="icon-18"
-            ></i-tabler>
-          </a>
-          <a mat-icon-button (click)="printPatientPrescription()">
-            <i-tabler
-              name="printer"
-              class="icon-18"
-            ></i-tabler>
-          </a>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <app-prescriptions></app-prescriptions>
+        <app-visits></app-visits>
       </mat-card-content>
     </mat-card>
   </div>
 </div>
+
+<mat-tab-group class="m-b-30">
+  <mat-tab label="Patient Prescriptions {{ tabDetails }}">
+    <mat-card>
+      <mat-card-content>
+        <app-prescriptions></app-prescriptions>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Vital Signs {{ tabDetails }}">
+    <mat-card>
+      <mat-card-content>
+        <app-vital-signs></app-vital-signs>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

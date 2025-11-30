@@ -14,13 +14,16 @@ export class MedicalRecordsService {
     sort: string,
     order: string,
     page: number,
-    patientName: string,
-    address: string
+    search: any
   ) {
+    if (search.search == null || search.search === undefined) {
+      search.search = '';
+    }
+
     const href = environment.MEDICAL_HISTORY_API_URL;
     const requestUrl = `${href}?sort=${sort}&order=${order}&page=${
       page + 1
-    }&limit=${ this.limit }&patientName=${encodeURIComponent(patientName)}&address=${encodeURIComponent(address)}`;
+    }&limit=${ this.limit }&search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
 
     return this.httpClient.get<PatientRecordsApi>(requestUrl);
   }

@@ -5,15 +5,11 @@ import {BehaviorSubject} from "rxjs";
   providedIn: 'root'
 })
 export class VisitsService {
-  private visitsSubject = new BehaviorSubject<any | null>(null);
-  patientId$ = this.visitsSubject.asObservable();
 
-  setPatientId(patientId: any) {
-    localStorage.setItem('patientId', patientId);
-    this.visitsSubject.next(patientId); // notify subscribers
-  }
+  private medicalRecordsEditViewMedicalRecordPatientIdBehaviorSubject = new BehaviorSubject<any | null>(null);
+  medicalRecordsEditViewMedicalRecordPatientIdObservable$ = this.medicalRecordsEditViewMedicalRecordPatientIdBehaviorSubject.asObservable();
 
-  clearLocalStorage() {
-    localStorage.removeItem('patientId');
+  setPatientId(patientId: string) {
+    this.medicalRecordsEditViewMedicalRecordPatientIdBehaviorSubject.next(patientId);
   }
 }

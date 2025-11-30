@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -10,21 +10,18 @@ export class PatientConsultationService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getPatientConsultation(patientName: string, status: string): Observable<PatientConsultation> {
+  private patientConsultationTabBehaviorSubject = new BehaviorSubject<any | null>(null);
+  patientConsultationTabBehaviorObservable$ = this.patientConsultationTabBehaviorSubject.asObservable();
+
+  setTabIndex(index: number) {
+    this.patientConsultationTabBehaviorSubject.next(index);
+  }
+
+  getPatientConsultation(search: any) {
     let params = new HttpParams();
 
-    if (patientName) {
-      params = params.set('patientName', patientName);
-    }
-
-    if (status) {
-      params = params.set('status', status);
-    }
-
-    return this.httpClient.get<PatientConsultation>(
-      environment.PATIENT_CONSULTATION_API_URL,
-      { params }
-    );
+    const href = `${environment.PATIENT_CONSULTATION_API_URL}?search=${search.search}&filterBy=${search.filterBy}&status=${search.status}`;
+    return this.httpClient.get<PatientConsultation>(href);
   }
 
   getPatientConsultationById(consultationId: number): Observable<PatientConsultation> {
@@ -38,7 +35,6 @@ export class PatientConsultationService {
 
     return this.httpClient.put<PatientConsultation>(href, patientConsultation);
   }
-
 }
 
 export interface PatientConsultation {
@@ -61,4 +57,5 @@ export interface PatientConsultation {
   oxygenSaturation: number;
   inProgressStatusCount: number;
   visitType: string;
+  pendingVisitsToday: number;
 }

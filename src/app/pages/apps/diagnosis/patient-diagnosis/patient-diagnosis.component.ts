@@ -1,5 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {MatButton, MatIconButton} from "@angular/material/button";
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatButton} from "@angular/material/button";
 import {
   MatDatepickerModule
 } from "@angular/material/datepicker";
@@ -22,13 +22,18 @@ import {PrescriptionComponent} from "./prescription/prescription.component";
 import {PrescriptionsComponent} from "../medical-records/prescriptions/prescriptions.component";
 import {VisitsComponent} from "../medical-records/visits/visits.component";
 import {VisitsService} from "../medical-records/visits/visits.service";
-import {DatePipe, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {PrescriptionsService} from "../medical-records/prescriptions/prescriptions.service";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {MatSelect} from "@angular/material/select";
 import {PatientRecordsService} from "../../patient-management/patient-records/patient-records.service";
 import {PatientConsultationService} from "../../patient-management/patient-consultation/patient-consultation.service";
 import {VitalSignsComponent} from "../medical-records/vital-signs/vital-signs.component";
+import {
+  ViewPatientMedicalRecordsService
+} from "../medical-records/view-patient-medical-records/view-patient-medical-records.service";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-patient-diagnosis',
@@ -53,7 +58,6 @@ import {VitalSignsComponent} from "../medical-records/vital-signs/vital-signs.co
     NgIf,
     MatCardTitle,
     PrescriptionsComponent,
-    MatIconButton,
     MatFormField,
     MatInput,
     MatLabel,
@@ -80,7 +84,7 @@ import {VitalSignsComponent} from "../medical-records/vital-signs/vital-signs.co
   ]
 })
 
-export class PatientDiagnosisComponent {
+export class PatientDiagnosisComponent implements OnInit, OnDestroy {
 
   patientForm: UntypedFormGroup | any;
   vitalSignsForm: UntypedFormGroup | any;
@@ -110,11 +114,20 @@ export class PatientDiagnosisComponent {
     'Female'
   ];
 
-  constructor(private patientDiagnosisService: PatientDiagnosisService, private fb: UntypedFormBuilder,
-              private toastR: ToastrService, private visitsService: VisitsService,
+  ageAndWeight: string = '';
+  private destroy$ = new Subject<void>();
+  tabDetails: string = '';
+
+  constructor(private patientDiagnosisService: PatientDiagnosisService,
+              private fb: UntypedFormBuilder,
+              private toastR: ToastrService,
+              private visitsService: VisitsService,
               private patientPrescription: PrescriptionsService,
-              private medicalRecordsService: MedicalRecordsService, private patientRecordsService: PatientRecordsService,
-              private patientConsultationService: PatientConsultationService) {
+              private medicalRecordsService: MedicalRecordsService,
+              private patientRecordsService: PatientRecordsService,
+              private patientConsultationService: PatientConsultationService,
+              private viewPatientMedicalRecordsService: ViewPatientMedicalRecordsService
+  ) {
     this.patientForm = this.fb.group({
       visitId: '',
       patientId: '',
@@ -135,11 +148,47 @@ export class PatientDiagnosisComponent {
       weight: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
       height: ['', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
       temperature: ['', [Validators.required, Validators.pattern('^([0-9]|[1-3][0-9]|4[0-2])(\\.\\d{1,2})?$'), Validators.min(0), Validators.max(42)]],
-      // bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
       bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
       heartRate: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
       oxygenSaturation: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
       status: 'true' // Will be interpreted to IN_PROGRESS in the backend
+    });
+
+    this.viewPatientMedicalRecordsService.viewPatientMedicalRecordObservable$.pipe(takeUntil(this.destroy$))
+      .subscribe(({patientId, visitId, visitDate}) => {
+        if (patientId && visitId && visitDate) {
+          this.tabDetails = ' - Visit Id: ' + visitId + ', Visit Date: ' + this.formatDateToMonthDayYear(visitDate);
+        } else {
+          this.tabDetails = '';
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngOnInit(): void {
+    this.vitalSignsForm.valueChanges.subscribe((formValue: any) => {
+      sessionStorage.setItem('DIAGNOSIS_VITAL_SIGNS_SESSION_STORAGE', JSON.stringify(formValue));
+      if (this.patientForm.value.age) {
+        if (Number(this.patientForm.value.age.split(' ')[0]) <= 14) {
+          this.ageAndWeight = ` - Age: ${this.patientForm.value.age}, Weight: ${formValue.weight} kg`;
+        }
+      }
+    });
+
+    this.patientForm.valueChanges.subscribe((formValue: any) => {
+      sessionStorage.setItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE', JSON.stringify(formValue));
+      if (formValue.age) {
+        if (Number(formValue.age.split(' ')[0]) <= 14) {
+          this.ageAndWeight = ` - Age: ${formValue.age}, Weight: ${this.vitalSignsForm.value.weight} kg`;
+        }
+      }
+
+      this.patientId = formValue.patientId;
+      this.visitsService.setPatientId(formValue.patientId);
     });
   }
 
@@ -155,6 +204,10 @@ export class PatientDiagnosisComponent {
       next: (data: any) => {
         if (data.data == null && directVisit) {
           this.toastR.error('No patients have been marked as Direct Doctor Consultation or Direct Doctor Follow-up Checkup.', 'Error');
+        }
+
+        if (!data.data) {
+          return;
         }
 
         this.patientInformation = data.data.patient;
@@ -175,36 +228,32 @@ export class PatientDiagnosisComponent {
             age: this.calculateAge(data.data.patient.birthDate)
           }
         );
-
         this.vitalSigns = data.data.vitalSigns;
         this.visitId = data.data.vitalSigns.visitId;
+
+        const vitalSignsSessionStorage = sessionStorage.getItem('DIAGNOSIS_VITAL_SIGNS_SESSION_STORAGE');
+        let parsedData = null;
+        if (vitalSignsSessionStorage) {
+          parsedData = JSON.parse(vitalSignsSessionStorage);
+        }
 
         this.vitalSignsForm.patchValue(
           {
             consultationId: data.data.vitalSigns.visitId,
-            weight: data.data.vitalSigns.weight,
-            height: data.data.vitalSigns.height,
-            temperature: data.data.vitalSigns.temperature,
-            bloodPressure: data.data.vitalSigns.bloodPressure,
-            heartRate: data.data.vitalSigns.heartRate,
-            oxygenSaturation: data.data.vitalSigns.oxygenSaturation
+            weight: parsedData?.weight ? parsedData.weight : data.data.vitalSigns.weight,
+            height: parsedData?.height ? parsedData.height : data.data.vitalSigns.height,
+            temperature: parsedData?.temperature ? parsedData.temperature : data.data.vitalSigns.temperature,
+            bloodPressure: parsedData?.bloodPressure ? parsedData.bloodPressure : data.data.vitalSigns.bloodPressure,
+            heartRate: parsedData?.heartRate ? parsedData.heartRate : data.data.vitalSigns.heartRate,
+            oxygenSaturation: parsedData?.oxygenSaturation ? parsedData.oxygenSaturation : data.data.vitalSigns.oxygenSaturation
           }
         );
-
-        this.prescriptionComponent.prescriptionList = [];
-
-        this.medicalSummaryComponent.diagnosisForm.reset();
-
-        this.medicalSummaryComponent.diagnosisForm.patchValue({
-          followUpCheckupRemarks: 'Follow up on 7th day if symptoms persists'
-        });
 
         this.showPrintMedicalCertificateButton = false;
         this.showSaveButton = true;
         this.showMoveToWaitingButton = true;
       },
       error: (error) => {
-        // this.toastR.error(error.error.message, 'Error');
         this.toastR.error(error.error?.message || 'Failed to load patient diagnosis', 'Error');
       }
     });
@@ -259,6 +308,12 @@ export class PatientDiagnosisComponent {
           this.diagnosisId = data.data.diagnosisId;
 
           this.printPatientPrescription();
+
+          this.prescriptionComponent.prescriptionList = [];
+          sessionStorage.removeItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE')
+          sessionStorage.removeItem('DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_MEDICAL_SUMMARY_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_VITAL_SIGNS_SESSION_STORAGE');
         } else {
           this.toastR.error(data.message, 'Error');
         }
@@ -337,7 +392,6 @@ export class PatientDiagnosisComponent {
           this.showMoveToWaitingButton = true;
         },
         error: (error) => {
-          // this.toastR.error(error.error.message, 'Error');
           this.toastR.error(error.error?.message || 'Failed to patient diagnosis', 'Error');
         }
       }
@@ -353,7 +407,6 @@ export class PatientDiagnosisComponent {
       next: (data: any) => {
         if (data.statusCode == 200) {
           this.toastR.success(data.message, 'Success');
-          // this.patientInformation = this.patientForm.value;
 
           this.patientForm.patchValue({
             visitId: this.visitId,
@@ -379,7 +432,6 @@ export class PatientDiagnosisComponent {
       next: (data: any) => {
         if (data.statusCode == 200) {
           this.toastR.success(data.message, 'Success');
-          // this.vitalSigns = this.vitalSignsForm.value;
 
           this.vitalSignsForm.patchValue({
             consultationId: this.visitId,
@@ -407,19 +459,6 @@ export class PatientDiagnosisComponent {
         const file = new Blob([res], {type: 'application/pdf'});
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL, '_blank', 'width=900,height=800,scrollbars=yes,resizable=yes');
-
-        const issuedDate = this.formatDate(new Date());
-
-        // Trigger download
-        /* const a = document.createElement('a');
-        a.href = fileURL;
-        a.download = `MedicalCertificate_${this.patientId}_Issued${issuedDate}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        // Cleanup
-        URL.revokeObjectURL(fileURL); */
       },
       error: (err) => {
         this.toastR.error(err.error.message, 'Error');
@@ -443,19 +482,6 @@ export class PatientDiagnosisComponent {
         const file = new Blob([res], {type: 'application/pdf'});
         const fileURL = URL.createObjectURL(file);
         window.open(fileURL, '_blank', 'width=900,height=800,scrollbars=yes,resizable=yes');
-
-        const issuedDate = this.formatDate(new Date());
-
-        // Trigger download
-        /* const a = document.createElement('a');
-        a.href = fileURL;
-        a.download = `Prescription_${this.patientId}_Issued${issuedDate}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-        // Cleanup
-        URL.revokeObjectURL(fileURL);  */
       },
       error: (error) => {
         this.toastR.error(error.error.message, 'Error');
@@ -475,6 +501,15 @@ export class PatientDiagnosisComponent {
     }).subscribe({
       next: (data: any) => {
         if (data.statusCode == 200) {
+          this.ageAndWeight = '';
+          this.medicalSummaryComponent.diagnosisForm.reset();
+
+          this.prescriptionComponent.prescriptionList = [];
+          sessionStorage.removeItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_MEDICAL_SUMMARY_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_VITAL_SIGNS_SESSION_STORAGE');
+
           this.patientForm.reset();
           this.vitalSignsForm.reset();
           this.showMoveToWaitingButton = false;
@@ -535,6 +570,19 @@ export class PatientDiagnosisComponent {
       months += 12;
     }
 
+    if (years <= 14) {
+      this.ageAndWeight = ` - Age: ${years} years ${months} months`;
+    }
+
     return `${years} years ${months} months`;
+  }
+
+  formatDateToMonthDayYear(dateStr: string): string {
+    const d = new Date(dateStr);
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const yyyy = d.getFullYear();
+
+    return `${mm}/${dd}/${yyyy}`;
   }
 }

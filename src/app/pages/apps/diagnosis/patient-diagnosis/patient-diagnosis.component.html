@@ -31,7 +31,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-tab-group [selectedIndex]="0">
+<mat-tab-group [selectedIndex]="3">
   <!-- Patient Information -->
   <mat-tab>
     <ng-template mat-tab-label>
@@ -48,7 +48,6 @@
                 (click)="updatePatientInformation()"
                 [disabled]="patientForm.invalid">Update Patient Information</button>
       </div>
-      <!-- <app-patient-information-medical-records [patientInformation]="patientInformation"></app-patient-information-medical-records> -->
 
       <form [formGroup]="patientForm" *ngIf="directDoctorConsultation === false">
         <div class="row">
@@ -109,11 +108,6 @@
 
             <!-- Birth Date -->
             <div class="col-lg-6">
-              <!--<mat-form-field appearance="outline" class="w-100">
-                <mat-label>Birth Date</mat-label>
-                <input matInput placeholder="Middle Name" value="{{ patientInformation?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
-              </mat-form-field>-->
-
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Birth Date</mat-label>
                 <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required (dateChange)="onBirthDateSelected()"/>
@@ -274,7 +268,7 @@
           <i-tabler name="prescription" class="icon-20 m-r-8"></i-tabler>
         </mat-icon>
       </div>
-      Prescription
+      Prescription {{ ageAndWeight }}
     </ng-template>
     <div class="f-s-14 p-16 rounded m-t-12">
       <app-prescription></app-prescription>
@@ -291,44 +285,26 @@
       </div>
       History
     </ng-template>
-    <div class="f-s-14 p-16 rounded m-t-12">
-      <div class="row">
-        <div class="col-6">
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>Patient Visits</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <app-visits *ngIf="patientInformation" [patientId]="patientInformation.patientId" [showActionsButton]="true"></app-visits>
-            </mat-card-content>
-          </mat-card>
-        </div>
-        <div class="col-6">
-          <mat-card>
-            <mat-card-header class="d-flex justify-content-between align-items-center">
-              <mat-card-title>Vital Signs</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <app-vital-signs></app-vital-signs>
-            </mat-card-content>
-          </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Patient Visits</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-visits></app-visits>
+      </mat-card-content>
+    </mat-card>
 
-          <mat-card>
-            <mat-card-header class="d-flex justify-content-between align-items-center">
-              <mat-card-title>Patient Prescriptions</mat-card-title>
-              <a mat-icon-button (click)="printPatientPrescription(true)">
-                <i-tabler
-                  name="printer"
-                  class="icon-18"
-                ></i-tabler>
-              </a>
-            </mat-card-header>
-            <mat-card-content>
-              <app-prescriptions></app-prescriptions>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
-    </div>
+    <mat-tab-group>
+      <mat-tab label="Patient Prescriptions {{ tabDetails }}">
+        <mat-card-content>
+          <app-prescriptions class="m-t-10"></app-prescriptions>
+        </mat-card-content>
+      </mat-tab>
+      <mat-tab label="Vital Signs {{ tabDetails }}">
+        <mat-card-content>
+          <app-vital-signs></app-vital-signs>
+        </mat-card-content>
+      </mat-tab>
+    </mat-tab-group>
   </mat-tab>
 </mat-tab-group>

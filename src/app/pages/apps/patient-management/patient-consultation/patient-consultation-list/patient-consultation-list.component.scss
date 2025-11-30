@@ -1,12 +1,11 @@
 .example-container {
-  // position: relative;
   min-height: 200px;
   overflow: auto;
 }
 
 .example-table-container {
   position: relative;
-  max-height: 500px;
+  max-height: 600px;
   overflow: auto;
 }
 
@@ -15,8 +14,6 @@
   top: 0;
   left: 0;
   bottom: 56px;
-  right: 0;
-  // background: rgba(0, 0, 0, 0.15);
   z-index: 1;
   display: flex;
   align-items: center;
@@ -84,4 +81,8 @@
 .status-default {
   background-color: #9e9e9e !important;
   color: white !important;
+}
+
+.visit-id-cell:hover {
+  text-decoration: underline;
 }

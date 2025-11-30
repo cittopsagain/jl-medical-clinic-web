@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
   Diagnosis,
   MedicalRecordsService,
@@ -23,6 +23,10 @@ import {VitalSignsService} from "../vital-signs/vital-signs.service";
 import {PrescriptionsService} from "../prescriptions/prescriptions.service";
 import {ToastrService} from "ngx-toastr";
 import {VisitsService} from "./visits.service";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
+import {MatIcon} from "@angular/material/icon";
+import {ViewPatientMedicalRecordsService} from "../view-patient-medical-records/view-patient-medical-records.service";
 
 @Component({
   selector: 'app-visits',
@@ -45,14 +49,15 @@ import {VisitsService} from "./visits.service";
     MatFormField,
     MatInput,
     MatLabel,
-    MatFormField
+    MatFormField,
+    MatIcon
   ],
   templateUrl: './visits.component.html',
   styleUrl: './visits.component.scss'
 })
-export class VisitsComponent {
+export class VisitsComponent implements OnInit, OnDestroy {
 
-  @Input() patientId: number;
+  patientId: number;
   @Input() showActionsButton: boolean = true;
 
   visits: Visits[] = [];
@@ -67,7 +72,7 @@ export class VisitsComponent {
 
   get visitsDisplayedColumns(): string[] {
     return this.showActionsButton ?
-      ['visitId', 'dateTimeVisit', 'diagnosis', 'action'] :
+      ['visitId', 'visitType', 'dateTimeVisit', 'diagnosis', 'action'] :
       ['visitId', 'dateTimeVisit', 'diagnosis'];
   }
 
@@ -76,29 +81,42 @@ export class VisitsComponent {
   @ViewChild('patientComplaintsNotesInput') patientComplaintsNotesInput: ElementRef;
   @ViewChild('followupInput') followupInput: ElementRef;
 
+  private destroy$ = new Subject<void>();
+
   constructor(private medicalRecordsService: MedicalRecordsService,
               private vitalSignsService: VitalSignsService,
               private prescriptionsService: PrescriptionsService,
               private toastR: ToastrService,
-              private visitsService: VisitsService) {
+              private visitsService: VisitsService,
+              private viewPatientMedicalRecordsService: ViewPatientMedicalRecordsService
+  ) {
+    this.visitsService.medicalRecordsEditViewMedicalRecordPatientIdObservable$.pipe(takeUntil(this.destroy$))
+      .subscribe(patientId => {
+        if (patientId) {
+          this.patientId = patientId;
+          this.getMedicalRecords(patientId);
+          this.showRemarksDiv = false; // Force hide remarks div on patient change
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngOnInit() {
+
   }
 
   ngAfterViewInit() {
-    /* this.visitsService.patientId$.subscribe(patientId => {
-      if (patientId) {
-        this.patientId = patientId;
-      }
-    }); */
 
-    this.getMedicalRecords();
   }
 
-  getMedicalRecords() {
-    return this.medicalRecordsService.getMedicalRecords(this.patientId ?? 0 ?? 0).subscribe({
+  getMedicalRecords(patientId: number) {
+    return this.medicalRecordsService.getMedicalRecords(patientId ?? 0 ?? 0).subscribe({
       next: (res: any) => {
         for (let i = 0; i < res.prescriptions.length; i++) {
-          // console.log(res.prescriptions[i]);
-          // this.prescriptions.push(res.prescriptions[i].prescriptions);
           this.prescriptions.push(res.prescriptions[i]);
         }
 
@@ -107,37 +125,24 @@ export class VisitsComponent {
           vitalSigns: res.medicalRecords.map((r: any) => r.vitalSigns),
           diagnosis: res.medicalRecords.map((r: any) => r.diagnosis)
         };
-
         this.vitalSigns = mapped.vitalSigns;
         this.visits = mapped.visits;
         this.diagnosis = mapped.diagnosis;
       },
       error: (err) => {
-        console.log(err);
+        this.toastR.error(err.message);
       }
     });
   }
 
-  getDiagnosisByPatientIdAndVisitId(visitId: number) {
-    for (let i = 0; i < this.diagnosis.length; i++) {
-      if (this.diagnosis[i].patientId === this.patientId && this.diagnosis[i].visitId === visitId) {
-        return this.diagnosis[i].diagnosis;
-      }
-
-    }
-
-    return '';
+  getDiagnosisByPatientIdAndVisitId(visitId: number): string {
+    const diagnosisRecord = this.diagnosis.find(d => d.visitId === visitId);
+    return diagnosisRecord?.diagnosis || '';
   }
 
-  getRemarksByPatientIdAndVisitId(visitId: number) {
-    for (let i = 0; i < this.diagnosis.length; i++) {
-      if (this.diagnosis[i].patientId === this.patientId && this.diagnosis[i].visitId === visitId) {
-        return this.diagnosis[i].remarks;
-      }
-
-    }
-
-    return '';
+  getRemarksByPatientIdAndVisitId(visitId: number): string {
+    const diagnosisRecord = this.diagnosis.find(d => d.visitId === visitId);
+    return diagnosisRecord?.remarks || '';
   }
 
   updatePatientVisitDetails() {
@@ -154,7 +159,7 @@ export class VisitsComponent {
     ).subscribe({
       next: (data) => {
         this.toastR.success(data.message, 'Success');
-        this.getMedicalRecords();
+        this.getMedicalRecords(this.patientId);
       }, error: (err) => {
         this.toastR.error(err.error.message, 'Error');
       }
@@ -162,23 +167,8 @@ export class VisitsComponent {
   }
 
   onPatientVisitRowClick(visitId: number, row: any) {
-    let vitalSigns = this.vitalSigns[this.currentPatientVisitRowIndex];
-    if (vitalSigns) {
-      this.vitalSignsService.setVitalSigns(vitalSigns);
-    }
-
-    const prescriptionList: Prescription[] = [];
-    for (let i = 0; i < this.prescriptions.length; i++) {
-      if (this.prescriptions[i].patientId === this.patientId && this.prescriptions[i].visitId === visitId) {
-        prescriptionList.push(this.prescriptions[i]);
-      }
-    }
-
-    if (prescriptionList.length > 0) {
-      this.prescriptionsService.setPrescriptions(prescriptionList);
-    } else {
-      this.prescriptionsService.setPrescriptions([]);
-    }
+    this.vitalSignsService.setVitalSigns(this.vitalSigns.find(v => v.visitId === visitId));
+    this.viewPatientMedicalRecordsService.setTabDetails(this.patientId, visitId, row.visitDateTime);
   }
 
   printMedicalCertificate(visitId: number) {

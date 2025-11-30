@@ -13,8 +13,15 @@ export class PrescriptionsService {
   private prescriptionsSubject = new BehaviorSubject<any | null>(null);
   prescriptions$ = this.prescriptionsSubject.asObservable();
 
+  private prescriptionPatientIdAndVisitIdBehaviorSubject = new BehaviorSubject<{patientId: any | null, visitId: any | null}>({patientId: null, visitId: null});
+  prescriptionPatientIdAndVisitIdObservable$ = this.prescriptionPatientIdAndVisitIdBehaviorSubject.asObservable();
+
+  setPatientIdAndVisitId(patientId: number, visitId: number) {
+    this.prescriptionPatientIdAndVisitIdBehaviorSubject.next({patientId, visitId});
+  }
+
   setPrescriptions(prescriptions: any) {
-    localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
+    sessionStorage.setItem('prescriptions', JSON.stringify(prescriptions));
     this.prescriptionsSubject.next(prescriptions); // notify subscribers
   }
 

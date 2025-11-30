@@ -4,11 +4,8 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {Prescription} from "../../medical-records.service";
 import {PrescriptionComponent} from "../../../patient-diagnosis/prescription/prescription.component";
-import {MatCard, MatCardContent} from "@angular/material/card";
-import {PrescriptionsComponent} from "../prescriptions.component";
 import {PrescriptionsService} from "../prescriptions.service";
 import {ToastrService} from "ngx-toastr";
-import {MatDivider} from "@angular/material/divider";
 
 @Component({
   selector: 'app-edit-prescription',
@@ -18,10 +15,7 @@ import {MatDivider} from "@angular/material/divider";
     MatIconButton,
     TablerIconComponent,
     PrescriptionComponent,
-    MatCardContent,
-    MatCard,
-    MatButton,
-    MatDivider
+    MatButton
   ],
   templateUrl: './edit-prescription.component.html',
   styleUrl: './edit-prescription.component.scss'

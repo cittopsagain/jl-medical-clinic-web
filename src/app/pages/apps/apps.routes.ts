@@ -119,13 +119,13 @@ export const AppsRoutes: Routes = [
         }
       },
       {
-        path: 'patient-management/patient-consultation',
+        path: 'patient-management/patient-consultation/:id',
         component: PatientConsultationListComponent,
         data: {
-          title: 'Patient Consultation & Follow-ups',
+          title: 'Consultations & Follow-ups',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Patient Consultation' },
+            { title: 'Consultations & Follow-ups' },
           ]
         }
       },
@@ -217,6 +217,17 @@ export const AppsRoutes: Routes = [
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Medicines' },
+          ]
+        }
+      },
+      {
+        path: 'inventory-pharmacy/medicine-returns',
+        component: MedicineComponent,
+        data: {
+          title: 'Medicine Returns',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Medicine Returns' },
           ]
         }
       },

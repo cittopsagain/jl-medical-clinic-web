@@ -1,13 +1,10 @@
-import {ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
-import {DatePipe} from "@angular/common";
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
-import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
-import {MatDivider} from "@angular/material/divider";
-import {MatFormField, MatHint, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
-import {Router, RouterLink} from "@angular/router";
-import {TablerIconComponent} from "angular-tabler-icons";
-import {DateAdapter, MatOption, provideNativeDateAdapter} from '@angular/material/core';
+import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
+import {Router} from "@angular/router";
+import {MatOption, provideNativeDateAdapter} from '@angular/material/core';
 import {
   MatDatepicker,
   MatDatepickerInput,
@@ -17,35 +14,26 @@ import {
 import {MatSelect} from "@angular/material/select";
 import {PatientRecordsService} from "../patient-records.service";
 import {ToastrService} from "ngx-toastr";
-import {MatCheckbox} from "@angular/material/checkbox";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 
 @Component({
   selector: 'app-add-patient',
-  // standalone: true,
   imports: [
-    DatePipe,
     FormsModule,
     MatButton,
     MatCard,
     MatCardContent,
-    MatDivider,
     MatFormField,
-    MatIconButton,
     MatInput,
     MatLabel,
-    RouterLink,
-    TablerIconComponent,
     MatDatepickerModule,
     MatDatepicker,
     MatDatepickerInput,
     MatDatepickerToggle,
-    MatHint,
     MatSuffix,
     MatOption,
     MatSelect,
     ReactiveFormsModule,
-    MatCheckbox,
     MatRadioButton,
     MatRadioGroup
   ],
@@ -55,7 +43,7 @@ import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
   templateUrl: './add-patient.component.html',
   styleUrl: './add-patient.component.scss'
 })
-export class AddPatientComponent {
+export class AddPatientComponent implements OnInit {
   patientForm: UntypedFormGroup | any;
   @ViewChild('lastNameInput') lastNameInput: ElementRef;
   gender: string[] = [
@@ -64,9 +52,11 @@ export class AddPatientComponent {
   ];
   visitType: string[] = ['Consultation', 'Direct Doctor Consultation', 'Direct Doctor Follow-up Checkup'];
 
-  constructor(private fb: UntypedFormBuilder, private cdr: ChangeDetectorRef,
-              private patientService: PatientRecordsService, private toastr: ToastrService,
-              private router: Router) {
+  constructor(private fb: UntypedFormBuilder,
+              private patientService: PatientRecordsService,
+              private toastR: ToastrService,
+              private router: Router
+  ) {
     this.patientForm = this.fb.group({
       lastName: ['', [Validators.required, Validators.pattern('^[a-zA-ZñÑ\\s\'\-]+$')]],
       firstName: ['', [Validators.required, Validators.pattern('^[a-zA-ZñÑ\\s\'\\-\\.]+$')]],
@@ -75,19 +65,28 @@ export class AddPatientComponent {
       birthDate: ['', Validators.required],
       sex: ['', Validators.required],
       contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      markForConsultation: [1], // Initialize with 1 (checked)
+      markForConsultation: [1],
       visitType: ['', Validators.required],
     });
   }
 
   ngOnInit() {
-    /*setTimeout(() => {
-      this.cdr.detectChanges();
-    });*/
+    const savedData: any = sessionStorage.getItem("PATIENT_RECORD_ADD_PATIENT_SESSION_STORAGE");
+    if (savedData) {
+      const parsed = JSON.parse(savedData);
+      this.patientForm.patchValue(parsed.formValue);
+    }
+
+    this.patientForm.valueChanges.subscribe((formValue: any) => {
+      const dataToStore: {formValue: any, timestamp: number} = {
+        formValue: formValue,
+        timestamp: Date.now()
+      };
+      sessionStorage.setItem('PATIENT_RECORD_ADD_PATIENT_SESSION_STORAGE', JSON.stringify(dataToStore));
+    });
   }
 
   ngAfterViewInit() {
-    // Delay focus to avoid ExpressionChangedAfterItHasBeenChecked error
     setTimeout(() => {
       if (this.lastNameInput) {
         this.lastNameInput.nativeElement.focus();
@@ -97,37 +96,31 @@ export class AddPatientComponent {
 
   savePatient(event: Event) {
     if (this.patientForm.valid) {
-      /*if (this.patientForm.value.markForConsultation == false) {
-        this.patientForm.value.markForConsultation = 0; // Unchecked
-      }*/
-
       this.patientService.savePatientRecord(this.patientForm.value)
         .subscribe({
           next: (response: any) => {
-            this.toastr.success(response.message, 'Success');
-            // this.patientForm.reset();
-            // if (response.data.consultationId != null && response.data.consultationId != undefined
-            // && this.patientForm.value.markForConsultation == 1) {
+            this.toastR.success(response.message, 'Success');
+            sessionStorage.removeItem("PATIENT_RECORD_ADD_PATIENT_SESSION_STORAGE");
             if (this.patientForm.value.visitType != null &&
               this.patientForm.value.visitType != '' &&
               this.patientForm.value.visitType != 'Direct Doctor Consultation' &&
-              this.patientForm.value.visitType != 'Direct Doctor Follow-up Checkup'){
-              // If consultationId is present, navigate to the consultation page
-              this.router.navigate(['/apps/patient-management/patient-consultation/edit-patient-for-consultation', response.data.consultationId]);
+              this.patientForm.value.visitType != 'Direct Doctor Follow-up Checkup') {
+              this.patientForm.reset();
+              this.router.navigate(
+                ['/apps/patient-management/patient-consultation/1'],
+                { queryParams: { visit_id: response.data.consultationId } }
+              )
             } else {
-              this.router.navigate(['/apps/patient-management/patient-records']);
+              this.patientForm.reset();
+              this.patientService.setTabIndex(0);
             }
           },
           error: (error) => {
-            this.toastr.error(error.error.message, 'Error');
+            this.toastR.error(error.error.message, 'Error');
           }
         });
     } else {
-      // Mark form controls as touched to display validation errors
-      Object.keys(this.patientForm.controls).forEach(key => {
-        this.patientForm.get(key).markAsTouched();
-      });
+      this.toastR.error('Please fill out all required fields correctly.', 'Error');
     }
   }
-
 }

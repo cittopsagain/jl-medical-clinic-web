@@ -19,7 +19,7 @@ import {
   MatHeaderRowDef,
   MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
-import {DatePipe, UpperCasePipe} from "@angular/common";
+import {DatePipe} from "@angular/common";
 import {MatDivider} from "@angular/material/divider";
 
 @Component({
@@ -45,7 +45,6 @@ import {MatDivider} from "@angular/material/divider";
     MatRowDef,
     MatSort,
     MatTable,
-    UpperCasePipe,
     MatHeaderCellDef,
     DatePipe,
     MatPaginator,
@@ -135,7 +134,6 @@ export class PrescriptionPurchasesComponent {
     this.posService.getPurchaseDetail(row.posId).subscribe({
       next: (response: any) => {
         this.purchasedMedicines = response.data;
-        console.log(this.purchasedMedicines);
       },
       error: (error) => {
         this.toastR.error(error.error.message, 'Error');

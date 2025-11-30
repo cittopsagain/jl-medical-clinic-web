@@ -1,4 +1,4 @@
-<mat-tab-group [(selectedIndex)]="selectedTabIndex">
+<mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
   <mat-tab label="Diagnosis">
     <app-patient-diagnosis></app-patient-diagnosis>
   </mat-tab>

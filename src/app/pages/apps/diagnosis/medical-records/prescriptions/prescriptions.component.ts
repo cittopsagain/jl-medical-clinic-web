@@ -1,6 +1,6 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PrescriptionsService} from "./prescriptions.service";
-import {Prescription} from "../medical-records.service";
+import {MedicalRecordsService, Prescription} from "../medical-records.service";
 import {
   MatCell,
   MatCellDef,
@@ -11,26 +11,21 @@ import {
   MatRow, MatRowDef, MatTable
 } from "@angular/material/table";
 import {NgIf, UpperCasePipe} from "@angular/common";
-import {MatButton, MatButtonModule, MatIconButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {TablerIconComponent} from "angular-tabler-icons";
-import {Products} from "../../patient-diagnosis/patient-diagnosis.service";
-import {MatIcon} from "@angular/material/icon";
 import {
   MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle
 } from "@angular/material/dialog";
-import {AppEmployeeDialogContentComponent} from "../../../employee/employee.component";
 import {EditPrescriptionComponent} from "./edit-prescription/edit-prescription.component";
 import {ToastrService} from "ngx-toastr";
-import {AppDialogOverviewComponent} from "../../../../ui-components/dialog/dialog.component";
 import {DeletePrescriptionComponent} from "./delete-prescription/delete-prescription.component";
 import {VisitsComponent} from "../visits/visits.component";
 import {FormsModule} from "@angular/forms";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
+import {MatIcon} from "@angular/material/icon";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-prescriptions',
@@ -49,17 +44,17 @@ import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
     MatIconButton,
     TablerIconComponent,
     NgIf,
-    MatIcon,
     FormsModule,
     MatButton,
     MatFormField,
     MatInput,
-    MatLabel
+    MatLabel,
+    MatIcon
   ],
   templateUrl: './prescriptions.component.html',
   styleUrl: './prescriptions.component.scss'
 })
-export class PrescriptionsComponent {
+export class PrescriptionsComponent implements OnDestroy {
 
   prescriptions: Prescription[] = [];
   prescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit', 'action'];
@@ -70,32 +65,45 @@ export class PrescriptionsComponent {
   @ViewChild('dosageInput') dosageInput: ElementRef;
   @ViewChild('instructionInput') instructionInput: ElementRef;
 
+  patientId: number;
+  visitId: number;
+  diagnosisId: number = 0;
+
   selectedPrescription: any;
 
-  showAddRow = false;
-  newPrescription = { visitId: '', brandName: '', productName: '', dosage: '', quantity: 0, unit: '' };
+  private destroy$ = new Subject<void>();
 
-  productData: Products[] = [];
+  constructor(private prescriptionsService: PrescriptionsService,
+              private matDialog: MatDialog,
+              private toastR: ToastrService,
+              private prescriptionService: PrescriptionsService,
+              private medicalRecordsService: MedicalRecordsService,
+              private router: Router
+  ) {
+    this.prescriptionService.prescriptionPatientIdAndVisitIdObservable$.pipe(takeUntil(this.destroy$))
+      .subscribe(({patientId, visitId}) => {
+        this.prescriptions = []; // Clear existing prescriptions
+        if (patientId && visitId) {
+          this.patientId = patientId;
+          this.visitId = visitId;
 
-  constructor(private prescriptionsService: PrescriptionsService, private matDialog: MatDialog, private toastR: ToastrService) {
+          this.prescriptions = []; // Clear existing prescriptions
+          this.getPrescriptions();
+        } else {
+          this.prescriptions = [];
+          this.visitId = 0;
+        }
 
+        this.showEditPrescriptionDiv = false;
+      });
   }
 
   ngAfterViewInit() {
-    this.prescriptionsService.prescriptions$.subscribe(prescriptions => {
-      if (prescriptions) {
-        this.prescriptions = prescriptions;
 
-        // We need to get again the prescription
-        if (this.prescriptions.length > 0) {
-          this.getPrescriptions();
-        }
-      }
-    });
   }
 
-  showEditDiv(patientId: number, visitId: number) {
-    if (visitId == null) {
+  showEditDiv() {
+    if (!this.visitId) {
       this.toastR.error('Please select a visit');
       return;
     }
@@ -103,8 +111,8 @@ export class PrescriptionsComponent {
     const dialogRef = this.matDialog.open(EditPrescriptionComponent, {
       data: {
         prescriptions: this.prescriptions,
-        patientId: patientId,
-        visitId: visitId
+        patientId: this.patientId,
+        visitId: this.visitId
       },
       width: '1600px',
       maxWidth: '95vw', // Add max width as viewport width
@@ -117,30 +125,47 @@ export class PrescriptionsComponent {
       if (result) {
          this.prescriptions = [
            {
-             patientId: patientId,
-             visitId: visitId,
+             patientId: this.patientId,
+             visitId: this.visitId,
              diagnosisId: 0,
              ...result
            }
          ];
 
         this.getPrescriptions();
+      }
+    });
+  }
 
-        /* if (Array.isArray(result)) {
-          this.getPrescriptions();
-          this.prescriptions = [...this.prescriptions, ...result];
-        } else {
-          this.prescriptions.push(result);
-        } */
+  printPatientPrescription() {
+    if (!this.visitId) {
+      this.toastR.error('Please select a visit');
+      return;
+    }
+
+    let patientId = this.patientId;
+    let visitId = this.visitId;
+
+    this.medicalRecordsService.getPrescription(patientId, visitId).subscribe({
+      next: (res) => {
+        const file = new Blob([res], {type: 'application/pdf'});
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL, '_blank', 'width=900,height=800,scrollbars=yes,resizable=yes');
+
+        // Cleanup
+        URL.revokeObjectURL(fileURL);
+      },
+      error: (error) => {
+        this.toastR.error(error.error.message, 'Error');
       }
     });
   }
 
   getPrescriptions() {
     this.prescriptionsService.getPrescriptions(
-      this.prescriptions[0].patientId,
-      this.prescriptions[0].visitId,
-      this.prescriptions[0].diagnosisId
+      this.patientId,
+      this.visitId,
+      this.diagnosisId
     ).subscribe({
       next: (res) => {
         this.prescriptions = res;
@@ -164,11 +189,7 @@ export class PrescriptionsComponent {
         this.prescriptionsService.deletePrescription(row.prescriptionId, row.nonStock).subscribe({
           next: (res) => {
             if (res.statusCode == 200) {
-              // Remove the deleted prescription from the local array
-              // this.prescriptions = this.prescriptions.filter(p => p.prescriptionId !== row.prescriptionId);
-
               this.getPrescriptions();
-
               this.toastR.success(res.message);
             } else {
               this.toastR.error(res.message);
@@ -211,5 +232,10 @@ export class PrescriptionsComponent {
         this.toastR.error('Failed to update prescription', 'Error');
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

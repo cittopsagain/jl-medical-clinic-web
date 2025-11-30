@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, inject, Input, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {PatientDiagnosisService, Prescription, Products} from "../patient-diagnosis.service";
@@ -12,16 +12,15 @@ import {
   MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow,
   MatHeaderRowDef,
-  MatRow, MatRowDef, MatTable
+  MatRow, MatRowDef, MatTable, MatTableDataSource
 } from "@angular/material/table";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
-import {NgIf, UpperCasePipe} from "@angular/common";
+import {isPlatformBrowser, NgIf, UpperCasePipe} from "@angular/common";
 import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {TablerIconComponent} from "angular-tabler-icons";
 import {ToastrService} from "ngx-toastr";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
-import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
 import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
@@ -50,19 +49,18 @@ import {MatCheckbox} from "@angular/material/checkbox";
     FormsModule,
     MatOption,
     MatSelect,
-    MatRadioGroup,
-    MatRadioButton,
     MatCheckbox
   ],
   templateUrl: './prescription.component.html',
   styleUrl: './prescription.component.scss'
 })
-export class PrescriptionComponent {
+export class PrescriptionComponent implements OnInit {
 
   selectedPrescription: any;
+  private _prescriptionList: any[] = [];
+  prescriptionDataSource = new MatTableDataSource<any>([]);
 
   productData: Products[] = [];
-  prescriptionList: any[] = [];
 
   prescriptionColumns: string[] = ['productName', 'unit', 'qty', 'action'];
   displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
@@ -94,15 +92,33 @@ export class PrescriptionComponent {
     }
   ];
   selectedFilter: string = 'brand_name';
+  private isInitialized = false;
 
   prescriptionForm: UntypedFormGroup | any;
+  @Input('addAdditionalPrescription') addAdditionalPrescription: boolean = false;
+  @ViewChild('qtyInputRef')  qtyInputRef: ElementRef;
+  @ViewChild('dosageInputRef')  dosageInputRef: ElementRef;
+  @ViewChild('instructionsInputRef')  instructionsInputRef: ElementRef;
 
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
   @ViewChild('filterByInput') filterByInput: MatSelect;
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
+  private platformId = inject(PLATFORM_ID);
 
-  constructor(private fb: UntypedFormBuilder, private patientDiagnosisService: PatientDiagnosisService,
+  get prescriptionList(): any[] {
+    return this._prescriptionList;
+  }
+
+  set prescriptionList(value: any[]) {
+    this._prescriptionList = value;
+    this.prescriptionDataSource.data = value; // Update the dataSource
+
+    this.setPrescriptionToSessionStorage();
+  }
+
+  constructor(private fb: UntypedFormBuilder,
+              private patientDiagnosisService: PatientDiagnosisService,
               private toastR: ToastrService) {
     this.prescriptionForm = this.fb.group({
       brandName: ['', Validators.required],
@@ -114,8 +130,38 @@ export class PrescriptionComponent {
     });
   }
 
+  ngOnInit() {
+
+  }
+
   ngAfterViewInit() {
+    if (this.isInitialized) return;
+    this.isInitialized = true;
+
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    if (isPlatformBrowser(this.platformId)) {
+      const savedData = sessionStorage.getItem('DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE');
+      const savedDataMedicalRecordsDiagnosisPrescription = sessionStorage.getItem(
+        'MEDICAL_RECORDS_DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE'
+      );
+
+      if (savedData) {
+        this.prescriptionList = [...JSON.parse(savedData)];
+
+        if (this.addAdditionalPrescription) {
+          this.prescriptionList = []; // Reset if from medical records/diagnosis history and adding new prescription
+        }
+
+        const savedDataPatientInformationSessionStorage = sessionStorage.getItem(
+          'DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE'
+        );
+        if (savedDataPatientInformationSessionStorage) {
+          const parsedData = JSON.parse(savedDataPatientInformationSessionStorage);
+        } else {
+          this.prescriptionList = []; // Reset if no patient information found
+        }
+      }
+    }
 
     this.getProducts();
   }
@@ -153,6 +199,12 @@ export class PrescriptionComponent {
       .subscribe((data: Products[]) => (this.productData = data));
   }
 
+  private setPrescriptionToSessionStorage() {
+    if (isPlatformBrowser(this.platformId)) {
+      sessionStorage.setItem("DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE", JSON.stringify(this._prescriptionList));
+    }
+  }
+
   applyFilter() {
     this.paginator.pageIndex = 0;
     this.getProducts();
@@ -170,10 +222,6 @@ export class PrescriptionComponent {
     }
 
     if (existingItem) {
-      /* if (existingItem.quantity >= row.qtyOnHand) {
-        return;
-      } */
-
       // If item exists, increment quantity
       existingItem.quantity = (existingItem.quantity || 1) + 1;
     } else {
@@ -215,11 +263,6 @@ export class PrescriptionComponent {
   }
 
   updatePrescription() {
-    /* if (this.qty > this.currentSelectedProduct.qtyOnHand) {
-      this.toastR.error('Quantity exceeds available stock.', 'Error');
-      return;
-    } */
-
     this.prescriptionList[this.currentSelectedPrescriptionIndex].dosage = this.dosage;
     this.prescriptionList[this.currentSelectedPrescriptionIndex].instructions = this.instructions;
     this.prescriptionList[this.currentSelectedPrescriptionIndex].quantity = this.qty;
@@ -229,9 +272,9 @@ export class PrescriptionComponent {
         this.prescriptionList[this.currentSelectedPrescriptionIndex],
         this.currentSelectedPrescriptionIndex
       );
-
-      this.prescriptionList = [...this.prescriptionList];
     }
+
+    this.prescriptionList = [...this.prescriptionList];
 
     this.showEditPrescription = false;
   }

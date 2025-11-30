@@ -1,8 +1,8 @@
-import {Component, ElementRef, numberAttribute, ViewChild} from '@angular/core';
-import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Patient, PosService, Products, PurchasedProducts} from "../pos.service";
+import {PosService, Products, PurchasedProducts} from "../pos.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {merge, of as observableOf} from "rxjs";
@@ -17,7 +17,7 @@ import {
   MatTable
 } from "@angular/material/table";
 import {MatDivider} from "@angular/material/divider";
-import {DatePipe, DecimalPipe, NgIf, UpperCasePipe} from "@angular/common";
+import {DecimalPipe, NgIf, UpperCasePipe} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {ToastrService} from "ngx-toastr";
@@ -26,9 +26,6 @@ import {TablerIconComponent} from "angular-tabler-icons";
 import {MatSelect} from "@angular/material/select";
 import {MatOption} from "@angular/material/core";
 import {MatDialog} from "@angular/material/dialog";
-import {
-  EditPrescriptionComponent
-} from "../../../diagnosis/medical-records/prescriptions/edit-prescription/edit-prescription.component";
 import {PosDialogComponent} from "./pos-dialog/pos-dialog.component";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {PrescriptionPurchasesComponent} from "../prescription-purchases/prescription-purchases.component";
@@ -63,7 +60,6 @@ import {PrescriptionPurchasesComponent} from "../prescription-purchases/prescrip
     UpperCasePipe,
     MatRadioButton,
     MatRadioGroup,
-    MatCardTitle,
     TablerIconComponent,
     MatOption,
     MatSelect,
@@ -209,7 +205,6 @@ export class PosComponent {
         maxWidth: '95vw', // Add max width as viewport width
         height: 'auto',
         panelClass: 'full-width-dialog',
-        // panelClass: ['full-width-dialog', 'no-scroll-dialog'], // Custom class for additional styling
         autoFocus: false
       });
 

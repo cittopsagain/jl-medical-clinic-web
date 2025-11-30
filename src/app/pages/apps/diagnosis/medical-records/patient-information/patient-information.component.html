@@ -3,7 +3,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Patient Id</mat-label>
-      <input matInput readonly placeholder="Patient Id" [value]="patientInformation?.patientId" name="patientId" />
+      <input matInput readonly placeholder="Patient Id" [value]="patientRecord?.patientId" name="patientId" />
     </mat-form-field>
   </div>
 
@@ -11,7 +11,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Last Name</mat-label>
-      <input matInput readonly placeholder="Last Name" value="{{ patientInformation?.lastName }}" name="lastName" />
+      <input matInput readonly placeholder="Last Name" [value]="patientRecord?.lastName" name="lastName" />
     </mat-form-field>
   </div>
 
@@ -19,7 +19,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>First Name</mat-label>
-      <input matInput readonly placeholder="First Name" value="{{ patientInformation?.firstName }}" name="firstName" />
+      <input matInput readonly placeholder="First Name" [value]="patientRecord?.firstName" name="firstName" />
     </mat-form-field>
   </div>
 
@@ -27,7 +27,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Middle Name</mat-label>
-      <input matInput readonly placeholder="Middle Name" value="{{ patientInformation?.middleName }}" name="middleName" />
+      <input matInput readonly placeholder="Middle Name" [value]="patientRecord?.middleName" name="middleName" />
     </mat-form-field>
   </div>
 
@@ -35,7 +35,8 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Birth Date</mat-label>
-      <input matInput readonly placeholder="Middle Name" value="{{ patientInformation?.birthDate | date: 'MM/dd/yyyy' }}" name="middleName" />
+      <!-- | date: 'MM/dd/yyyy' -->
+      <input matInput readonly placeholder="Middle Name" [value]="patientRecord?.birthDate" name="middleName" />
     </mat-form-field>
   </div>
 
@@ -43,7 +44,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Address</mat-label>
-      <input matInput readonly placeholder="Address" value="{{ patientInformation?.address }}" name="address" />
+      <input matInput readonly placeholder="Address" [value]="patientRecord?.address" name="address" />
     </mat-form-field>
   </div>
 
@@ -51,7 +52,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Gender</mat-label>
-      <input matInput readonly placeholder="Gender" value="{{ patientInformation?.gender }}" name="sex" />
+      <input matInput readonly placeholder="Gender" [value]="patientRecord?.sex" name="sex" />
     </mat-form-field>
   </div>
 
@@ -59,7 +60,7 @@
   <div class="col-lg-6">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Contact Number</mat-label>
-      <input matInput readonly placeholder="Contact Number" value="{{ patientInformation?.contactNumber }}" name="sex" />
+      <input matInput readonly placeholder="Contact Number" [value]="patientRecord?.contactNumber" name="sex" />
     </mat-form-field>
   </div>
 </div>

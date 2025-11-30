@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {environment} from "../../../../../environments/environment";
 
 @Injectable({
@@ -12,23 +12,26 @@ export class PatientRecordsService {
 
   constructor(private httpClient: HttpClient) {}
 
+  private patientRecordTabBehaviorSubject = new BehaviorSubject<any | null>(null);
+  patientRecordTabBehaviorObservable$ = this.patientRecordTabBehaviorSubject.asObservable();
+
+  setTabIndex(index: number) {
+    this.patientRecordTabBehaviorSubject.next(index);
+  }
+
   getPatientRecords(
     search: any,
     sort: string,
     order: string,
     page: number): Observable<PatientRecordsApi> {
-    if (search.patientName == null || search.patientName === undefined) {
-      search.patientName = '';
-    }
-
-    if (search.address == null || search.address === undefined) {
-      search.address = '';
+    if (search.search == null || search.search === undefined) {
+      search.search = '';
     }
 
     const href = environment.PATIENT_RECORD_API_URL;
     const requestUrl = `${href}?sort=${sort}&order=${order}&page=${
       page + 1
-    }&limit=${ this.limit }&patientName=${encodeURIComponent(search.patientName)}&address=${encodeURIComponent(search.address)}`;
+    }&limit=${ this.limit }&search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
 
     return this.httpClient.get<PatientRecordsApi>(requestUrl);
   }
@@ -58,6 +61,10 @@ export class PatientRecordsService {
     return this.httpClient.get<MedicalHistoryApi>(href);
   }
 
+  getPrescription(patientId: number, visitId: number) {
+    const href = `${environment.MEDICAL_HISTORY_API_URL}/prescription/${patientId}/${visitId}/0`;
+    return this.httpClient.get<MedicalHistoryApi>(href);
+  }
 }
 
 export interface  PatientRecordsApi {

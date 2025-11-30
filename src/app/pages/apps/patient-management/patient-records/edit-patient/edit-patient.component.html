@@ -1,138 +1,108 @@
-<mat-card class="cardWithShadow">
-  <mat-card-content>
-    <div class="row justify-content-end m-b-24">
-      <div class="col-sm-4 text-right">
-        <a routerLink="/apps/patient-management/patient-records" (click)="clearLocalStorage()" mat-flat-button class="bg-error text-white m-r-10">
-          Cancel
-        </a>
-        <button mat-flat-button color="primary" (click)="updatePatient($event)" [disabled]="patientForm.invalid">
-          Update Patient
-        </button>
-      </div>
-    </div>
-
-    <mat-divider></mat-divider>
-    <div class="col-12 mt-2">
-      <small class="text-muted">* Required fields are marked with an asterisk</small>
-    </div>
-
-    <form [formGroup]="patientForm" class="m-t-20">
-      <div class="p-16 bg-light-primary rounded m-t-10 m-b-20"
-           *ngIf="patientRecord?.visitType && patientRecord?.visitType !== '' && patientRecord?.visitStatus !== 'COMPLETED'">
-        <h5 class="f-s-14 text-primary d-flex align-items-center f-w-600">
-          <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
-          >Patient has been scheduled for a {{ patientRecord?.visitType }}
-        </h5>
-      </div>
-
-      <div class="row">
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Patient Id</mat-label>
-            <input matInput readonly placeholder="Patient Id" [value]="patientRecord?.patientId" name="patientId"/>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Last Name</mat-label>
-            <input matInput placeholder="Last Name" formControlName="lastName" name="lastName"/>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>First Name</mat-label>
-            <input matInput placeholder="First Name" formControlName="firstName" name="firstName"/>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Middle Name</mat-label>
-            <input matInput placeholder="Middle Name" formControlName="middleName" name="middleName"/>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Birth Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required/>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Address</mat-label>
-            <input matInput placeholder="Address" formControlName="address" name="address"/>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Contact Number</mat-label>
-            <input matInput placeholder="Contact Number" name="contactNumber" formControlName="contactNumber" maxlength="11"/>
-          </mat-form-field>
-        </div>
-
-        <div class="col-sm-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Gender</mat-label>
-            <mat-select formControlName="sex" disableOptionCentering placeholder="Gender" required>
-              @for (gender of gender; track gender) {
-                <!--<mat-option [value]="gender === 'Male' ? 'M' : (gender === 'Female' ? 'F' : gender)">-->
-                <mat-option [value]="gender">
-                  {{ gender }}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="col-12">
-          <label id="example-radio-group-label" class="f-w-600 d-block f-s-14">Visit Type</label>
-          <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="visitType">
-            @for(visit of visitType; track visit) {
-              <mat-radio-button class="example-radio-button" color="primary" [value]="visit">
-                {{ visit }}
-              </mat-radio-button>
-            }
-          </mat-radio-group>
-        </div>
-
-        <!--<div class="p-24 rounded bg-light m-t-16">
-          <div class="mat-sm-4">
-              <mat-checkbox color="primary" formControlName="markForConsultation">Mark for Consultation</mat-checkbox>
-          </div>
-        </div> -->
-      </div>
-    </form>
-
-  </mat-card-content>
-</mat-card>
-
-<div class="row">
-  <div class="col-6">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Patient Visits</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-visits *ngIf="patientRecord" [patientId]="patientRecord.patientId" [showActionsButton]="false"></app-visits>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <div class="col-6">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Patient Prescriptions</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-prescriptions></app-prescriptions>
-      </mat-card-content>
-    </mat-card>
+<div class="row justify-content-end m-t-10">
+  <div class="col-sm-4 text-right">
+    <button mat-flat-button color="primary" (click)="updatePatient($event)" [disabled]="patientForm.invalid">
+      Update Patient
+    </button>
   </div>
 </div>
+<mat-tab-group>
+  <mat-tab label="Patient Information">
+    <mat-card class="cardWithShadow">
+      <mat-card-content>
+        <small class="text-muted">* Required fields are marked with an asterisk</small>
+        <form [formGroup]="patientForm" class="m-t-20">
+
+          <div class="p-16 bg-light-primary rounded m-t-10 m-b-20"
+               *ngIf="patientRecord?.visitType && patientRecord?.visitType !== '' && patientRecord?.visitStatus !== 'COMPLETED'">
+            <h5 class="f-s-14 text-primary d-flex align-items-center f-w-600">
+              <i-tabler name="info-circle" class="icon-20 m-r-8 d-flex"></i-tabler
+              >Patient has been scheduled for a {{ patientRecord?.visitType }}
+            </h5>
+          </div>
+
+          <div class="row">
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Patient Id</mat-label>
+                <input matInput readonly placeholder="Patient Id" formControlName="patientId" name="patientId"/>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Last Name</mat-label>
+                <input matInput placeholder="Last Name" formControlName="lastName" name="lastName"/>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>First Name</mat-label>
+                <input matInput placeholder="First Name" formControlName="firstName" name="firstName"/>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Middle Name</mat-label>
+                <input matInput placeholder="Middle Name" formControlName="middleName" name="middleName"/>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Birth Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="birthDate" readonly required/>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Address</mat-label>
+                <input matInput placeholder="Address" formControlName="address" name="address"/>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Contact Number</mat-label>
+                <input matInput placeholder="Contact Number" name="contactNumber" formControlName="contactNumber" maxlength="11"/>
+              </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Gender</mat-label>
+                <mat-select formControlName="sex" disableOptionCentering placeholder="Gender" required>
+                  @for (gender of gender; track gender) {
+                    <mat-option [value]="gender">
+                      {{ gender }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12">
+              Visit Type:<mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="visitType">
+              @for(visit of visitType; track visit) {
+                <mat-radio-button class="example-radio-button" color="primary" [value]="visit">
+                  {{ visit }}
+                </mat-radio-button>
+              }
+            </mat-radio-group>
+            </div>
+          </div>
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+
+  <mat-tab label="History">
+    <app-medical-history [patientId]="patientRecord?.patientId ? patientRecord?.patientId : patientIdFromSessionStorage"></app-medical-history>
+  </mat-tab>
+</mat-tab-group>

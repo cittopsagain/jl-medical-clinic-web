@@ -20,7 +20,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Consultations & Follow-ups',
     iconName: 'stethoscope',
-    route: 'apps/patient-management/patient-consultation',
+    route: 'apps/patient-management/patient-consultation/0',
   },
   {
     navCap: 'Sales',
@@ -68,6 +68,11 @@ export const navItems: NavItem[] = [
     displayName: 'Medicines',
     iconName: 'pill',
     route: 'apps/inventory-pharmacy/medicines',
+  },
+  {
+    displayName: 'Medicine Returns',
+    iconName: 'arrow-back-up',
+    route: 'apps/inventory-pharmacy/medicine-returns',
   },
   /*{
     displayName: 'Medicine Dosage',

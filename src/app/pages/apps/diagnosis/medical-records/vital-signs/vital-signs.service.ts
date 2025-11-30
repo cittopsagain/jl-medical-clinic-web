@@ -7,12 +7,11 @@ export class VitalSignsService {
   vitalSigns$ = this.vitalSignsSubject.asObservable();
 
   setVitalSigns(vitalSigns: any) {
-    localStorage.setItem('vitalSigns', JSON.stringify(vitalSigns));
     this.vitalSignsSubject.next(vitalSigns); // notify subscribers
   }
 
   getVitalSigns() {
-    const stored = localStorage.getItem('vitalSigns');
+    const stored = sessionStorage.getItem('vitalSigns');
     return stored ? JSON.parse(stored) : null;
   }
 }
