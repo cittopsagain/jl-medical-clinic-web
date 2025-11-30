@@ -98,7 +98,11 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"
+                    [class.info-row]="isExpiryInRange(row.expiryDate, 4, 6)"
+                    [class.warning-row]="isExpiryInRange(row.expiryDate, 2, 3)"
+                    [class.danger-row]="isExpiryInRange(row.expiryDate, 0, 1)">
+                </tr>
               </table>
             </div>
 
@@ -209,7 +213,11 @@
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="purchasedItemsColumns; sticky: true"></tr>
-                      <tr mat-row *matRowDef="let row; columns: purchasedItemsColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: purchasedItemsColumns"
+                          [class.info-row]="isExpiryInRange(row.expiryDate, 4, 6)"
+                          [class.warning-row]="isExpiryInRange(row.expiryDate, 2, 3)"
+                          [class.danger-row]="isExpiryInRange(row.expiryDate, 0, 1)">
+                      </tr>
                     </table>
                   </div>
 

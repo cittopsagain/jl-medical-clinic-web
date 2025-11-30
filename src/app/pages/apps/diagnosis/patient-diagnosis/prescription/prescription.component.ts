@@ -301,4 +301,19 @@ export class PrescriptionComponent implements OnInit {
     this.showAddNonStock = false;
     this.prescriptionForm.reset();
   }
+
+  isExpiryInRange(expiryDate: string, minMonths: number, maxMonths: number): boolean {
+    if (!expiryDate) return false;
+
+    // Parse MM/YYYY format
+    const [month, year] = expiryDate.split('/').map(Number);
+    const expiry = new Date(year, month - 1, 1); // month is 0-indexed in JS
+    const today = new Date();
+
+    // Calculate months difference
+    const monthsDiff = (expiry.getFullYear() - today.getFullYear()) * 12 +
+      (expiry.getMonth() - today.getMonth());
+
+    return monthsDiff >= minMonths && monthsDiff <= maxMonths || monthsDiff < 0;
+  }
 }

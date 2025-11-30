@@ -94,3 +94,18 @@
   height: 56px; /* match Angular Material outline input height */
   line-height: 56px;
 }
+
+.info-row {
+  background-color: #fff9c4;
+  color: #6d4c00;
+}
+
+.warning-row {
+  background-color: #ffe5cc;
+  color: #cc5200;
+}
+
+.danger-row {
+  background-color: #f8d7da;
+  color: #721c24;
+}
