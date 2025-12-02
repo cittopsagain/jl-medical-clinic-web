@@ -82,6 +82,9 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"
                 [class.selected-row]="selectedRow && selectedRow.productId === row.productId && selectedRow.productHistoryId === row.productHistoryId"
+                [class.info-row]="isExpiryInRange(row.expiryDate, 4, 6)"
+                [class.warning-row]="isExpiryInRange(row.expiryDate, 2, 3)"
+                [class.danger-row]="isExpiryInRange(row.expiryDate, 0, 1)"
                 (click)="getProductDetailsById(row)"></tr>
           </table>
         </div>

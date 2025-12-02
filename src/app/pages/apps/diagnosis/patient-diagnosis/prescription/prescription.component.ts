@@ -147,7 +147,6 @@ export class PrescriptionComponent implements OnInit {
 
       if (savedData) {
         this.prescriptionList = [...JSON.parse(savedData)];
-
         if (this.addAdditionalPrescription) {
           this.prescriptionList = []; // Reset if from medical records/diagnosis history and adding new prescription
         }
@@ -157,6 +156,7 @@ export class PrescriptionComponent implements OnInit {
         );
         if (savedDataPatientInformationSessionStorage) {
           const parsedData = JSON.parse(savedDataPatientInformationSessionStorage);
+
         } else {
           this.prescriptionList = []; // Reset if no patient information found
         }
@@ -200,9 +200,7 @@ export class PrescriptionComponent implements OnInit {
   }
 
   private setPrescriptionToSessionStorage() {
-    if (isPlatformBrowser(this.platformId)) {
       sessionStorage.setItem("DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE", JSON.stringify(this._prescriptionList));
-    }
   }
 
   applyFilter() {

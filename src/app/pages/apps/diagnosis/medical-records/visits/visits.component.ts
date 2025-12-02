@@ -96,6 +96,8 @@ export class VisitsComponent implements OnInit, OnDestroy {
           this.patientId = patientId;
           this.getMedicalRecords(patientId);
           this.showRemarksDiv = false; // Force hide remarks div on patient change
+        } else {
+          this.visits = [];
         }
       });
   }

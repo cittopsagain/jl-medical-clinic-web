@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {CanDeactivate, Routes} from '@angular/router';
 
 import { AppChatComponent } from './chat/chat.component';
 import { AppEmailComponent } from './email/email.component';
@@ -29,7 +29,6 @@ import { AddProductComponent } from './ecommerce/add-product/add-product.compone
 import { ProductDetailsComponent } from './ecommerce/product-details/product-details.component';
 import { ShopComponent } from './ecommerce/shop/shop.component';
 import {PatientRecordsComponent} from "./patient-management/patient-records/patient-records.component";
-import {PatientDiagnosisComponent} from "./diagnosis/patient-diagnosis/patient-diagnosis.component";
 import {AddPatientComponent} from "./patient-management/patient-records/add-patient/add-patient.component";
 import {ViewPatientComponent} from "./patient-management/patient-records/view-patient/view-patient.component";
 import {EditPatientComponent} from "./patient-management/patient-records/edit-patient/edit-patient.component";
@@ -65,7 +64,21 @@ import {
 import {
   ViewStockReceivingComponent
 } from "./inventory-pharmacy/stock-receiving/view-stock-receiving/view-stock-receiving.component";
+import {Injectable} from "@angular/core";
+import {Observable} from "rxjs";
 
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable<boolean> | boolean;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
+  canDeactivate(component: CanComponentDeactivate): boolean | Observable<boolean> {
+    return component.canDeactivate ? component.canDeactivate() : true;
+  }
+}
 
 export const AppsRoutes: Routes = [
   {
@@ -156,6 +169,7 @@ export const AppsRoutes: Routes = [
       {
         path: 'diagnosis/patient-diagnosis/:id',
         component: DiagnosisAndMedicalRecordsComponent,
+        canDeactivate: [CanDeactivateGuard],
         data: {
           title: 'Diagnosis & Records',
           urls: [

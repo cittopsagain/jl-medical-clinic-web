@@ -74,8 +74,8 @@ import {takeUntil} from "rxjs/operators";
   styleUrl: './patient-diagnosis.component.scss',
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
       transition(
         'expanded <=> collapsed',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
@@ -308,12 +308,8 @@ export class PatientDiagnosisComponent implements OnInit, OnDestroy {
           this.diagnosisId = data.data.diagnosisId;
 
           this.printPatientPrescription();
-
-          this.prescriptionComponent.prescriptionList = [];
-          sessionStorage.removeItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE')
-          sessionStorage.removeItem('DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE');
-          sessionStorage.removeItem('DIAGNOSIS_MEDICAL_SUMMARY_SESSION_STORAGE');
-          sessionStorage.removeItem('DIAGNOSIS_VITAL_SIGNS_SESSION_STORAGE');
+          sessionStorage.setItem('DIAGNOSIS_SUCCESS_SAVE_SESSION_STORAGE', JSON.stringify(1));
+          // Note: The logic in clearing the session storage and prescriptionList array is in the DiagnosisAndMedicalRecordsComponent
         } else {
           this.toastR.error(data.message, 'Error');
         }
@@ -380,16 +376,32 @@ export class PatientDiagnosisComponent implements OnInit, OnDestroy {
     this.patientDiagnosisService.getInProgressPatient().subscribe(
       {
         next: (data: any) => {
-          if (data.data == false) {
+          if (data.data == null || data.data.visitCount < 1) {
             this.toastR.error('Either no patients are marked as In-Progress, or no patients are waiting.', 'Error');
             return;
           }
 
           this.getPatientDiagnosis();
-
           this.showUpdateButton = false;
           this.showSaveButton = true;
           this.showMoveToWaitingButton = true;
+
+          const savedData = sessionStorage.getItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE');
+          if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            if (data.data.patientId != parsedData.patientId) {
+              this.prescriptionComponent.prescriptionList = [];
+              this.medicalSummaryComponent.diagnosisForm.reset();
+              sessionStorage.removeItem('DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE');
+            }
+          }
+
+          this.patientPrescription.setPatientIdAndVisitId(0, 0);
+          this.visitsService.setPatientId('');
+          sessionStorage.removeItem('DIAGNOSIS_SUCCESS_SAVE_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_MEDICAL_SUMMARY_SESSION_STORAGE');
+          sessionStorage.removeItem('DIAGNOSIS_VITAL_SIGNS_SESSION_STORAGE');
         },
         error: (error) => {
           this.toastR.error(error.error?.message || 'Failed to patient diagnosis', 'Error');
@@ -505,6 +517,8 @@ export class PatientDiagnosisComponent implements OnInit, OnDestroy {
           this.medicalSummaryComponent.diagnosisForm.reset();
 
           this.prescriptionComponent.prescriptionList = [];
+          this.visitsService.setPatientId('');
+          sessionStorage.removeItem('DIAGNOSIS_SUCCESS_SAVE_SESSION_STORAGE');
           sessionStorage.removeItem('DIAGNOSIS_PATIENT_INFORMATION_SESSION_STORAGE');
           sessionStorage.removeItem('DIAGNOSIS_PRESCRIPTION_SESSION_STORAGE');
           sessionStorage.removeItem('DIAGNOSIS_MEDICAL_SUMMARY_SESSION_STORAGE');

@@ -56,3 +56,17 @@
 .selected-row:hover {
   background-color: rgba(0, 0, 0, 0.08);
 }
+.info-row {
+  background-color: #fff9c4;
+  color: #6d4c00;
+}
+
+.warning-row {
+  background-color: #ffe5cc;
+  color: #cc5200;
+}
+
+.danger-row {
+  background-color: #f8d7da;
+  color: #721c24;
+}

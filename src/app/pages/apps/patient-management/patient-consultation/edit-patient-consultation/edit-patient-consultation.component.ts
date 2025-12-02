@@ -106,11 +106,6 @@ export class EditPatientConsultationComponent implements OnInit {
     this.patientConsultationService.getPatientConsultationById(id).subscribe({
       next: (data: any) => {
         this.patientConsultation = data.data;
-        let sex = 'Female';
-        if (data.data.sex === 'M') {
-          sex = 'Male';
-        }
-        this.patientConsultation.sex = sex;
 
         this.patientConsultationForm.patchValue({
           patientId: data.data.patientId,
@@ -118,7 +113,7 @@ export class EditPatientConsultationComponent implements OnInit {
           firstName: data.firstName,
           middleName: data.middleName,
           lastName: data.data.lastName,
-          sex: sex,
+          sex: data.data.sex,
           birthDate: data.data.birthDate,
           address: data.data.address,
           consultationDate: data.data.consultationDate,
