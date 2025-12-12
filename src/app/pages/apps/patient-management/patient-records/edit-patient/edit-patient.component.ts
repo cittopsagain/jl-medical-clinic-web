@@ -19,6 +19,8 @@ import {takeUntil} from "rxjs/operators";
 import {EditPatientService} from "./edit-patient.service";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {AppNavItemComponent} from "../../../../../layouts/full/vertical/sidebar/nav-item/nav-item.component";
 
 @Component({
   selector: 'app-edit-patient',
@@ -74,7 +76,8 @@ export class EditPatientComponent implements OnInit, OnDestroy {
               private prescriptionService: PrescriptionsService,
               private editPatientService: EditPatientService,
               private visitService: VisitsService,
-              private router: Router
+              private router: Router,
+              private dialog: MatDialog
   ) {
     this.patientForm = this.fb.group({
       patientId: ['', Validators.required],
@@ -188,6 +191,10 @@ export class EditPatientComponent implements OnInit, OnDestroy {
             ['/apps/patient-management/patient-consultation/1'],
             { queryParams: { visit_id: response.data } }
           );
+
+          /* this.router.navigate(
+            ['/apps/patient-management/patient-consultation/' + response.data]
+          ); */
         } else {
           sessionStorage.removeItem('PATIENT_RECORD_EDIT_PATIENT_SESSION_STORAGE');
           this.patientForm.reset();

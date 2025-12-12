@@ -11,6 +11,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {EditPatientConsultationService} from "./edit-patient-consultation.service";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-edit-patient-consultation',
@@ -48,22 +49,24 @@ export class EditPatientConsultationComponent implements OnInit {
               private toastR: ToastrService,
               private editPatientConsultationService: EditPatientConsultationService,
               private cdr: ChangeDetectorRef,
-              private patientConsultationListService: PatientConsultationService
+              private patientConsultationListService: PatientConsultationService,
+              private router: Router,
+              private route: ActivatedRoute,
   ) {
 
     this.patientConsultationForm = this.fb.group({
-      weight: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
-      height: ['', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
-      temperature: ['',
+      weight: ['0', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
+      height: ['0', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
+      temperature: ['0',
         [
           Validators.required, Validators.pattern('^([0-9]|[1-3][0-9]|4[0-2])(\\.\\d{1,2})?$'),
           Validators.min(0), Validators.max(42)
         ]
       ],
-      bloodPressure: ['', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
-      heartRate: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
-      oxygenSaturation: ['', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
-      status: ['']
+      bloodPressure: ['0/0', [Validators.required, Validators.pattern('^\\d+\\/\\d+$')]],
+      heartRate: ['0', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
+      oxygenSaturation: ['0', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]],
+      status: ['0']
     });
   }
 
@@ -117,12 +120,12 @@ export class EditPatientConsultationComponent implements OnInit {
           birthDate: data.data.birthDate,
           address: data.data.address,
           consultationDate: data.data.consultationDate,
-          weight: data.data.weight ? data.data.weight : parsedSavedData?.weight,
-          height: data.data.height ? data.data.height : parsedSavedData?.height,
-          temperature: data.data.temperature ? data.data.temperature : parsedSavedData?.temperature,
-          bloodPressure: data.data.bloodPressure != '0/0' ? data.data.bloodPressure : parsedSavedData?.bloodPressure,
-          heartRate: data.data.heartRate ? data.data.heartRate : parsedSavedData?.heartRate,
-          oxygenSaturation: data.data.oxygenSaturation ? data.data.oxygenSaturation : parsedSavedData?.oxygenSaturation,
+          weight: parsedSavedData?.weight ? parsedSavedData.weight : data.data.weight,
+          height: parsedSavedData?.height ? parsedSavedData.height : data.data.height,
+          temperature: parsedSavedData?.temperature ? parsedSavedData.temperature : data.data.temperature,
+          bloodPressure: parsedSavedData?.bloodPressure ? parsedSavedData.bloodPressure : data.data.bloodPressure,
+          heartRate: parsedSavedData?.heartRate ? parsedSavedData.heartRate : data.data.heartRate,
+          oxygenSaturation: parsedSavedData?.oxygenSaturation ? parsedSavedData.oxygenSaturation : data.data.oxygenSaturation,
           status: parsedSavedData?.status? parsedSavedData.status : false
         });
       },
@@ -141,6 +144,7 @@ export class EditPatientConsultationComponent implements OnInit {
 
         this.toastR.success(data.message, 'Success');
         this.patientConsultationForm.reset();
+
         this.patientConsultationListService.setTabIndex(0);
       },
       error: (error) => {

@@ -23,7 +23,7 @@ export class MedicineService {
     }
 
     const href = environment.MEDICINE_API_URL;
-    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&medicineName=${encodeURIComponent(search.medicineName)}`;
+    const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&search=${encodeURIComponent(search.medicineName)}&filterBy=${encodeURIComponent(search.filterBy)}`;
 
     return this.httpClient.get<MedicineApi>(requestUrl);
   }

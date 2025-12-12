@@ -113,6 +113,15 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     const id: number = Number(this.route.snapshot.paramMap.get('id'));
+
+    this.patientConsultationListService.patientConsultationTabBehaviorObservable$.pipe(takeUntil(this.destroy$)).subscribe(tabIndex => {
+      if (tabIndex !== null && tabIndex !== undefined) {
+        this.disableEditConsultationFollowupTab = true;
+        this.selectedTabIndex = tabIndex;
+        this.visitId = '';
+      }
+    });
+
     if (id) {
       this.route.queryParams.subscribe(params => {
         this.selectedTabIndex = id;
@@ -129,14 +138,6 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
       )));
       this.disableEditConsultationFollowupTab = false;
     }
-
-    this.patientConsultationListService.patientConsultationTabBehaviorObservable$.pipe(takeUntil(this.destroy$)).subscribe(tabIndex => {
-      if (tabIndex !== null && tabIndex !== undefined) {
-        this.disableEditConsultationFollowupTab = true;
-        this.selectedTabIndex = tabIndex;
-        this.visitId = '';
-      }
-    });
   }
 
   applyFilter() {

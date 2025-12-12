@@ -4,7 +4,20 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Filter By</mat-label>
+              <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="applyFilter()"
+                          disableOptionCentering placeholder="Filter By">
+                @for (filter of filter; track filter) {
+                  <mat-option [value]="filter.value">
+                    {{ filter.name }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-8">
             <mat-form-field appearance="outline" class="w-100 hide-hint">
               <mat-label>Medicine Name</mat-label>
               <input

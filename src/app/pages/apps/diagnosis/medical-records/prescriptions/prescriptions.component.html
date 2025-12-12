@@ -24,8 +24,8 @@
 
     <div class="col-12">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Product Name</mat-label>
-        <input matInput readonly placeholder="Product Name" name="productName" value="{{ selectedPrescription.productName }}" />
+        <mat-label>Generic Name</mat-label>
+        <input matInput readonly placeholder="Generic Name" name="productName" value="{{ selectedPrescription.productName }}" />
       </mat-form-field>
     </div>
 
@@ -92,7 +92,7 @@
     <!-- Date Time Visit -->
     <ng-container matColumnDef="productName">
       <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-        Product Name
+        Medicine Name
       </th>
       <td mat-cell *matCellDef="let row">
         <h6 class="mat-subtitle-1 f-s-14 f-w-600">

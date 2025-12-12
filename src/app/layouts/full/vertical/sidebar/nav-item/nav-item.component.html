@@ -3,20 +3,27 @@
   {{ item.navCap }}
 </div>
 } @if(!item.navCap && !item.external && !item.twoLines) {
-<!--<a mat-list-item (click)="onItemSelected(item)" [ngClass]="{
+<a mat-list-item (click)="onItemSelected(item)" [ngClass]="{
     'mat-toolbar mat-primary activeMenu': item.route
       ? router.isActive(item.route, true)
       : false,
+    expanded: expanded,
+    disabled: item.disabled
+  }" class="menu-list-item">
+
+<!-- The menu selection issue is caused by the router.isActive() method's second parameter.
+You're using false for exact matching, but Angular's routing might have additional segments. -->
+<!--<a mat-list-item (click)="onItemSelected(item)" [ngClass]="{
+    'mat-toolbar mat-primary activeMenu': item.route
+      ? router.isActive(item.route, {
+    paths: 'subset',
+    queryParams: 'subset',
+    fragment: 'ignored',
+    matrixParams: 'ignored'
+    }) : false,
     expanded: expanded, activemenu: isChildActive(item),
     disabled: item.disabled
   }" class="menu-list-item">-->
-<a mat-list-item (click)="onItemSelected(item)" [ngClass]="{
-    'mat-toolbar mat-primary activeMenu': item.route
-      ? router.isActive(item.route, false)
-      : false,
-    expanded: expanded, activemenu: isChildActive(item),
-    disabled: item.disabled
-  }" class="menu-list-item">
   <i-tabler class="routeIcon" name="{{ item.iconName }}" matListItemIcon></i-tabler>
   <span class="hide-menu">{{ item.displayName | translate }}</span>
   <div class="d-flex align-items-center gap-4">

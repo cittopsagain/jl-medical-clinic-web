@@ -32,6 +32,7 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {ItemsService} from "../items/items.service";
 import {Medicine} from "../../../medicine/models/medicine";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-details',
@@ -63,7 +64,9 @@ import {Medicine} from "../../../medicine/models/medicine";
     MatDatepickerInput,
     MatDatepickerToggle,
     MatSuffix,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatOption,
+    MatSelect
   ],
   providers: [
     provideNativeDateAdapter()
@@ -87,6 +90,18 @@ export class DetailsComponent {
   data: Medicine[] = [];
   items: any[] = [];
   selectedMedicine: Medicine;
+
+  filter: any[] = [
+    {
+      name: 'Brand Name',
+      value: 'brand_name'
+    },
+    {
+      name: 'Generic Name',
+      value: 'product_name'
+    }
+  ];
+  selectedFilter: string = 'brand_name';
 
   displayedColumns: string[] = ['number', 'productName', 'unit'];
 
@@ -127,7 +142,8 @@ export class DetailsComponent {
         switchMap(() => {
           this.isLoadingResults = true;
           return this.medicineService.getMedicine({
-            medicineName: this.medicineName
+            medicineName: this.medicineName,
+            filterBy: this.selectedFilter
           }, this.sort.active, this.sort.direction, this.paginator.pageIndex);
         }),
         map((data: any) => {

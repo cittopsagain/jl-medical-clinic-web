@@ -5,10 +5,10 @@ import {
   OnInit,
   OnChanges,
   Output,
-  EventEmitter,
+  EventEmitter, OnDestroy, computed,
 } from '@angular/core';
 import { NavItem } from './nav-item';
-import { Router } from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import { NavService } from '../../../../../services/nav.service';
 import {
   animate,
@@ -21,6 +21,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { CommonModule } from '@angular/common';
+import {filter, takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-nav-item',
@@ -35,7 +37,7 @@ import { CommonModule } from '@angular/common';
     ]),
   ]
 })
-export class AppNavItemComponent implements OnChanges {
+export class AppNavItemComponent implements OnChanges, OnInit, OnDestroy {
   @Output() toggleMobileLink: any = new EventEmitter<void>();
   @Output() notify: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -46,10 +48,35 @@ export class AppNavItemComponent implements OnChanges {
   @Input() item: NavItem | any;
   @Input() depth: any;
 
+  private destroy$ = new Subject<void>();
+  currentRoute = '';
+
   constructor(public navService: NavService, public router: Router) {
     if (this.depth === undefined) {
       this.depth = 0;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  isRouteActive(route: string): boolean {
+    return this.router.url.startsWith(route);
+  }
+
+  ngOnInit(): void {
+    // Force change detection on navigation
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        // Template will re-evaluate router.isActive()
+        this.currentRoute = this.router.url;
+      });
   }
 
   ngOnChanges() {
