@@ -66,7 +66,7 @@ export class EditMedicineComponent implements OnChanges, AfterViewInit {
         medicineId: this.medicine.medicineId,
         genericName: this.medicine.genericName,
         unitId: this.medicine.unitId,
-        unitName: this.medicine.unitName.toUpperCase(),
+        unitName: this.medicine.unitName ? this.medicine.unitName.toUpperCase() : '',
         brandId: this.medicine.brandId,
         brandName: this.medicine.brandName,
         dosage: this.medicine.dosage
