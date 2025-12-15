@@ -25,6 +25,8 @@ import {EditMedicineComponent} from "./edit-medicine/edit-medicine.component";
 import {Medicine} from "./models/medicine";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {AddMedicineComponent} from "./add-medicine/add-medicine.component";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-medicine',
@@ -56,7 +58,9 @@ import {AddMedicineComponent} from "./add-medicine/add-medicine.component";
     MatTab,
     EditMedicineComponent,
     MatProgressSpinner,
-    AddMedicineComponent
+    AddMedicineComponent,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './medicine.component.html',
   styleUrl: './medicine.component.scss'
@@ -72,6 +76,18 @@ export class MedicineComponent implements OnDestroy {
   isError = false;
   pageSize = 30;
   errorMessage: string = 'Problem loading data. Please try again later.';
+  filter: any[] = [
+    {
+      name: 'Brand Name',
+      value: 'brand_name'
+    },
+    {
+      name: 'Generic Name',
+      value: 'product_name'
+    }
+  ];
+  selectedFilter: string = 'brand_name';
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
@@ -114,6 +130,7 @@ export class MedicineComponent implements OnDestroy {
           this.isLoadingResults = true;
           return this.medicineService.getMedicine({
             medicineName: this.medicineNameInput.nativeElement.value,
+            filterBy: this.selectedFilter
           }, this.sort.active, this.sort.direction, this.paginator.pageIndex);
         }),
         map((data: any) => {

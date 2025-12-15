@@ -2,15 +2,33 @@
   <mat-tab label="List of Medicines">
     <mat-card class="cardWithShadow">
       <mat-card-content>
-        <mat-form-field appearance="outline" class="w-100 hide-hint">
-          <mat-label>Search</mat-label>
-          <input
-            matInput
-            placeholder="Search"
-            (keyup.enter)="applyFilter()"
-            #medicineNameInput
-          />
-        </mat-form-field>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Filter By</mat-label>
+              <mat-select #filterByInput [(ngModel)]="selectedFilter" (selectionChange)="applyFilter()"
+                          disableOptionCentering placeholder="Filter By">
+                @for (filter of filter; track filter) {
+                  <mat-option [value]="filter.value">
+                    {{ filter.name }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-8">
+            <mat-form-field appearance="outline" class="w-100 hide-hint">
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                placeholder="Search"
+                (keyup.enter)="applyFilter()"
+                #medicineNameInput
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
         <div class="example-table-container responsive-table m-t-10">
           <table mat-table [dataSource]="data" matSort matSortActive="brand_name" matSortDisableClear
                  matSortDirection="asc" class="hover-table">
