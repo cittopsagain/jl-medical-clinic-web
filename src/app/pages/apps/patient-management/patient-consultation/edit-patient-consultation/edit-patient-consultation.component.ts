@@ -55,6 +55,7 @@ export class EditPatientConsultationComponent implements OnInit {
   ) {
 
     this.patientConsultationForm = this.fb.group({
+      consultationId: ['0'],
       weight: ['0', [Validators.required, Validators.pattern('^\\d*\\.?\\d*$')]], // Accepts decimal numbers
       height: ['0', [Validators.required, Validators.pattern('^\\d*\\d*$')]],
       temperature: ['0',
@@ -112,9 +113,9 @@ export class EditPatientConsultationComponent implements OnInit {
 
         this.patientConsultationForm.patchValue({
           patientId: data.data.patientId,
-          consultationId: data.consultationId,
+          consultationId: data.data.consultationId,
           firstName: data.firstName,
-          middleName: data.middleName,
+          middleName: data.data.middleName,
           lastName: data.data.lastName,
           sex: data.data.sex,
           birthDate: data.data.birthDate,
@@ -128,6 +129,11 @@ export class EditPatientConsultationComponent implements OnInit {
           oxygenSaturation: parsedSavedData?.oxygenSaturation ? parsedSavedData.oxygenSaturation : data.data.oxygenSaturation,
           status: parsedSavedData?.status? parsedSavedData.status : false
         });
+
+        sessionStorage.setItem(
+          'PATIENT_CONSULTATION_EDIT_PATIENT_CONSULTATION_VITAL_SIGNS_SESSION_STORAGE',
+          JSON.stringify(this.patientConsultationForm.value)
+        );
       },
       error: (error) => {
         this.toastR.error("Error fetching patient information", 'Error');

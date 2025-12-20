@@ -101,6 +101,11 @@ export class AddPatientComponent implements OnInit {
           next: (response: any) => {
             this.toastR.success(response.message, 'Success');
             sessionStorage.removeItem("PATIENT_RECORD_ADD_PATIENT_SESSION_STORAGE");
+
+            // Clear related session storage items
+            sessionStorage.removeItem('PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE')
+            sessionStorage.removeItem('PATIENT_CONSULTATION_EDIT_PATIENT_CONSULTATION_VITAL_SIGNS_SESSION_STORAGE');
+
             if (this.patientForm.value.visitType != null &&
               this.patientForm.value.visitType != '' &&
               this.patientForm.value.visitType != 'Direct Doctor Consultation' &&

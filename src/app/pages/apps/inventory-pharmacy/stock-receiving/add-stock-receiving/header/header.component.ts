@@ -242,8 +242,6 @@ export class HeaderComponent {
 
     this.selectedAgentId = found.agentId;
     this.selectedSupplierId = supplierId;
-
-    console.log(this.headerForm.value);
   }
 
   onSupplierSelected(selected: string) {

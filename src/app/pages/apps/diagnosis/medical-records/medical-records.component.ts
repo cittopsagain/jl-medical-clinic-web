@@ -92,7 +92,7 @@ export class MedicalRecordsComponent implements OnInit, OnDestroy, AfterViewInit
       value: 'patient_name'
     },
     {
-      name: 'Patient Id',
+      name: 'Patient ID',
       value: 'patient_id'
     }
   ];
@@ -198,7 +198,7 @@ export class MedicalRecordsComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   setPatientId(patientId: string) {
-    this.patientId = ' - Patient Id: ' + patientId;
+    this.patientId = ' - Patient ID: ' + patientId;
     sessionStorage.setItem('MEDICAL_RECORDS_EDIT_VIEW_MEDICAL_RECORDS_PATIENT_ID', patientId);
 
     if (patientId) {

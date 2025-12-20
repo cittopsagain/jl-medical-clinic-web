@@ -185,16 +185,17 @@ export class EditPatientComponent implements OnInit, OnDestroy {
           this.patientForm.value.visitType != 'Direct Doctor Consultation' &&
           this.patientForm.value.visitType != 'Direct Doctor Follow-up Checkup') {
           sessionStorage.removeItem('PATIENT_RECORD_EDIT_PATIENT_SESSION_STORAGE');
+
+          // Clear related session storage items
+          sessionStorage.removeItem('PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE')
+          sessionStorage.removeItem('PATIENT_CONSULTATION_EDIT_PATIENT_CONSULTATION_VITAL_SIGNS_SESSION_STORAGE');
+
           this.patientForm.reset();
 
           this.router.navigate(
             ['/apps/patient-management/patient-consultation/1'],
             { queryParams: { visit_id: response.data } }
           );
-
-          /* this.router.navigate(
-            ['/apps/patient-management/patient-consultation/' + response.data]
-          ); */
         } else {
           sessionStorage.removeItem('PATIENT_RECORD_EDIT_PATIENT_SESSION_STORAGE');
           this.patientForm.reset();

@@ -67,7 +67,6 @@ export class ItemsComponent implements OnDestroy, OnInit {
   removeItem(index: number) {
     for (let i = 0; i < this.items.length; i++) {
       if (i == index) {
-        console.log('Found!');
         this.items = this.items.filter((_, i) => i !== index);
         break;
       }

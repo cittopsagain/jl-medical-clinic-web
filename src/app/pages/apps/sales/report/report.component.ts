@@ -64,7 +64,6 @@ export class ReportComponent {
   }
 
   generateReport() {
-    console.log('Report Type: ', this.reportType);
     if (this.reportType === 'Summary') {
       this.getSalesReport();
     }

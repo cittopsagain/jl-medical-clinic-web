@@ -79,11 +79,11 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
       value: 'patient_name'
     },
     {
-      name: 'Patient Id',
+      name: 'Patient ID',
       value: 'patient_id'
     },
     {
-      name: 'Visit Id',
+      name: 'Visit ID',
       value: 'visit_id'
     }
   ];
@@ -166,6 +166,7 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
       'PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE'
     ) != visitId.toString()) {
       // Clear Vital Signs if Visit ID has changed
+      sessionStorage.removeItem('PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE')
       sessionStorage.removeItem('PATIENT_CONSULTATION_EDIT_PATIENT_CONSULTATION_VITAL_SIGNS_SESSION_STORAGE');
 
       // Update the URL with the new visit_id
@@ -181,7 +182,7 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
       visitId.toString()
     );
     this.editPatientConsultationService.setVisitId(visitId);
-    this.visitId = ' - Visit Id: '+sessionStorage.getItem(
+    this.visitId = ' - Visit ID: '+sessionStorage.getItem(
       'PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE'
     );
   }

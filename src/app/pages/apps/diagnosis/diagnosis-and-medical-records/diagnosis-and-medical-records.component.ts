@@ -90,7 +90,6 @@ export class DiagnosisAndMedicalRecordsComponent implements OnInit, CanComponent
     // Diagnosis Tab
     if (index == 0) {
       if (savedDataPatientInformation) {
-        console.log('Here!');
         const parsedData = JSON.parse(savedDataPatientInformation);
         this.visitsService.setPatientId(parsedData.patientId);
       } else {

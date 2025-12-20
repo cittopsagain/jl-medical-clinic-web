@@ -80,7 +80,7 @@ export class PatientRecordsComponent implements OnInit, OnDestroy {
       value: 'patient_name'
     },
     {
-      name: 'Patient Id',
+      name: 'Patient ID',
       value: 'patient_id'
     }
   ];
@@ -144,13 +144,13 @@ export class PatientRecordsComponent implements OnInit, OnDestroy {
     );
 
     if (savedData?.patientId) {
-      this.editPatientId = ' - Patient Id: ' + savedData.patientId;
+      this.editPatientId = ' - Patient ID: ' + savedData.patientId;
       this.disableEditTab = false;
     }
 
     const viewSavedData = JSON.parse(sessionStorage.getItem('PATIENT_RECORD_VIEW_PATIENT_SESSION_STORAGE') || '{}');
     if (viewSavedData?.patientId) {
-      this.viewPatientId = ' - Patient Id: ' + viewSavedData.patientId;
+      this.viewPatientId = ' - Patient ID: ' + viewSavedData.patientId;
       this.disableViewTab = false;
     }
   }
@@ -176,11 +176,11 @@ export class PatientRecordsComponent implements OnInit, OnDestroy {
   }
 
   setEditTabPatientId(patientId: string) {
-    this.editPatientId = ' - Patient Id: ' + patientId;
+    this.editPatientId = ' - Patient ID: ' + patientId;
   }
 
   setViewTabPatientId(patientId: string) {
-    this.viewPatientId = ' - Patient Id: ' + patientId;
+    this.viewPatientId = ' - Patient ID: ' + patientId;
   }
 
   applyFilter() {

@@ -74,7 +74,7 @@ export class PrescriptionPurchasesComponent {
       value: 'patient_name'
     },
     {
-      name: 'Patient Id',
+      name: 'Patient ID',
       value: 'patient_id'
     }
   ];

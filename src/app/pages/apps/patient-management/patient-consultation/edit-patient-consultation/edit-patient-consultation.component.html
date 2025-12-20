@@ -26,16 +26,17 @@
         <!-- Patient Id -->
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Patient Id</mat-label>
-            <input matInput readonly placeholder="Patient Id" [value]="patientConsultation?.patientId" name="patientId" />
+            <mat-label>Patient ID</mat-label>
+            <input matInput readonly placeholder="Patient ID" [value]="patientConsultation?.patientId" name="patientId" />
           </mat-form-field>
         </div>
 
         <!-- Consultation Id -->
         <div class="col-lg-4">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Visit Id</mat-label>
-            <input matInput readonly placeholder="Consultation Id" value="{{ patientConsultation?.consultationId }}" name="consultationId" />
+            <mat-label>Visit ID</mat-label>
+            <!--<input matInput readonly placeholder="Consultation ID" value="{{ patientConsultation?.consultationId }}" name="consultationId" />-->
+            <input matInput readonly placeholder="Consultation ID" formControlName="consultationId" name="consultationId" />
           </mat-form-field>
         </div>
 

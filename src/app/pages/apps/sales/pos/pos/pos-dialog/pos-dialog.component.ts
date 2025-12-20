@@ -71,11 +71,11 @@ export class PosDialogComponent {
       value: 'patient_name'
     },
     {
-      name: 'Prescription Id',
+      name: 'Prescription ID',
       value: 'patient_diagnosis_id'
     },
     {
-      name: 'Prescription Id or Patient Name',
+      name: 'Prescription ID or Patient Name',
       value: 'patient_diagnosis_id_or_patient_name'
     }
   ];
@@ -114,7 +114,6 @@ export class PosDialogComponent {
         }),
         map((data: any) => {
           this.resultsLength = data.data.totalCount;
-          console.log(this.data);
 
           return data.data.items;
         }),

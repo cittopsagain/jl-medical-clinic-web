@@ -53,8 +53,10 @@ export class MedicalHistoryComponent implements OnChanges, OnInit {
   selectedPatientPrescriptionsByVisit: PatientPrescriptionList[] = [];
 
   patientVisitsDisplayedColumns: string[] = ['visitId', 'dateTimeVisit', 'diagnosis'];
-  patientPrescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit'];
+  patientPrescriptionsDisplayedColumns: string[] = ['productName', 'dosage', 'qty', 'unit'];
   private destroy$ = new Subject<void>();
+
+  patientPrescriptionsCardTitleAdditionalText: string = '';
 
   constructor(private patientService: PatientRecordsService,
               private toastr: ToastrService,
@@ -107,6 +109,7 @@ export class MedicalHistoryComponent implements OnChanges, OnInit {
   }
 
   onMedicalHistoryRowClick(index: number, row: any) {
+    this.patientPrescriptionsCardTitleAdditionalText = ' - Visit ID: ' + row.visits.visitId;
     this.getPrescription(row.visits.patientId, row.visits.visitId);
   }
 

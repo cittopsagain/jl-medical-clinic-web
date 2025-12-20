@@ -110,6 +110,9 @@ export class PosComponent {
   showQtyInput: boolean = false;
   qtyInputIndex: number = -1;
 
+  isSaving: boolean = false;
+  isUpdating: boolean = false;
+
   customerType: string[] = ['Prescription', 'Walk-in'];
 
   selectedTabIndex: number = 0;
@@ -376,6 +379,12 @@ export class PosComponent {
   }
 
   confirmPayment() {
+    // Prevent multiple submissions while request is in progress
+    if (this.isSaving) {
+      this.toastR.error("Save operation is already in progress. Please wait.", 'Error');
+      return;
+    }
+
     if (this.patientNameInput.nativeElement.value === '' && this.selectedCustomerType == 'Prescription') {
       this.toastR.error('Please provide patient information', 'Error');
       this.selectedTabIndex = 1;
@@ -389,6 +398,7 @@ export class PosComponent {
       return;
     }
 
+    this.isSaving = true;
     this.posService.savePurchasedProducts({
       header: {
         totalAmount: this.totalItemsPurchased,
@@ -406,6 +416,8 @@ export class PosComponent {
       details: this.purchasedItems
     }).subscribe({
       next: (response: any) => {
+        this.isSaving = false;
+
         if (response.statusCode === 400) {
           this.toastR.error(response.message);
           this.getProducts();
@@ -447,6 +459,7 @@ export class PosComponent {
         this.getTodaysSales();
       },
       error: (error) => {
+        this.isSaving = false;
         this.toastR.error(error.error.message, 'Error');
       }
     });
