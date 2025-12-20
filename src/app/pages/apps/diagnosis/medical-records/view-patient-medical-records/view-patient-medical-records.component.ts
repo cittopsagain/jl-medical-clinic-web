@@ -73,7 +73,7 @@ export class ViewPatientMedicalRecordsComponent implements OnDestroy {
     this.viewPatientMedicalRecordsService.viewPatientMedicalRecordObservable$.pipe(takeUntil(this.destroy$))
       .subscribe(({patientId, visitId, visitDate}) => {
         if (patientId && visitId && visitDate) {
-          this.tabDetails = ' - Visit Id: ' + visitId + ', Visit Date: ' + this.formatDateToMonthDayYear(visitDate);
+          this.tabDetails = ' - Visit ID: ' + visitId + ', Visit Date: ' + this.formatDateToMonthDayYear(visitDate);
 
           this.prescriptionService.setPatientIdAndVisitId(patientId, visitId);
         } else {
