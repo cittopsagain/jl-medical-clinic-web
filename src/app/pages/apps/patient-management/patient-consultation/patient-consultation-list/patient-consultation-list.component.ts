@@ -122,21 +122,21 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
       }
     });
 
-    if (id) {
+    if (id) { // From Patient Records
       this.route.queryParams.subscribe(params => {
         this.selectedTabIndex = id;
         const visitId = params['visit_id'];
         this.setVisitId(visitId);
       });
-    }
-
-    if (sessionStorage.getItem(
+    } else if (sessionStorage.getItem( // From Patient Consultation List
       'PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE'
     )) {
       this.setVisitId(Number(sessionStorage.getItem(
         'PATIENT_CONSULTATION_PATIENT_CONSULTATION_LIST_VISIT_ID_SESSION_STORAGE'
       )));
       this.disableEditConsultationFollowupTab = false;
+    } else {
+      this.toastR.error('No Visit ID', 'Error');
     }
   }
 
