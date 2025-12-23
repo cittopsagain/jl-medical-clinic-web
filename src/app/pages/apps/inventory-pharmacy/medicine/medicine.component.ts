@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
-import {UpperCasePipe} from "@angular/common";
+import {SlicePipe, UpperCasePipe} from "@angular/common";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {MedicineService} from "./medicine.service";
 import {MatPaginator} from "@angular/material/paginator";
@@ -27,6 +27,7 @@ import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {AddMedicineComponent} from "./add-medicine/add-medicine.component";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
+import {ViewMedicineComponent} from "./view-medicine/view-medicine.component";
 
 @Component({
   selector: 'app-medicine',
@@ -60,7 +61,8 @@ import {MatSelect} from "@angular/material/select";
     MatProgressSpinner,
     AddMedicineComponent,
     MatOption,
-    MatSelect
+    MatSelect,
+    ViewMedicineComponent
   ],
   templateUrl: './medicine.component.html',
   styleUrl: './medicine.component.scss'
@@ -75,6 +77,8 @@ export class MedicineComponent implements OnDestroy {
   isLoadingResults = true;
   isError = false;
   pageSize = 30;
+  disableEditMedicineTab: boolean = true;
+  disableViewMedicineTab: boolean = true;
   errorMessage: string = 'Problem loading data. Please try again later.';
   filter: any[] = [
     {
@@ -88,7 +92,8 @@ export class MedicineComponent implements OnDestroy {
   ];
   selectedFilter: string = 'brand_name';
 
-
+  editMedicine: string = 'Edit Medicine';
+  viewMedicine: string = 'View Medicine';
   @ViewChild(MatPaginator) paginator: MatPaginator = Object.create(null);
   @ViewChild(MatSort) sort: MatSort = Object.create(null);
   @ViewChild('medicineNameInput') medicineNameInput: ElementRef;
@@ -155,6 +160,19 @@ export class MedicineComponent implements OnDestroy {
   onEditMedicine(row: any) {
     this.selectedTabIndex = 2;
     this.selectedMedicine = row;
+    this.disableEditMedicineTab = false;
+
+    this.editMedicine = 'Edit Medicine - ' + (row?.brandName ? row.brandName : '') + ' - ' +
+    (row.genericName && row.genericName.length > 20 ? row.genericName.slice(0, 20) + '...' : row.genericName);
+  }
+
+  onViewMedicine(row: any) {
+    this.selectedTabIndex = 3;
+    this.selectedMedicine = row;
+    this.disableViewMedicineTab = false;
+
+    this.viewMedicine = 'View Medicine - ' + (row?.brandName ? row.brandName : '') + ' - ' +
+    (row.genericName && row.genericName.length > 20 ? row.genericName.slice(0, 20) + '...' : row.genericName);
   }
 
   onClickTab(selectedTabIndex: number) {

@@ -38,6 +38,7 @@ export class EditMedicineComponent implements OnChanges, AfterViewInit {
 
   medicineForm: UntypedFormGroup | any;
   @Input() medicine: Medicine;
+  @Input() currentTabIndex: number;
   groupedBrandObservable: Observable<GroupedBrand[]>;
   unitNameObservable: Observable<Unit[]>;
   private units: Unit[] = [];
@@ -62,15 +63,17 @@ export class EditMedicineComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['medicine'] && changes['medicine'].currentValue) {
-      this.medicineForm.patchValue({
-        medicineId: this.medicine.medicineId,
-        genericName: this.medicine.genericName,
-        unitId: this.medicine.unitId,
-        unitName: this.medicine.unitName ? this.medicine.unitName.toUpperCase() : '',
-        brandId: this.medicine.brandId,
-        brandName: this.medicine.brandName,
-        dosage: this.medicine.dosage
-      });
+      if (this.currentTabIndex == 2) {
+        this.medicineForm.patchValue({
+          medicineId: this.medicine.medicineId,
+          genericName: this.medicine.genericName,
+          unitId: this.medicine.unitId,
+          unitName: this.medicine.unitName ? this.medicine.unitName.toUpperCase() : '',
+          brandId: this.medicine.brandId,
+          brandName: this.medicine.brandName,
+          dosage: this.medicine.dosage
+        });
+      }
     }
   }
 
