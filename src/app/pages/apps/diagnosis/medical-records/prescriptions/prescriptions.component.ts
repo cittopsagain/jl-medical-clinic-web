@@ -57,7 +57,7 @@ import {Router} from "@angular/router";
 export class PrescriptionsComponent implements OnDestroy {
 
   prescriptions: Prescription[] = [];
-  prescriptionsDisplayedColumns: string[] = ['visitId', 'productName', 'dosage', 'qty', 'unit', 'action'];
+  prescriptionsDisplayedColumns: string[] = ['productName', 'dosage', 'qty', 'unit', 'action'];
   showEditPrescriptionDiv: boolean = false;
   displayedColumns: string[] = ['productName', 'unit', 'qtyOnHand', 'sellingPrice', 'expiryDate'];
   @ViewChild(VisitsComponent) visitsComponent: VisitsComponent;

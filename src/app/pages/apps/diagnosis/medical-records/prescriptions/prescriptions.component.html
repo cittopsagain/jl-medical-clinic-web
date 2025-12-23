@@ -79,16 +79,6 @@
   </div>
 
   <table mat-table [dataSource]="prescriptions" class="hover-table">
-    <!-- Visit Id -->
-    <ng-container matColumnDef="visitId">
-      <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-        Visit ID
-      </th>
-      <td mat-cell *matCellDef="let row">
-        {{ row.visitId }}
-      </td>
-    </ng-container>
-
     <!-- Date Time Visit -->
     <ng-container matColumnDef="productName">
       <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
