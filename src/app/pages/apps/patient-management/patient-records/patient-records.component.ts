@@ -232,7 +232,11 @@ export class PatientRecordsComponent implements OnInit, OnDestroy {
   }
 
   deletePatientRecord(patientId: number): void {
-    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent);
+    const dialogRef = this.dialog.open(ConfirmDeleteDialogComponent, {
+      data: {
+        patientId: patientId
+      }
+    });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.patientRecordService.deletePatientRecord(patientId).subscribe({
