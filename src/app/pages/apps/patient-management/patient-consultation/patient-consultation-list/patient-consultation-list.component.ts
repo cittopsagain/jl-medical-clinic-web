@@ -136,7 +136,8 @@ export class PatientConsultationListComponent implements OnDestroy, OnInit {
       )));
       this.disableEditConsultationFollowupTab = false;
     } else {
-      this.toastR.error('No Visit ID', 'Error');
+      // No visit ID found, default to first tab
+      this.selectedTabIndex = 0;
     }
   }
 
