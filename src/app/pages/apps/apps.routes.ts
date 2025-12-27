@@ -66,6 +66,10 @@ import {
 } from "./inventory-pharmacy/stock-receiving/view-stock-receiving/view-stock-receiving.component";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
+import {MedicineReturnsComponent} from "./inventory-pharmacy/medicine-returns/medicine-returns.component";
+import {
+  PatientReturnListComponent
+} from "./inventory-pharmacy/medicine-returns/patients/patient-return-list/patient-return-list.component";
 
 export interface CanComponentDeactivate {
   canDeactivate: () => Observable<boolean> | boolean;
@@ -235,13 +239,14 @@ export const AppsRoutes: Routes = [
         }
       },
       {
-        path: 'inventory-pharmacy/medicine-returns',
-        component: MedicineComponent,
+        path: 'inventory-pharmacy/medicine-returns/patient',
+        component: PatientReturnListComponent,
         data: {
-          title: 'Medicine Returns',
+          title: 'Patient Medicine Returns',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Medicine Returns' },
+            { title: 'Pharmacy Returns' },
+            { title: 'Patient Medicine Returns' },
           ]
         }
       },

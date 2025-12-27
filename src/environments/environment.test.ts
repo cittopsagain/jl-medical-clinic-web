@@ -9,5 +9,6 @@ export const environment = {
   MEDICAL_HISTORY_API_URL: 'https://davetolentin.ph/api/v1/medical-history',
   PDF_API_URL: 'https://davetolentin.ph/api/v1/pdf',
   MEDICINE_API_URL: 'http://davetolentin.ph/api/v1/medicine',
-  STOCK_RECEIVING_API_URL: 'http://davetolentin.ph/api/v1/stock-receiving'
+  STOCK_RECEIVING_API_URL: 'http://davetolentin.ph/api/v1/stock-receiving',
+  POS_RETURN_API_URL: 'http://davetolentin.ph/api/v1/stock-receiving'
 };

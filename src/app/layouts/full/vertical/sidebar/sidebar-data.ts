@@ -6,8 +6,7 @@ export const navItems: NavItem[] = [
   },
   {
     displayName: 'Dashboard',
-    iconName: 'aperture',
-    // route: '/dashboards/dashboard1',
+    iconName: 'aperture'
   },
   {
     navCap: 'Patient Management',
@@ -33,7 +32,6 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Consultation Fees',
     iconName: 'cash',
-    //route: 'apps/chat',
   },
   {
     navCap: 'Diagnosis',
@@ -43,21 +41,12 @@ export const navItems: NavItem[] = [
     iconName: 'clipboard-heart',
     route: 'apps/diagnosis/patient-diagnosis/0',
   },
-  /*{
-    navCap: 'Medical Records',
-  },
-  {
-    displayName: 'Medical Certificate',
-    iconName: 'certificate',
-    //route: 'front-pages/homepage'
-  },*/
   {
     navCap: 'Pharmacy',
   },
   {
     displayName: 'Suppliers',
-    iconName: 'users-group',
-    //route: 'front-pages/homepage',
+    iconName: 'users-group'
   },
   {
     displayName: 'Brands',
@@ -70,15 +59,21 @@ export const navItems: NavItem[] = [
     route: 'apps/inventory-pharmacy/medicines',
   },
   {
-    displayName: 'Medicine Returns',
+    displayName: 'Pharmacy Returns',
     iconName: 'arrow-back-up',
-    route: 'apps/inventory-pharmacy/medicine-returns',
+    children: [
+      {
+        displayName: 'Patient',
+        iconName: 'point',
+        route: 'apps/inventory-pharmacy/medicine-returns/patient',
+      },
+      {
+        displayName: 'Supplier',
+        iconName: 'point',
+        route: 'apps/invoice/viewInvoice/101',
+      }
+    ]
   },
-  /*{
-    displayName: 'Medicine Dosage',
-    iconName: 'pill',
-    route: 'apps/inventory-pharmacy/medicines1',
-  },*/
   {
     displayName: 'Stock Adjustments',
     iconName: 'clipboard',
@@ -89,11 +84,6 @@ export const navItems: NavItem[] = [
     iconName: 'building-warehouse',
     route: 'apps/inventory-pharmacy/stock-receiving',
   },
-  /*{
-    displayName: 'Stock Card Viewer',
-    iconName: 'building-warehouse',
-    route: 'apps/inventory-pharmacy/stock-receiving',
-  },*/
   {
     displayName: 'Expiration Date Monitoring',
     iconName: 'calendar-x',

@@ -9,5 +9,6 @@ export const environment = {
   MEDICAL_HISTORY_API_URL: 'http://192.168.0.150:8087/api/v1/medical-history',
   PDF_API_URL: 'http://192.168.0.150:8088/api/v1/pdf',
   MEDICINE_API_URL: 'http://192.168.0.150:8089/api/v1/medicine',
-  STOCK_RECEIVING_API_URL: 'http://192.168.0.150:8090/api/v1/stock-receiving'
+  STOCK_RECEIVING_API_URL: 'http://192.168.0.150:8090/api/v1/stock-receiving',
+  POS_RETURN_API_URL: 'http://192.168.0.150:8091/api/v1/stock-receiving'
 };
