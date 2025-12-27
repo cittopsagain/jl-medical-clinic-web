@@ -1,0 +1,19 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content>
+    <div class="d-flex justify-content-between align-items-center">
+      <small class="text-muted">* Required fields are marked with an asterisk</small>
+      <button mat-flat-button (click)="updateBrand()"
+              [disabled]="brandForm.invalid"
+              color="primary">
+        Update Brand
+      </button>
+    </div>
+
+    <form [formGroup]="brandForm" class="m-t-10">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Brand Name</mat-label>
+        <input matInput placeholder="Brand Name" name="brandName" formControlName="brandName">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+</mat-card>
