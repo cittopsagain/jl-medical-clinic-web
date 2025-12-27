@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
 import {Brand} from "./models/brand";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,13 @@ import {Brand} from "./models/brand";
 export class BrandsService {
 
   constructor(private httpClient: HttpClient) {}
+
+  private brandRecordTabBehaviorSubject = new BehaviorSubject<any | null>(null);
+  brandRecordTabBehaviorObservable$ = this.brandRecordTabBehaviorSubject.asObservable();
+
+  setTabIndex(index: number) {
+    this.brandRecordTabBehaviorSubject.next(index);
+  }
 
   getBrands(search: any, sort: string, order: string, page: number) {
     if (search.brandName == null || search.brandName === undefined) {
@@ -24,6 +32,16 @@ export class BrandsService {
   saveBrand(brand: Brand) {
     const href = environment.BRANDS_API_URL;
     return this.httpClient.post<any>(href, brand);
+  }
+
+  updateBrand(brand: Brand) {
+    const href = environment.BRANDS_API_URL;
+    return this.httpClient.put<any>(href, brand);
+  }
+
+  deleteBrand(brandId: number) {
+    const href = environment.BRANDS_API_URL;
+    return this.httpClient.delete<any>(`${href}/${brandId}`);
   }
 }
 
