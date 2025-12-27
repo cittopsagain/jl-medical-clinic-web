@@ -1,13 +1,9 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
-import {MatDivider} from "@angular/material/divider";
-import {RouterLink} from "@angular/router";
 import {BrandsService} from "../brands.service";
 import {ToastrService} from "ngx-toastr";
-import {AsyncPipe, UpperCasePipe} from "@angular/common";
 import {FormBuilder, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators} from "@angular/forms";
-import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from "@angular/material/autocomplete";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 
 @Component({
@@ -16,19 +12,11 @@ import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
     MatButton,
     MatCard,
     MatCardContent,
-    MatDivider,
-    RouterLink,
-    AsyncPipe,
     FormsModule,
-    MatAutocomplete,
-    MatAutocompleteTrigger,
     MatFormField,
     MatInput,
     MatLabel,
-    MatOptgroup,
-    MatOption,
     ReactiveFormsModule,
-    UpperCasePipe,
     MatFormField
   ],
   templateUrl: './add-brand.component.html',
