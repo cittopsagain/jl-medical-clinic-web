@@ -1,8 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Medicine} from "../models/medicine";
-import {AsyncPipe, UpperCasePipe} from "@angular/common";
-import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from "@angular/material/autocomplete";
-import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {FormBuilder, ReactiveFormsModule, UntypedFormGroup, Validators} from "@angular/forms";
@@ -10,19 +7,12 @@ import {FormBuilder, ReactiveFormsModule, UntypedFormGroup, Validators} from "@a
 @Component({
   selector: 'app-view-medicine',
   imports: [
-    AsyncPipe,
-    MatAutocomplete,
-    MatAutocompleteTrigger,
-    MatButton,
     MatCard,
     MatCardContent,
     MatFormField,
     MatInput,
     MatLabel,
-    MatOptgroup,
-    MatOption,
-    ReactiveFormsModule,
-    UpperCasePipe
+    ReactiveFormsModule
   ],
   templateUrl: './view-medicine.component.html',
   styleUrl: './view-medicine.component.scss'

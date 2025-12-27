@@ -1,11 +1,11 @@
-import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
-import {SlicePipe, UpperCasePipe} from "@angular/common";
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {UpperCasePipe} from "@angular/common";
 import {MatCard, MatCardContent} from "@angular/material/card";
 import {MedicineService} from "./medicine.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {interval, merge, of as observableOf, Subscription} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {interval, merge, of as observableOf, Subject, Subscription} from "rxjs";
+import {catchError, map, startWith, switchMap, takeUntil} from "rxjs/operators";
 import {MatIconButton} from "@angular/material/button";
 import {
   MatCell,
@@ -67,7 +67,7 @@ import {ViewMedicineComponent} from "./view-medicine/view-medicine.component";
   templateUrl: './medicine.component.html',
   styleUrl: './medicine.component.scss'
 })
-export class MedicineComponent implements OnDestroy {
+export class MedicineComponent implements OnDestroy, OnInit {
 
   selectedTabIndex: number = 0;
   selectedMedicine: Medicine;
@@ -91,6 +91,7 @@ export class MedicineComponent implements OnDestroy {
     }
   ];
   selectedFilter: string = 'brand_name';
+  private destroy$ = new Subject<void>();
 
   editMedicine: string = 'Edit Medicine';
   viewMedicine: string = 'View Medicine';
@@ -103,11 +104,25 @@ export class MedicineComponent implements OnDestroy {
 
   }
 
+  ngOnInit(): void {
+    this.medicineService.medicineRecordTabBehaviorObservable$.pipe(takeUntil(this.destroy$)).subscribe((tabIndex: number) => {
+      if (tabIndex !== null) {
+        this.selectedTabIndex = tabIndex;
+        this.editMedicine = 'Edit Medicine';
+        this.disableEditMedicineTab = true;
+        this.getMedicine();
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     // Clean up subscription to prevent memory leaks
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
+
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   ngAfterViewInit() {
@@ -128,6 +143,10 @@ export class MedicineComponent implements OnDestroy {
   }
 
   getMedicine(){
+    if (!this.medicineNameInput) {
+      return;
+    }
+
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),

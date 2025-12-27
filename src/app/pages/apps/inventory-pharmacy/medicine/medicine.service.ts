@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {environment} from "../../../../../environments/environment";
 import {MedicineApi} from "./models/medicine";
 
@@ -12,6 +12,9 @@ export class MedicineService {
   private limit = 30; // Default limit for pagination
 
   constructor(private httpClient: HttpClient) {}
+  private medicineRecordTabBehaviorSubject = new BehaviorSubject<any | null>(null);
+  medicineRecordTabBehaviorObservable$ = this.medicineRecordTabBehaviorSubject.asObservable();
+
 
   getMedicine(search: any,
               sort: string,
@@ -26,6 +29,10 @@ export class MedicineService {
     const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&search=${encodeURIComponent(search.medicineName)}&filterBy=${encodeURIComponent(search.filterBy)}`;
 
     return this.httpClient.get<MedicineApi>(requestUrl);
+  }
+
+  setTabIndex(tabIndex: number) {
+    this.medicineRecordTabBehaviorSubject.next(tabIndex);
   }
 
   getBrands() {

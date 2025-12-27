@@ -100,6 +100,8 @@ export class EditMedicineComponent implements OnChanges, AfterViewInit {
             this.toastR.success(data.message, 'Success');
             // Clear the form
             this.medicineForm.reset();
+
+            this.medicineService.setTabIndex(0); // Switch back to the list tab
           } else {
             this.toastR.error(data.message, 'Error');
           }
