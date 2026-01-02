@@ -93,6 +93,8 @@ export class PrescriptionPurchasesComponent {
   applyFilter() {
     this.getPatientsTransactions();
 
+    this.selectedPosHeader = null;
+    this.purchasedMedicines = [];
   }
 
   getPatientsTransactions() {

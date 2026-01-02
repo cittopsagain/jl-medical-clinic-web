@@ -90,7 +90,7 @@
               <!-- Date Created -->
               <ng-container matColumnDef="dateCreated">
                 <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
-                  Date Created
+                  Purchase Date
                 </th>
                 <td mat-cell *matCellDef="let row; let i = index">
                   {{ row.dateCreated | date: 'MM/dd/yyyy HH:mm:ss' }}
@@ -126,7 +126,7 @@
           {{ selectedPosHeader?.customerOrderType ? selectedPosHeader?.customerOrderType : 'N/A' }}
         </div>
         <div class="m-t-2">
-          <strong>Date Created:</strong>
+          <strong>Purchase Date:</strong>
           {{
             selectedPosHeader?.dateCreated ? (selectedPosHeader?.dateCreated | date: 'MM/dd/yyyy HH:mm:ss') : 'N/A'
           }}
