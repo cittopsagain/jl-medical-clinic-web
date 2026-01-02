@@ -88,6 +88,26 @@ export class PosService {
     }
   }
 
+  getLast7DaysPatientsTransactions(search: any,
+                          sort: string,
+                          order: string,
+                          page: number): Observable<PatientApi> {
+    {
+      if (search.search == null || search.search === undefined) {
+        search.search = '';
+      }
+
+      if (search.filterBy == null || search.filterBy === undefined) {
+        search.filterBy = '';
+      }
+
+      const href = `${environment.POS_API_URL}/patients-transactions/last-7-days`;
+      const requestUrl = `${href}?sort=${sort}&order=${order}&page=${page + 1}&limit=${this.limit}&search=${encodeURIComponent(search.search)}&filterBy=${encodeURIComponent(search.filterBy)}`;
+
+      return this.httpClient.get<PatientApi>(requestUrl);
+    }
+  }
+
   getPurchaseDetail(posId: number) {
     const href = `${environment.POS_API_URL}/purchase-detail/${posId}`;
     return this.httpClient.get<any>(href);

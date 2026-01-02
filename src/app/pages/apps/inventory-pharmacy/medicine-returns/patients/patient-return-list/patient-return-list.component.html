@@ -1,12 +1,79 @@
-<div class="m-t-10">
-
-</div>
-
-<mat-tab-group>
+<mat-tab-group [selectedIndex]="selectedTabIndex">
   <mat-tab label="List of Medicine Returns">
+    <mat-card class="cardWithShadow">
+      <mat-card-content>
+        <div class="example-table-container responsive-table">
+          <table mat-table [dataSource]="data" matSort matSortActive="product_name" matSortDisableClear
+                 matSortDirection="asc" class="hover-table">
 
+            <!-- Return Id -->
+            <ng-container matColumnDef="returnId">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Return ID
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row?.returnId }}
+              </td>
+            </ng-container>
+
+            <!-- POS Id -->
+            <ng-container matColumnDef="posId">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                POS ID
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row?.posId }}
+              </td>
+            </ng-container>
+
+            <!-- Patient Id -->
+            <ng-container matColumnDef="patientId">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Patient ID
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row?.customerOrderType == 'Walk-in' ? 'N/A' : row?.patientId }}
+              </td>
+            </ng-container>
+
+            <!-- Customer Order Type -->
+            <ng-container matColumnDef="customerOrderType">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Order Type
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row?.customerOrderType }}
+              </td>
+            </ng-container>
+
+            <!-- Patient Name -->
+            <ng-container matColumnDef="patientName">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Patient Name
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row?.customerOrderType == 'Walk-in' ? 'N/A' : row?.patientName }}
+              </td>
+            </ng-container>
+
+            <!-- Return Date -->
+            <ng-container matColumnDef="returnDate">
+              <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                Return Date
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                {{ row.returnDate | date: 'MM/dd/yyyy HH:mm:ss' }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </mat-tab>
   <mat-tab label="Add Medicine Return">
-
+    <app-add-medicine-return></app-add-medicine-return>
   </mat-tab>
 </mat-tab-group>

@@ -85,3 +85,16 @@
 ::ng-deep .mat-tab-group {
   overflow: hidden;
 }
+
+.patient-row {
+  align-items: flex-end; /* 👈 aligns button with bottom of input box */
+}
+
+.browse-btn {
+  height: 56px; /* match Angular Material outline input height */
+  line-height: 56px;
+}
+.status-completed {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
