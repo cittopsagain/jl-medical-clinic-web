@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: famed-web-ng
+    image: famed-web-ng:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
